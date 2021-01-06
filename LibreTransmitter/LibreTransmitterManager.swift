@@ -28,6 +28,14 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+    public var hasValidSensorSession: Bool {
+        lastConnected != nil
+    }
+
+    public var cgmStatus: CGMManagerStatus {
+        return CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
+    }
+
     public var glucoseDisplay: GlucoseDisplayable?
 
     public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier) {
@@ -121,7 +129,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     //public var miaomiaoService: MiaomiaoService
 
-    public func fetchNewDataIfNeeded(_ completion: @escaping (CGMResult) -> Void) {
+    public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
         NSLog("dabear:: fetchNewDataIfNeeded called but we don't continue")
 
         completion(.noData)
@@ -351,7 +359,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 }
             } else {
                 os_log("Sensor type was incorrect, and no decryption of sensor was possible")
-                self.cgmManagerDelegate?.cgmManager(self, didUpdateWith: .error(LibreError.encryptedSensor))
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.encryptedSensor))
                 return
             }
         }
@@ -365,7 +373,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
         guard sensorData.hasValidCRCs else {
             self.delegateQueue.async {
-                self.cgmManagerDelegate?.cgmManager(self, didUpdateWith: .error(LibreError.checksumValidationError))
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
             }
 
             os_log("dit not get sensordata with valid crcs")
@@ -377,7 +385,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         guard sensorData.state == .ready || sensorData.state == .starting else {
             os_log("dabear:: got sensordata with valid crcs, but sensor is either expired or failed")
             self.delegateQueue.async {
-            self.cgmManagerDelegate?.cgmManager(self, didUpdateWith: .error(LibreError.expiredSensor))
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.expiredSensor))
             }
             return
         }
@@ -393,7 +401,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             if let error = error {
                 NSLog("dabear:: handleGoodReading returned with error: \(error)")
                 self.delegateQueue.async {
-                    self.cgmManagerDelegate?.cgmManager(self, didUpdateWith: .error(error))
+                    self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
                 }
                 return
             }
@@ -401,7 +409,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             guard let glucose = glucose else {
                 NSLog("dabear:: handleGoodReading returned with no data")
                 self.delegateQueue.async {
-                    self.cgmManagerDelegate?.cgmManager(self, didUpdateWith: .noData)
+                    self.cgmManagerDelegate?.cgmManager(self, hasNew: .noData)
                 }
                 return
             }
@@ -444,7 +452,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
             NSLog("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
             self.delegateQueue.async {
-                var result: CGMResult
+                var result: CGMReadingResult
                 // If several readings from a valid and running sensor come out empty,
                 // we have (with a large degree of confidence) a sensor that has been
                 // ripped off the body
@@ -453,7 +461,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 } else {
                     result = newGlucose.isEmpty ? .noData : .newData(newGlucose)
                 }
-                self.cgmManagerDelegate?.cgmManager(self, didUpdateWith: result)
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: result)
             }
         }
     }
