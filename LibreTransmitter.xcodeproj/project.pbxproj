@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
+		273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
+		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
+		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
+		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		27850CE725672C0C0020D109 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CD925672C0C0020D109 /* DataExtensions.swift */; };
 		27850CE925672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CDA25672C0C0020D109 /* TimeIntervalExtensions.swift */; };
 		27850CEA25672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CDA25672C0C0020D109 /* TimeIntervalExtensions.swift */; };
@@ -96,38 +101,21 @@
 		4325E9D3210E6ADA00969CE5 /* IdentifiableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325E9D2210E6ADA00969CE5 /* IdentifiableClass.swift */; };
 		4325E9D5210E6B4400969CE5 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325E9D4210E6B4300969CE5 /* UIColor.swift */; };
 		432B0E8C1CDFC3C50045347B /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		432B0E931CDFC3C50045347B /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
-		432B0E981CDFC3C50045347B /* LibreTransmitterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432B0E971CDFC3C50045347B /* LibreTransmitterTests.swift */; };
 		43A8EC7C210E661400A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 		43A8EC86210E664300A81379 /* LibreTransmitterUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 43A8EC84210E664300A81379 /* LibreTransmitterUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43A8EC8A210E664C00A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 		43A8EC8C210E665700A81379 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC8B210E665600A81379 /* LoopKitUI.framework */; };
 		43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC8E210E676500A81379 /* LibreTransmitterManager+UI.swift */; };
-		43A8EC93210E679B00A81379 /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
 		43A8EC95210E67B000A81379 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC94210E67B000A81379 /* HealthKit.framework */; };
 		43A8EC9D210E68CE00A81379 /* LibreTransmitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */; };
 		43AB511B21330D1400B3D58D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB511921330D1400B3D58D /* Localizable.strings */; };
 		43AB5127213315D300B3D58D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB5125213315D300B3D58D /* Localizable.strings */; };
-		A9AD06BC225ECDAC00471B4A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC94210E67B000A81379 /* HealthKit.framework */; };
-		A9ED4D95225EB4D30080DEBA /* LibreTransmitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */; };
-		A9ED4D9C225EB4D30080DEBA /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
-		A9ED4D9E225EB4D30080DEBA /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A9ED4DA0225EB4D30080DEBA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB5125213315D300B3D58D /* Localizable.strings */; };
-		A9ED4DAF225EB93A0080DEBA /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9ED4DAE225EB9390080DEBA /* HealthKit.framework */; };
 		B40BF26623ABD4E700A43CEE /* LibreTransmitterPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26523ABD4E700A43CEE /* LibreTransmitterPlugin.swift */; };
 		B40BF26823ABD55200A43CEE /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26723ABD55200A43CEE /* OSLog.swift */; };
 		B40BF26923ABD55200A43CEE /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26723ABD55200A43CEE /* OSLog.swift */; };
-		C17D3CC62184CC26003458C8 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		432B0E941CDFC3C50045347B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 432B0E871CDFC3C50045347B;
-			remoteInfo = LibreTransmitter;
-		};
 		A9E521F6225E949400EDDEF2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
@@ -145,6 +133,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
 		27850BA0256724EF0020D109 /* LibreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreError.swift; sourceTree = "<group>"; };
 		27850BA1256724EF0020D109 /* Calibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calibration.swift; sourceTree = "<group>"; };
 		27850BA2256724EF0020D109 /* LimitedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedQueue.swift; sourceTree = "<group>"; };
@@ -221,7 +210,6 @@
 		432B0E881CDFC3C50045347B /* LibreTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LibreTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibreTransmitter.h; sourceTree = "<group>"; };
 		432B0E8D1CDFC3C50045347B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		432B0E921CDFC3C50045347B /* LibreTransmitterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibreTransmitterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		432B0E971CDFC3C50045347B /* LibreTransmitterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreTransmitterTests.swift; sourceTree = "<group>"; };
 		432B0E991CDFC3C50045347B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43A8EC7B210E661400A81379 /* LoopKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -266,7 +254,6 @@
 		7D9BF12E2336FFA9005DCFD6 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7D9BF12F2336FFAF005DCFD6 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7D9BF1302336FFAF005DCFD6 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
-		A9ED4DA4225EB4D30080DEBA /* LibreTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LibreTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9ED4DAE225EB9390080DEBA /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		B40BF25E23ABD47400A43CEE /* LibreTransmitterPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibreTransmitterPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		B40BF26023ABD47400A43CEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -285,32 +272,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		432B0E8F1CDFC3C50045347B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9AD06BC225ECDAC00471B4A /* HealthKit.framework in Frameworks */,
-				432B0E931CDFC3C50045347B /* LibreTransmitter.framework in Frameworks */,
-				C17D3CC62184CC26003458C8 /* LoopKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		43A8EC7E210E664300A81379 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43A8EC93210E679B00A81379 /* LibreTransmitter.framework in Frameworks */,
+				273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */,
 				43A8EC8C210E665700A81379 /* LoopKitUI.framework in Frameworks */,
 				43A8EC8A210E664C00A81379 /* LoopKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A9ED4D9A225EB4D30080DEBA /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9ED4DAF225EB93A0080DEBA /* HealthKit.framework in Frameworks */,
-				A9ED4D9C225EB4D30080DEBA /* LoopKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +286,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,6 +354,7 @@
 		27850CD125672BA40020D109 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				273BFDD025ACAB000042E1EC /* copy-frameworks.sh */,
 				27850CD225672BA40020D109 /* capture-build-details.sh */,
 			);
 			path = Scripts;
@@ -534,9 +504,7 @@
 			isa = PBXGroup;
 			children = (
 				432B0E881CDFC3C50045347B /* LibreTransmitter.framework */,
-				432B0E921CDFC3C50045347B /* LibreTransmitterTests.xctest */,
 				43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */,
-				A9ED4DA4225EB4D30080DEBA /* LibreTransmitter.framework */,
 				B40BF25E23ABD47400A43CEE /* LibreTransmitterPlugin.loopplugin */,
 			);
 			name = Products;
@@ -637,14 +605,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A9ED4D9D225EB4D30080DEBA /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9ED4D9E225EB4D30080DEBA /* LibreTransmitter.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -666,25 +626,6 @@
 			productReference = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		432B0E911CDFC3C50045347B /* LibreTransmitterTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 432B0E9F1CDFC3C50045347B /* Build configuration list for PBXNativeTarget "LibreTransmitterTests" */;
-			buildPhases = (
-				432B0E8E1CDFC3C50045347B /* Sources */,
-				432B0E8F1CDFC3C50045347B /* Frameworks */,
-				432B0E901CDFC3C50045347B /* Resources */,
-				A9F2C3E0225ECF8800C3B796 /* Copy Frameworks with Carthage */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				432B0E951CDFC3C50045347B /* PBXTargetDependency */,
-			);
-			name = LibreTransmitterTests;
-			productName = LibreTransmitterTests;
-			productReference = 432B0E921CDFC3C50045347B /* LibreTransmitterTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		43A8EC81210E664300A81379 /* LibreTransmitterUI */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43A8EC87210E664300A81379 /* Build configuration list for PBXNativeTarget "LibreTransmitterUI" */;
@@ -704,24 +645,6 @@
 			productReference = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		A9ED4D91225EB4D30080DEBA /* LibreTransmitter-watchOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A9ED4DA1225EB4D30080DEBA /* Build configuration list for PBXNativeTarget "LibreTransmitter-watchOS" */;
-			buildPhases = (
-				A9ED4D92225EB4D30080DEBA /* Sources */,
-				A9ED4D9A225EB4D30080DEBA /* Frameworks */,
-				A9ED4D9D225EB4D30080DEBA /* Headers */,
-				A9ED4D9F225EB4D30080DEBA /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "LibreTransmitter-watchOS";
-			productName = LibreTransmitter;
-			productReference = A9ED4DA4225EB4D30080DEBA /* LibreTransmitter.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		B40BF25D23ABD47400A43CEE /* LibreTransmitterPlugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B40BF26323ABD47400A43CEE /* Build configuration list for PBXNativeTarget "LibreTransmitterPlugin" */;
@@ -729,6 +652,7 @@
 				B40BF25A23ABD47400A43CEE /* Sources */,
 				B40BF25B23ABD47400A43CEE /* Frameworks */,
 				B40BF25C23ABD47400A43CEE /* Resources */,
+				273BFDCC25ACA9D00042E1EC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -751,10 +675,6 @@
 				ORGANIZATIONNAME = "Mark Wilson";
 				TargetAttributes = {
 					432B0E871CDFC3C50045347B = {
-						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 1020;
-					};
-					432B0E911CDFC3C50045347B = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1020;
 					};
@@ -801,8 +721,6 @@
 			projectRoot = "";
 			targets = (
 				432B0E871CDFC3C50045347B /* LibreTransmitter */,
-				A9ED4D91225EB4D30080DEBA /* LibreTransmitter-watchOS */,
-				432B0E911CDFC3C50045347B /* LibreTransmitterTests */,
 				43A8EC81210E664300A81379 /* LibreTransmitterUI */,
 				B40BF25D23ABD47400A43CEE /* LibreTransmitterPlugin */,
 			);
@@ -817,14 +735,8 @@
 				27850E5125673CF40020D109 /* libresensor.png in Resources */,
 				27850E5725673CF70020D109 /* bubble.png in Resources */,
 				43AB5127213315D300B3D58D /* Localizable.strings in Resources */,
+				273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */,
 				27850E4B25673CE60020D109 /* miaomiao-small.png in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		432B0E901CDFC3C50045347B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -836,6 +748,7 @@
 				27850D6825672DFB0020D109 /* icons8-drop-down-arrow-50.png in Resources */,
 				43AB511B21330D1400B3D58D /* Localizable.strings in Resources */,
 				27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */,
+				273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */,
 				27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */,
 				27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */,
 				27850D6425672DFB0020D109 /* libresensor.png in Resources */,
@@ -850,25 +763,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A9ED4D9F225EB4D30080DEBA /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9ED4DA0225EB4D30080DEBA /* Localizable.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B40BF25C23ABD47400A43CEE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A9F2C3E0225ECF8800C3B796 /* Copy Frameworks with Carthage */ = {
+		273BFDCC25ACA9D00042E1EC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -876,17 +782,16 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/LoopKit.framework",
+				"$(BUILT_PRODUCTS_DIR)/LibreTransmitter.framework/LibreTransmitter",
+				"$(BUILT_PRODUCTS_DIR)/LibreTransmitterUI.framework/LibreTransmitterUI",
 			);
-			name = "Copy Frameworks with Carthage";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/LoopKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "CARTHAGE_BUILD_DIR=\"${SRCROOT}/Carthage/Build\"\nif [ -n \"${IPHONEOS_DEPLOYMENT_TARGET}\" ]; then\n    CARTHAGE_BUILD_DIR=\"${CARTHAGE_BUILD_DIR}/iOS\"\nelif [ -n \"${WATCHOS_DEPLOYMENT_TARGET}\" ]; then\n    CARTHAGE_BUILD_DIR=\"${CARTHAGE_BUILD_DIR}/watchOS\"\nelse\n    echo \"ERROR: Unexpected deployment target type\"\n    exit 1\nfi\n\nfor SCRIPT_INPUT_FILE in ${!SCRIPT_INPUT_FILE_*}; do\n    CARTHAGE_BUILD_FILE=\"${!SCRIPT_INPUT_FILE/${BUILT_PRODUCTS_DIR}/${CARTHAGE_BUILD_DIR}}\"\n    if [ -e \"${CARTHAGE_BUILD_FILE}\" ]; then\n        if [ -e \"${SCRIPT_INPUT_FILE}\" ]; then\n            echo \"ERROR: Duplicate frameworks found at:\"\n            echo \"  ${SCRIPT_INPUT_FILE}\"\n            echo \"  ${CARTHAGE_BUILD_FILE}\"\n            exit 1\n        fi\n        echo \"Substituting \\\"${CARTHAGE_BUILD_FILE}\\\" for \\\"${!SCRIPT_INPUT_FILE}\\\"\"\n        export ${SCRIPT_INPUT_FILE}=\"${CARTHAGE_BUILD_FILE}\"\n    fi\ndone\n\necho \"Copy Frameworks with Carthage\"\ncarthage copy-frameworks\n";
+			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -935,14 +840,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		432B0E8E1CDFC3C50045347B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				432B0E981CDFC3C50045347B /* LibreTransmitterTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		43A8EC7D210E664300A81379 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -987,14 +884,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A9ED4D92225EB4D30080DEBA /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A9ED4D95225EB4D30080DEBA /* LibreTransmitterManager.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B40BF25A23ABD47400A43CEE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1007,11 +896,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		432B0E951CDFC3C50045347B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 432B0E871CDFC3C50045347B /* LibreTransmitter */;
-			targetProxy = 432B0E941CDFC3C50045347B /* PBXContainerItemProxy */;
-		};
 		A9E521F7225E949400EDDEF2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 432B0E871CDFC3C50045347B /* LibreTransmitter */;
@@ -1251,34 +1135,6 @@
 			};
 			name = Release;
 		};
-		432B0EA01CDFC3C50045347B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = LibreTransmitterTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mddub.LibreTransmitterTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		432B0EA11CDFC3C50045347B /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
-				INFOPLIST_FILE = LibreTransmitterTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mddub.LibreTransmitterTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		43A8EC88210E664300A81379 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1344,62 +1200,6 @@
 			};
 			name = Release;
 		};
-		A9ED4DA2225EB4D30080DEBA /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 2;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/watchOS",
-				);
-				INFOPLIST_FILE = LibreTransmitter/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mddub.LibreTransmitter;
-				PRODUCT_NAME = LibreTransmitter;
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchos watchsimulator";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 4;
-			};
-			name = Debug;
-		};
-		A9ED4DA3225EB4D30080DEBA /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 2;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/watchOS",
-				);
-				INFOPLIST_FILE = LibreTransmitter/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mddub.LibreTransmitter;
-				PRODUCT_NAME = LibreTransmitter;
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchos watchsimulator";
-				TARGETED_DEVICE_FAMILY = 4;
-			};
-			name = Release;
-		};
 		B40BF26123ABD47400A43CEE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1414,7 +1214,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = LibreTransmitterPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@rpath $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1445,7 +1245,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = LibreTransmitterPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "@rpath $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_FAST_MATH = YES;
@@ -1481,29 +1281,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		432B0E9F1CDFC3C50045347B /* Build configuration list for PBXNativeTarget "LibreTransmitterTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				432B0EA01CDFC3C50045347B /* Debug */,
-				432B0EA11CDFC3C50045347B /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		43A8EC87210E664300A81379 /* Build configuration list for PBXNativeTarget "LibreTransmitterUI" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				43A8EC88210E664300A81379 /* Debug */,
 				43A8EC89210E664300A81379 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A9ED4DA1225EB4D30080DEBA /* Build configuration list for PBXNativeTarget "LibreTransmitter-watchOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A9ED4DA2225EB4D30080DEBA /* Debug */,
-				A9ED4DA3225EB4D30080DEBA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
