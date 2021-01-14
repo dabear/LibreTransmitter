@@ -17,11 +17,11 @@ class LibreTransmitterPlugin: NSObject, LoopUIPlugin {
     private let log = OSLog(category: "LibreTransmitterPlugin")
     
     public var pumpManagerType: PumpManagerUI.Type? {
-        return nil
+        nil
     }
     
     public var cgmManagerType: CGMManagerUI.Type? {
-        return LibreTransmitterManager.self
+        LibreTransmitterManager.self
     }
     
     override init() {

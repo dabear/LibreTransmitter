@@ -63,7 +63,7 @@ extension CBPeripheral: PeripheralProtocol, Identifiable {
     }
 
     public var asStringIdentifier: String {
-        return self.identifier.uuidString
+        self.identifier.uuidString
     }
 }
 

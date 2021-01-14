@@ -145,13 +145,13 @@ struct BluetoothSelection: View {
     @ObservedObject var selection: SelectionState = .shared
 
     public func getNewDeviceId () -> String? {
-        return selection.selectedStringIdentifier
+        selection.selectedStringIdentifier
     }
 
     private var searcher: BluetoothSearchManager!
 
     static func asHostedViewController() -> UIHostingController<Self> {
-        return UIHostingController(rootView: self.init())
+        UIHostingController(rootView: self.init())
     }
 
     // Should contain all discovered and compatible devices

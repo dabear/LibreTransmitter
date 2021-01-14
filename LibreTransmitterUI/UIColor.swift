@@ -12,6 +12,6 @@ extension UIColor {
     static let delete = UIColor.higRed()
 
     private static func higRed() -> UIColor {
-        return UIColor(red: 1, green: 59 / 255, blue: 48 / 255, alpha: 1)
+        UIColor(red: 1, green: 59 / 255, blue: 48 / 255, alpha: 1)
     }
 }

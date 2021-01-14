@@ -37,7 +37,6 @@ extension LibreTransmitterManager: CGMManagerUI {
 
 extension LibreTransmitterManager: DeviceManagerUI {
     public var smallImage: UIImage? {
-        //print("Got request for smallimage::", self.getSmallImage())
-        return self.getSmallImage()
+       self.getSmallImage()
     }
 }

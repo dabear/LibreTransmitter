@@ -142,8 +142,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
     public var connectionStateString: String {
-        //dispatchPrecondition(condition: .onQueue(managerQueue))
-        return self.state.rawValue
+        self.state.rawValue
     }
 
     public func dispatchToDelegate( _ closure :@escaping  (_ aself: LibreTransmitterProxyManager) -> Void ) {

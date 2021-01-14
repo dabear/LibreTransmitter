@@ -29,11 +29,11 @@ import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
     public var hasValidSensorSession: Bool {
-        lastConnected != nil
+        lastConnected != nil 
     }
 
     public var cgmStatus: CGMManagerStatus {
-        return CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
+        CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
     }
 
     public var glucoseDisplay: GlucoseDisplayable?

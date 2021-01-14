@@ -72,8 +72,7 @@ struct Measurement: MeasurementProtocol {
     }
 
     var description: String {
-        var aString = String(" date:  \(date), rawGlucose: \(rawGlucose), rawTemperature: \(rawTemperature), bytes: \(bytes) \n")
+        String(" date:  \(date), rawGlucose: \(rawGlucose), rawTemperature: \(rawTemperature), bytes: \(bytes) \n")
 
-        return aString
     }
 }

@@ -52,7 +52,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     }
 
     override class var smallImage: UIImage? {
-        return UIImage(named: "bubble", in: Bundle.current, compatibleWith: nil)
+         UIImage(named: "bubble", in: Bundle.current, compatibleWith: nil)
     }
 
     override static func canSupportPeripheral(_ peripheral: CBPeripheral) -> Bool {

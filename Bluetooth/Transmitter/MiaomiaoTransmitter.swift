@@ -213,7 +213,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
     }
 
     class func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String? {
-        return nil
+        nil
     }
 
     required init(delegate: LibreTransmitterDelegate, advertisementData: [String: Any]?) {
