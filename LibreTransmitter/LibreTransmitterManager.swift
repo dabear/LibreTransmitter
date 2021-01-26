@@ -114,7 +114,17 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public var debugDescription: String {
-        [
+        /*var foreground = Alert.Content(title: "foreground title", body: "foreground body", acknowledgeActionButtonLabel: "ForegroundActionButtonLabel")
+        var background = Alert.Content(title: "background title", body: "background body", acknowledgeActionButtonLabel: "BackgroundActionButtonLabel")
+        var id = Alert.Identifier(managerIdentifier: "managerid", alertIdentifier: "alertid")
+        var alert = Alert(identifier: id, foregroundContent: foreground, backgroundContent: background, trigger: .delayed(interval: 15), sound: .vibrate)
+
+
+
+        cgmManagerDelegate?.issueAlert(alert )*/
+
+        //cgmManagerDelegate?.scheduleNotification(for: <#T##DeviceManager#>, identifier: <#T##String#>, content: <#T##UNNotificationContent#>, trigger: <#T##UNNotificationTrigger?#>)
+        return [
             "## MiaomiaoClientManager",
             "Testdata: foo",
             "lastConnected: \(String(describing: lastConnected))",

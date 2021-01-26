@@ -117,6 +117,7 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
         case date
        // case trend
         case footerChecksum
+        case error
     }
 
     private enum LatestSensorInfoRow: Int, CaseIterable {
@@ -258,6 +259,14 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
             case .footerChecksum:
                 cell.textLabel?.text = LocalizedString("Sensor Footer checksum", comment: "Title describing Sensor footer reverse checksum")
 
+                cell.detailTextLabel?.text = isDemoMode ? "demo123" : cgmManager?.sensorFooterChecksums
+            case .error:
+                cell.textLabel?.text = LocalizedString("Entry Errors", comment: "Title describing Glucose Reading error codes")
+                if let errors = glucose?.error {
+                    cell.detailTextLabel?.text = errors.debugDescription
+                } else {
+                    cell.detailTextLabel?.text = SettingsTableViewCell.NoValueString
+                }
                 cell.detailTextLabel?.text = isDemoMode ? "demo123" : cgmManager?.sensorFooterChecksums
             }
 

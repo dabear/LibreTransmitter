@@ -14,7 +14,38 @@ protocol MeasurementProtocol {
     var rawTemperature: Int { get }
 
     var rawTemperatureAdjustment: Int { get }
+
+    var error : [MeasurementError] { get}
 }
+
+public enum MeasurementError: Int, CaseIterable {
+    case OK = 0
+    case SD14_FIFO_OVERFLOW      = 1
+    case FILTER_DELTA            = 0x02
+    case WORK_VOLTAGE            = 0x04
+    case PEAK_DELTA_EXCEEDED     = 0x08
+    case AVG_DELTA_EXCEEDED      = 0x10
+    case RF                      = 0x20
+    case REF_R                   = 0x40
+    case SIGNAL_SATURATED        = 128    //   0x80
+    case SENSOR_SIGNAL_LOW       = 256    //  0x100
+    case THERMISTOR_OUT_OF_RANGE = 2048   //  0x800
+
+    case TEMP_HIGH               = 8192   // 0x2000
+    case TEMP_LOW                = 16384  // 0x4000
+    case INVALID_DATA            = 32768  // 0x8000
+
+    static var allErrorCodes : [MeasurementError] {
+        var allErrorCases = MeasurementError.allCases
+        allErrorCases.removeAll { $0 == .OK}
+        return allErrorCases
+    }
+}
+
+
+
+
+
 
 struct SimplifiedMeasurement: MeasurementProtocol {
     var rawGlucose: Int
@@ -22,6 +53,8 @@ struct SimplifiedMeasurement: MeasurementProtocol {
     var rawTemperature: Int
 
     var rawTemperatureAdjustment: Int = 0
+
+    var error = [MeasurementError.OK]
 }
 
 /// Structure for one glucose measurement including value, date and raw data bytes
@@ -40,6 +73,8 @@ struct Measurement: MeasurementProtocol {
     let rawTemperature: Int
 
     let rawTemperatureAdjustment: Int
+
+    let error : [MeasurementError]
 
     ///
     /// - parameter bytes:  raw data bytes as read from the sensor
@@ -65,11 +100,24 @@ struct Measurement: MeasurementProtocol {
         self.date = date
         self.counter = counter
 
+        let errorBitField = SensorData.readBits(bytes,0, 0xe, 0xc)
+        self.error = Self.extractErrorBitField(errorBitField)
 //        self.oopSlope = slope_slope * Double(rawTemperature) + offset_slope
 //        self.oopOffset = slope_offset * Double(rawTemperature) + offset_offset
 //        self.oopGlucose = oopSlope * Double(rawGlucose) + oopOffset
 
     }
+
+    static func extractErrorBitField(_ errBitField: Int) -> [MeasurementError]{
+
+        if errBitField == 0 {
+            return [MeasurementError.OK]
+        }
+
+        return MeasurementError.allErrorCodes.filter { (errBitField & $0.rawValue) != 0 }
+
+    }
+
 
     var description: String {
         String(" date:  \(date), rawGlucose: \(rawGlucose), rawTemperature: \(rawTemperature), bytes: \(bytes) \n")

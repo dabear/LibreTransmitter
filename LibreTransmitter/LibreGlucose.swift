@@ -10,6 +10,7 @@ import LoopKit
 public struct LibreGlucose {
     public let unsmoothedGlucose: Double
     public var glucoseDouble: Double
+    public var error = [MeasurementError.OK]
     public var glucose: UInt16 {
         UInt16(glucoseDouble.rounded())
     }
@@ -164,6 +165,7 @@ extension LibreGlucose {
                 //glucoseDouble: historical.temperatureAlgorithmGlucose,
                 unsmoothedGlucose: historical.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
                 glucoseDouble: historical.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
+                error: historical.error,
                 timestamp: historical.date)
 
             if glucose.glucoseDouble > 0 {
@@ -186,6 +188,7 @@ extension LibreGlucose {
                 //unsmoothedGlucose: trend.temperatureAlgorithmGlucose,
                 unsmoothedGlucose: trend.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
                 glucoseDouble: 0.0,
+                error: trend.error,
                 timestamp: trend.date)
             // if sensor is ripped off body while transmitter is attached, values below 1 might be created
             // this will also disable smoothing for sensors started less than 16 minuttes ago
