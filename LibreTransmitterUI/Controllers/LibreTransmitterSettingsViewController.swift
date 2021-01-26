@@ -267,7 +267,7 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                 } else {
                     cell.detailTextLabel?.text = SettingsTableViewCell.NoValueString
                 }
-                cell.detailTextLabel?.text = isDemoMode ? "demo123" : cgmManager?.sensorFooterChecksums
+                
             }
 
             return cell
