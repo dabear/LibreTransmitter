@@ -109,12 +109,9 @@ struct Measurement: MeasurementProtocol {
     }
 
     static func extractErrorBitField(_ errBitField: Int) -> [MeasurementError]{
-
-        if errBitField == 0 {
-            return [MeasurementError.OK]
-        }
-
-        return MeasurementError.allErrorCodes.filter { (errBitField & $0.rawValue) != 0 }
+        errBitField == 0 ?
+            [MeasurementError.OK] :
+            MeasurementError.allErrorCodes.filter { (errBitField & $0.rawValue) != 0}
 
     }
 
