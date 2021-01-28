@@ -264,10 +264,12 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                 cell.textLabel?.text = LocalizedString("Entry Errors", comment: "Title describing Glucose Reading error codes")
                 if let errors = glucose?.error {
                     cell.detailTextLabel?.text = errors.debugDescription
+                    print("EntryErrors:")
+                    debugPrint(errors)
                 } else {
                     cell.detailTextLabel?.text = SettingsTableViewCell.NoValueString
                 }
-                
+
             }
 
             return cell
