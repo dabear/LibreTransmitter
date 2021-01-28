@@ -191,9 +191,15 @@ extension LibreGlucose {
                 error: trend.error,
                 timestamp: trend.date)
             // if sensor is ripped off body while transmitter is attached, values below 1 might be created
-            // this will also disable smoothing for sensors started less than 16 minuttes ago
+
             if glucose.unsmoothedGlucose > 0 {
                 arr.append(glucose)
+            }
+
+            // Just for expliciticity, if one of the values are 0,
+            // then the rest of the values should not be smoothed
+            if glucose.unsmoothedGlucose <= 0 {
+                shouldSmoothGlucose = false
             }
         }
         //NSLog("dabear:: glucose samples before smoothing: \(String(describing: origarr))")
