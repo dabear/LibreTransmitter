@@ -34,6 +34,7 @@ public protocol LibreTransmitterDelegate: class {
 
     func noLibreTransmitterSelected()
     func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?)
+    func UpdateBadge()
 }
 
 extension LibreTransmitterDelegate {
@@ -42,6 +43,13 @@ extension LibreTransmitterDelegate {
 }
 
 final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, LibreTransmitterDelegate {
+    func UpdateBadge() {
+        os_log("libreTransmitterBadge changed", log: Self.bt_log)
+        dispatchToDelegate { manager in
+            manager.delegate?.UpdateBadge()
+        }
+    }
+    
     func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {
         dispatchToDelegate { manager in
             manager.delegate?.libreManagerDidRestoreState(found: peripherals, connected: to)
@@ -78,6 +86,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             manager.delegate?.libreTransmitterDidUpdate(with: sensorData, and: Device)
         }
     }
+    
 
     // MARK: - Properties
     private var wantsToTerminate = false

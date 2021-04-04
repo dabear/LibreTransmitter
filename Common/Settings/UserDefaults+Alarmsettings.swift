@@ -9,6 +9,7 @@
 import Foundation
 import HealthKit
 
+
 extension UserDefaults {
     private enum Key: String {
         case glucoseSchedules = "no.bjorninge.glucoseschedules"
@@ -27,6 +28,8 @@ extension UserDefaults {
         case mmDangerMode = "no.bjorninge.mmDangerModeActivated"
         case mmShowPhoneBattery = "no.bjorninge.mmShowPhoneBattery"
         case mmShowTransmitterBattery = "no.bjorninge.mmShowTransmitterBattery"
+        
+        case mmShowBadge = "fr.avouspierre.mmShowBadge"
     }
     /*
      case always
@@ -131,6 +134,15 @@ extension UserDefaults {
             set(newValue, forKey: Key.mmShowTransmitterBattery.rawValue)
         }
     }
+    
+    var mmShowBadge: Bool {
+        get {
+            optionalBool(forKey: Key.mmShowBadge.rawValue) ?? true
+        }
+        set {
+            set(newValue, forKey: Key.mmShowBadge.rawValue)
+        }
+    }
 
     var allNotificationToggles: [Bool] {
         [mmAlwaysDisplayGlucose, mmAlertLowBatteryWarning, mmAlertInvalidSensorDetected, mmAlertNewSensorDetected, mmAlertNoSensorDetected, mmAlertWillSoonExpire, mmGlucoseAlarmsVibrate, mmShowPhoneBattery, mmShowTransmitterBattery]
@@ -142,6 +154,7 @@ extension UserDefaults {
         }
         set {
             set(newValue, forKey: Key.mmDangerMode.rawValue)
+            
         }
     }
 

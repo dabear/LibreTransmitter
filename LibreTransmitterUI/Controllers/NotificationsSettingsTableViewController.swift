@@ -8,6 +8,7 @@
 import LoopKit
 import LoopKitUI
 import UIKit
+import LibreTransmitter
 
 import HealthKit
 public class NotificationsSettingsTableViewController: UITableViewController, mmTextFieldViewCellCellDelegate {
@@ -18,17 +19,17 @@ public class NotificationsSettingsTableViewController: UITableViewController, mm
     }
 
     public weak var disappearDelegate: SubViewControllerWillDisappear?
-
+    public var cgmManager: LibreTransmitterManager
     private var glucoseUnit: HKUnit
 
-    public init(glucoseUnit: HKUnit) {
+    public init(cgmManager: LibreTransmitterManager, glucoseUnit: HKUnit) {
         if let savedGlucoseUnit = UserDefaults.standard.mmGlucoseUnit {
             self.glucoseUnit = savedGlucoseUnit
         } else {
             self.glucoseUnit = glucoseUnit
             UserDefaults.standard.mmGlucoseUnit = glucoseUnit
         }
-
+        self.cgmManager = cgmManager
         // todo: save/persist glucoseUnit in init
         // to make it accessible for the non-ui part of this plugin
         self.glucseSegmentsStrings = self.glucoseSegments.map({ $0.localizedShortUnitString })
@@ -72,6 +73,7 @@ public class NotificationsSettingsTableViewController: UITableViewController, mm
         case glucoseVibrate
         case glucseAlarmsAlsoShowBattery
         case glucoseAlarmsShowTransmitterBattery
+        case glucoseBadge
 
         static let count = NotificationsSettingsRow.allCases.count
     }
@@ -147,6 +149,13 @@ public class NotificationsSettingsTableViewController: UITableViewController, mm
     private func notificationGlucoseAlarmsVibrate(_ sender: UISwitch) {
         print("mmGlucoseAlarmsVibrate changed to \(sender.isOn)")
         UserDefaults.standard.mmGlucoseAlarmsVibrate = sender.isOn
+    }
+    
+    @objc
+    private func glucoseBadgeDisplayed(_ sender: UISwitch) {
+        print("mmShowBadge changed to \(sender.isOn)")
+        UserDefaults.standard.mmShowBadge = sender.isOn
+        cgmManager.UpdateBadge()
     }
 
     func mmTextFieldViewCellDidUpdateValue(_ cell: MMTextFieldViewCell, value: String?) {
@@ -285,6 +294,17 @@ public class NotificationsSettingsTableViewController: UITableViewController, mm
             switchCell.toggleIsSelected?.addTarget(self, action: #selector(showTransmitterBatteryChanged(_:)), for: .valueChanged)
             switchCell.contentView.layoutMargins.left = tableView.separatorInset.left
             return switchCell
+        case .glucoseBadge:
+            let switchCell = tableView.dequeueIdentifiableCell(cell: MMSwitchTableViewCell.self, for: indexPath)
+
+            switchCell.toggleIsSelected?.isOn = UserDefaults.standard.mmShowBadge
+    
+
+            switchCell.titleLabel?.text = NSLocalizedString("Glucose Badge", comment: "Display the value of the glucose as a badge of the application")
+
+            switchCell.toggleIsSelected?.addTarget(self, action: #selector(glucoseBadgeDisplayed(_:)), for: .valueChanged)
+            switchCell.contentView.layoutMargins.left = tableView.separatorInset.left
+            return switchCell
         }
     }
 
@@ -326,8 +346,11 @@ public class NotificationsSettingsTableViewController: UITableViewController, mm
             print("selected glucseAlarmsAlsoShowBattery")
         case .glucoseAlarmsShowTransmitterBattery:
             print("selected glucoseAlarmsShowTransmitterBattery")
+        case .glucoseBadge:
+            print("selected glucoseBadge")
         }
 
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+

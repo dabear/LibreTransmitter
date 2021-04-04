@@ -25,6 +25,8 @@ enum NotificationHelper {
         case invalidChecksum = "no.bjorninge.miaomiao.invalidChecksum-notification"
         case calibrationOngoing = "no.bjorninge.miaomiao.calibration-notification"
         case restoredState = "no.bjorninge.miaomiao.state-notification"
+        
+        case glucoseBadge = "fr.avouspierre.show-badge"
     }
 
     public static func vibrateIfNeeded(count: Int = 3) {
@@ -116,7 +118,7 @@ enum NotificationHelper {
             let content = UNMutableNotificationContent()
             content.title = "Invalid libre checksum"
             content.body = "Libre sensor was incorrectly read, CRCs were not valid"
-
+            content.badge = 0
             addRequest(identifier: .invalidChecksum, content: content)
         }
     }
@@ -141,12 +143,39 @@ enum NotificationHelper {
         NSLog("dabear:: glucose alarmtype is \(alarm)")
         // We always send glucose notifications when alarm is active,
         // even if glucose notifications are disabled in the UI
+        
+        if (UserDefaults.standard.mmShowBadge) {
+            NSLog("avous: glucose badge update")
+            sendGlucoseBadge(glucose: glucose)
+        } else {
+            NSLog("avous: remove the badge")
+            removeGlucoseBadge()
+        }
 
         if shouldSend || alarm.isAlarming() {
             sendGlucoseNotitifcation(glucose: glucose, oldValue: oldValue, alarm: alarm, isSnoozed: isSnoozed, trend: trend, showPhoneBattery: shouldShowPhoneBattery, transmitterBattery: transmitterBattery)
         } else {
             NSLog("dabear:: not sending glucose, shouldSend and alarmIsActive was false")
             return
+        }
+    }
+    
+    // send a update of the glucose in the badge of the application
+    public static func sendGlucoseBadge(glucose: LibreGlucose) {
+        ensureCanSendGlucoseNotification { _ in
+            let content = UNMutableNotificationContent()
+            content.badge = NSNumber(value: glucose.glucose)
+            addRequest(identifier: .glucoseBadge, content: content, deleteOld: true)
+        }
+        
+    }
+    
+    // remove the badge of the application
+    public static func removeGlucoseBadge() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.badge = NSNumber(0)
+            addRequest(identifier: .glucoseBadge, content: content, deleteOld: true)
         }
     }
 
@@ -244,7 +273,7 @@ enum NotificationHelper {
             content.sound = .default
             content.title = "Extracting calibrationdata from sensor"
             content.body = calibrationMessage.rawValue
-
+            content.badge = 0
             addRequest(identifier: .calibrationOngoing,
                        content: content,
                        deleteOld: true)
@@ -265,7 +294,7 @@ enum NotificationHelper {
             let content = UNMutableNotificationContent()
             content.title = "No Sensor Detected"
             content.body = "This might be an intermittent problem, but please check that your transmitter is tightly secured over your sensor"
-
+            content.badge = 0
             addRequest(identifier: .noSensorDetected, content: content)
         }
     }
@@ -283,7 +312,7 @@ enum NotificationHelper {
             let content = UNMutableNotificationContent()
             content.title = "New Sensor Detected"
             content.body = "Please wait up to 30 minutes before glucose readings are available!"
-
+            content.badge = 0
             addRequest(identifier: .sensorChange, content: content)
             //content.sound = UNNotificationSound.
 
@@ -305,7 +334,7 @@ enum NotificationHelper {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
             content.title = "Invalid Sensor Detected"
-
+            content.badge = 0
             if !sensorData.isLikelyLibre1FRAM {
                 content.body = "Detected sensor seems not to be a libre 1 sensor!"
             } else if !(sensorData.state == .starting || sensorData.state == .ready) {
@@ -395,7 +424,7 @@ enum NotificationHelper {
             let content = UNMutableNotificationContent()
             content.title = "Sensor Ending Soon"
             content.body = "Current Sensor is Ending soon! Sensor Age: \(sensorData.humanReadableSensorAge)"
-
+            
             addRequest(identifier: .sensorExpire, content: content, deleteOld: true)
         }
     }

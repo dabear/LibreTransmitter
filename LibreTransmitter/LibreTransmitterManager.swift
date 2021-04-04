@@ -70,6 +70,22 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     public func noLibreTransmitterSelected() {
         NotificationHelper.sendNoTransmitterSelectedNotification()
     }
+    
+    
+    public func UpdateBadge() {
+        
+        if (UserDefaults.standard.mmShowBadge) {
+            let glucose = self.latestBackfill
+            NSLog("avous: update badge with \(glucose?.description)")
+            if (glucose != nil){
+                NotificationHelper.sendGlucoseBadge(glucose: glucose!)
+            } 
+        }
+        else {
+            NSLog("avous : Remove Glucose Badge")
+            NotificationHelper.removeGlucoseBadge()
+        }
+    }
 
     public var cgmManagerDelegate: CGMManagerDelegate? {
         get {

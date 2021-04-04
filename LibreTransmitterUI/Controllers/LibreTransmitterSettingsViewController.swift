@@ -592,7 +592,7 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                 controller.disappearDelegate = self
                 show(controller, sender: nil)
             case .glucoseNotifications:
-                let controller = NotificationsSettingsTableViewController(glucoseUnit: self.glucoseUnit)
+                let controller = NotificationsSettingsTableViewController(cgmManager: self.cgmManager!, glucoseUnit: self.glucoseUnit)
                 controller.disappearDelegate = self
                 show(controller, sender: nil)
             case .dangermode:
