@@ -40,7 +40,6 @@
 		27850D0E25672CA60020D109 /* ConcreteGlucoseDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D0B25672CA60020D109 /* ConcreteGlucoseDisplayable.swift */; };
 		27850D1025672CA60020D109 /* LibreGlucose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D0C25672CA60020D109 /* LibreGlucose.swift */; };
 		27850D1225672CA60020D109 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D0D25672CA60020D109 /* NotificationHelper.swift */; };
-		27850D4C25672DFB0020D109 /* CalibrationEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2225672DFB0020D109 /* CalibrationEditTableViewController.swift */; };
 		27850D4D25672DFB0020D109 /* LibreTransmitterSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2325672DFB0020D109 /* LibreTransmitterSettingsViewController.swift */; };
 		27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */; };
 		27850D4F25672DFB0020D109 /* NotificationsSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */; };
@@ -172,7 +171,6 @@
 		27850D0B25672CA60020D109 /* ConcreteGlucoseDisplayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcreteGlucoseDisplayable.swift; sourceTree = "<group>"; };
 		27850D0C25672CA60020D109 /* LibreGlucose.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreGlucose.swift; sourceTree = "<group>"; };
 		27850D0D25672CA60020D109 /* NotificationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
-		27850D2225672DFB0020D109 /* CalibrationEditTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalibrationEditTableViewController.swift; sourceTree = "<group>"; };
 		27850D2325672DFB0020D109 /* LibreTransmitterSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterSettingsViewController.swift; sourceTree = "<group>"; };
 		27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterSetupViewController.swift; sourceTree = "<group>"; };
 		27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -389,7 +387,6 @@
 		27850D2125672DFB0020D109 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				27850D2225672DFB0020D109 /* CalibrationEditTableViewController.swift */,
 				27850D2325672DFB0020D109 /* LibreTransmitterSettingsViewController.swift */,
 				27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */,
 				27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */,
@@ -864,7 +861,6 @@
 				27850D6D25672DFB0020D109 /* BluetoothSelection.swift in Sources */,
 				2793EBE6260BDE43001A35A3 /* CalibrationEditView.swift in Sources */,
 				27850CF225672C0C0020D109 /* LocalizedString.swift in Sources */,
-				27850D4C25672DFB0020D109 /* CalibrationEditTableViewController.swift in Sources */,
 				27850D5C25672DFB0020D109 /* MMTextFieldViewCell2.swift in Sources */,
 				27850CF625672C0C0020D109 /* UserDefaults+Alarmsettings.swift in Sources */,
 				27850D4D25672DFB0020D109 /* LibreTransmitterSettingsViewController.swift in Sources */,
