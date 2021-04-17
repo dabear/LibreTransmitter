@@ -118,8 +118,39 @@ public struct SensorData: Codable {
         }
     }
 
+    enum CalibrationInfoCodingKeys: CodingKey {
+        case i1
+        case i2
+        case i3
+        case i4
+        case i5
+        case i6
+        case isValidForFooterWithReverseCRCs
+
+    }
     //how to use this in a sensible way is still unknown
-    public struct CalibrationInfo: Codable, CustomStringConvertible {
+    public class CalibrationInfo: Codable, CustomStringConvertible, ObservableObject {
+        public required init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CalibrationInfoCodingKeys.self)
+            i1 = try container.decode(Int.self, forKey: .i1)
+            i2 = try container.decode(Int.self, forKey: .i2)
+            i3 = try container.decode(Double.self, forKey: .i3)
+            i4 = try container.decode(Double.self, forKey: .i4)
+            i5 = try container.decode(Double.self, forKey: .i5)
+            i6 = try container.decode(Double.self, forKey: .i6)
+            isValidForFooterWithReverseCRCs = try container.decode(Int.self, forKey: .isValidForFooterWithReverseCRCs)
+        }
+
+        public func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CalibrationInfoCodingKeys.self)
+            try container.encode(i1, forKey: .i1)
+            try container.encode(i2, forKey: .i2)
+            try container.encode(i3, forKey: .i3)
+            try container.encode(i4, forKey: .i4)
+            try container.encode(i5, forKey: .i5)
+            try container.encode(i6, forKey: .i6)
+            try container.encode(isValidForFooterWithReverseCRCs, forKey: .isValidForFooterWithReverseCRCs)
+        }
         public init(i1: Int, i2: Int, i3: Double, i4: Double, i5: Double, i6: Double, isValidForFooterWithReverseCRCs: Int) {
             self.i1 = i1
             self.i2 = i2
@@ -130,14 +161,14 @@ public struct SensorData: Codable {
             self.isValidForFooterWithReverseCRCs = isValidForFooterWithReverseCRCs
         }
 
-      public var i1: Int
-      public var i2: Int
-      public var i3: Double
-      public var i4: Double
-      public var i5: Double
-      public var i6: Double
+        @Published public var i1: Int
+        @Published public var i2: Int
+        @Published public var i3: Double
+        @Published public var i4: Double
+        @Published public var i5: Double
+        @Published public var i6: Double
 
-      public var isValidForFooterWithReverseCRCs: Int
+        @Published public var isValidForFooterWithReverseCRCs: Int
 
       public var description: String {
             "CalibrationInfo(i1: \(i1), i2: \(i2), i3: \(i3), i4: \(i4), isValidForFooterWithReverseCRCs: \(isValidForFooterWithReverseCRCs), i5: \(i5)), i6: \(i6))"

@@ -538,9 +538,13 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                 if UserDefaults.standard.dangerModeActivated {
                     //ok
                     print("user can edit calibrations")
-                    let controller = CalibrationEditTableViewController(cgmManager: self.cgmManager)
+                    /*let controller = CalibrationEditTableViewController(cgmManager: self.cgmManager)
                     controller.disappearDelegate = self
+                    self.show(controller, sender: self)*/
+
+                    let controller = CalibrationEditView.asHostedViewController(cgmManager: self.cgmManager)
                     self.show(controller, sender: self)
+                    
                 } else {
                     self.presentStatus(OKAlertController("Could not access calibration settings, danger mode was not activated!", title: "No can do!"))
                 }
