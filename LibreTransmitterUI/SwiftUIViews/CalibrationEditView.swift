@@ -248,7 +248,7 @@ struct CalibrationEditView: View {
 
             }
             Section {
-                Text("Valid for footer: \(newParams.i6)")
+                Text("Valid for footer: \(newParams.isValidForFooterWithReverseCRCs)")
 
             }
             Section {
