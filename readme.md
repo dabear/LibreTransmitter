@@ -31,7 +31,7 @@ For all supported sensors you need such a transmitter, even for the libre 2 whic
 
 
 # How to build
-It's a dynamic loop plugin. Details here are purposely lacking until I can find the time to do a detailed write-up. I usually build a modified loopworkspace to get this working
+It's a dynamic loop plugin. I usually build a modified loopworkspace to get this working. See the [build.md](./build.md) file for futher instructions
 
 ## Glucose Algorithm
 The GetGlucoseFromRaw.swift file is not included in this repo. You need to explicitly download this file from other sources and add it before you build
