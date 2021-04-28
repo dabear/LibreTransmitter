@@ -133,8 +133,6 @@ public struct CalibrationItem: View  {
         HStack {
             Text("\(description)")
             textFieldWithError
-
-
         }
         .padding(1)
 

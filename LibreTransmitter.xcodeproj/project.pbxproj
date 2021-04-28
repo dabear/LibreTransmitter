@@ -297,6 +297,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		277773B02639F33400431547 /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				277773A62639EF2B00431547 /* BlueButtonStyle.swift */,
+				277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
 		27850B9F256724EE0020D109 /* LibreSensor */ = {
 			isa = PBXGroup;
 			children = (
@@ -481,11 +490,10 @@
 		27850D4825672DFB0020D109 /* SwiftUIViews */ = {
 			isa = PBXGroup;
 			children = (
+				277773B02639F33400431547 /* Styles */,
 				27850D4A25672DFB0020D109 /* SwiftSnoozeView.swift */,
 				27850D4B25672DFB0020D109 /* BluetoothSelection.swift */,
 				2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */,
-				277773A62639EF2B00431547 /* BlueButtonStyle.swift */,
-				277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */,
 			);
 			path = SwiftUIViews;
 			sourceTree = "<group>";
