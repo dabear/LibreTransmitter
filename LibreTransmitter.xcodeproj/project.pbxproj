@@ -12,6 +12,8 @@
 		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
+		277773A72639EF2B00431547 /* BlueButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773A62639EF2B00431547 /* BlueButtonStyle.swift */; };
+		277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */; };
 		27850CE725672C0C0020D109 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CD925672C0C0020D109 /* DataExtensions.swift */; };
 		27850CE925672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CDA25672C0C0020D109 /* TimeIntervalExtensions.swift */; };
 		27850CEA25672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CDA25672C0C0020D109 /* TimeIntervalExtensions.swift */; };
@@ -134,6 +136,8 @@
 
 /* Begin PBXFileReference section */
 		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
+		277773A62639EF2B00431547 /* BlueButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueButtonStyle.swift; sourceTree = "<group>"; };
+		277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTextFieldStyle.swift; sourceTree = "<group>"; };
 		27850BA0256724EF0020D109 /* LibreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreError.swift; sourceTree = "<group>"; };
 		27850BA1256724EF0020D109 /* Calibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calibration.swift; sourceTree = "<group>"; };
 		27850BA2256724EF0020D109 /* LimitedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedQueue.swift; sourceTree = "<group>"; };
@@ -480,6 +484,8 @@
 				27850D4A25672DFB0020D109 /* SwiftSnoozeView.swift */,
 				27850D4B25672DFB0020D109 /* BluetoothSelection.swift */,
 				2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */,
+				277773A62639EF2B00431547 /* BlueButtonStyle.swift */,
+				277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */,
 			);
 			path = SwiftUIViews;
 			sourceTree = "<group>";
@@ -869,6 +875,7 @@
 				27850CF425672C0C0020D109 /* UserDefaults+GlucoseSettings.swift in Sources */,
 				27850D5325672DFB0020D109 /* GlucoseAlarmInputCell.swift in Sources */,
 				27850CEC25672C0C0020D109 /* DoubleExtensions.swift in Sources */,
+				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
 				27850D6025672DFB0020D109 /* SegmentViewCell.swift in Sources */,
 				27850D5525672DFB0020D109 /* CustomDatePicker.swift in Sources */,
 				4325E9D3210E6ADA00969CE5 /* IdentifiableClass.swift in Sources */,
@@ -879,6 +886,7 @@
 				27850CFA25672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
 				27850CF025672C0C0020D109 /* CollectionExtensions.swift in Sources */,
 				27850D5225672DFB0020D109 /* GlucoseSettingsTableViewController.swift in Sources */,
+				277773A72639EF2B00431547 /* BlueButtonStyle.swift in Sources */,
 				27850D4F25672DFB0020D109 /* NotificationsSettingsTableViewController.swift in Sources */,
 				27850CFC25672C0C0020D109 /* GlucoseSchedules.swift in Sources */,
 			);

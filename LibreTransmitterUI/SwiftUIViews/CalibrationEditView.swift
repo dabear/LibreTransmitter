@@ -32,14 +32,7 @@ fileprivate var intNumberFormatter: NumberFormatter = {
 }()
 
 
-private struct ErrorTextFieldStyle : TextFieldStyle {
-    public func _body(configuration: TextField<Self._Label>) -> some View {
-        configuration
-            .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .stroke(Color.red,  lineWidth: 3))
-    }
-}
+
 
 public struct CalibrationItem: View  {
 
@@ -59,12 +52,18 @@ public struct CalibrationItem: View  {
         intNumberFormatter.string(from: dbl as NSNumber)
     }
 
-    @State private(set) var hasError = false
+    @State private(set) var hasError = false {
+        didSet {
+            if oldValue != hasError {
+                formstate.childrenErrorStatus[description] = hasError
+            }
+        }
+    }
+
+    @ObservedObject fileprivate var formstate : CalibrationState = .shared
 
 
     var textField: some View {
-
-
 
         TextField("Calibration item \(description)", text: $numericString)
             .onReceive(Just(numericString)) { value in
@@ -73,8 +72,6 @@ public struct CalibrationItem: View  {
 
 
                 guard let newValue = Self.localeTextToDouble(value) else {
-                    //consider this or coloring view to indicate error
-                    //self.numericString = "\(numericValue)"
                     print("onreceive guard failed")
                     hasError = true
 
@@ -117,9 +114,6 @@ public struct CalibrationItem: View  {
 
     }
 
-
-
-
     var textFieldWithError : some View{
         textField
         .overlay(
@@ -154,8 +148,6 @@ public struct CalibrationItem: View  {
     }
 
 
-   
-
     init(description: String, numericValue wrapper:  Binding<Int>, isReadOnly:Bool=false) {
         self.description = description
         self.requiresIntegerValue = true
@@ -179,7 +171,6 @@ public struct CalibrationItem: View  {
     @State private var numericString: String  = ""
 
 
-
 }
 
 private struct ListHeader: View {
@@ -189,23 +180,9 @@ private struct ListHeader: View {
             Text("Edit Calibration data")
         }
 
-
     }
 }
-fileprivate typealias Params = SensorData.CalibrationInfo
 
-struct BlueButtonStyle: ButtonStyle {
-
-  func makeBody(configuration: Self.Configuration) -> some View {
-    configuration.label
-        .font(.headline)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        .contentShape(Rectangle())
-        .padding()
-        .foregroundColor(configuration.isPressed ? Color.white.opacity(0.5) : Color.white)
-        .listRowBackground(configuration.isPressed ? Color.blue.opacity(0.5) : Color.blue)
-  }
-}
 
 struct CalibrationMessage: Identifiable {
     var id: String { title }
@@ -213,10 +190,24 @@ struct CalibrationMessage: Identifiable {
     let message: String
 }
 
+// Decided to use shared instance instead of .environmentObject()
+fileprivate  class CalibrationState: ObservableObject {
+    @Published var childrenErrorStatus: [String:Bool] = [:]
+
+    var hasAnyError : Bool {
+        !childrenErrorStatus.isEmpty && childrenErrorStatus.values.contains(true)
+    }
+
+    static var shared = CalibrationState()
+}
+
+
 struct CalibrationEditView: View {
+    typealias Params = SensorData.CalibrationInfo
 
     static func asHostedViewController(cgmManager: LibreTransmitterManager?)-> UIHostingController<Self> {
-        UIHostingController(rootView: self.init(cgmManager: cgmManager, debugMode: false))
+        UIHostingController(rootView:self.init(cgmManager: cgmManager, debugMode: false) )
+
     }
 
 
@@ -232,6 +223,12 @@ struct CalibrationEditView: View {
         return !hasExistingParams
     }
 
+
+    @ObservedObject fileprivate var formstate : CalibrationState = .shared
+
+
+
+
     var body: some View {
         List {
             Section {
@@ -244,17 +241,24 @@ struct CalibrationEditView: View {
                 CalibrationItem(description: "i4", numericValue: $newParams.i4, isReadOnly: isReadOnly)
                 CalibrationItem(description: "i5", numericValue: $newParams.i5, isReadOnly: isReadOnly)
                 CalibrationItem(description: "i6", numericValue: $newParams.i6, isReadOnly: isReadOnly)
-
-
             }
             Section {
                 Text("Valid for footer: \(newParams.isValidForFooterWithReverseCRCs)")
+
+
 
             }
             Section {
                 Button(action: {
                     print("calibrationsaving in progress")
+
+
                     self.isPressed.toggle()
+
+                    if formstate.hasAnyError {
+                        presentableStatus = CalibrationMessage(title: "Could not save", message:"Some of the fields was not correctly entered")
+                        return
+                    }
 
                     if isReadOnly {
                         presentableStatus = CalibrationMessage(title: "Could not save", message:"Calibration parameters are readonly and cannot be saved")
@@ -282,6 +286,7 @@ struct CalibrationEditView: View {
 
             }
         }
+
     }
 
     public var cgmManager: LibreTransmitterManager!
@@ -311,6 +316,9 @@ struct CalibrationEditView: View {
 
 struct CalibrationEditView_Previews: PreviewProvider {
     static var previews: some View {
+        //var testData = FormState.shared
+        //testData.childStates["i1"] = true
         CalibrationEditView(cgmManager: nil, debugMode: true)
+
     }
 }
