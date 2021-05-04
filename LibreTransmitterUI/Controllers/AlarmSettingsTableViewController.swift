@@ -8,6 +8,7 @@
 import LoopKit
 import LoopKitUI
 import UIKit
+import SwiftUI
 
 import HealthKit
 
@@ -36,26 +37,33 @@ public protocol SubViewControllerWillDisappear: class {
     func onDisappear()
 }
 
-public class AlarmSettingsTableViewController: UITableViewController, AlarmTimeInputCellDelegate, GlucoseAlarmInputCellDelegate, CustomDatePickerDelegate { // LFTimePickerDelegate,
+public class AlarmSettingsTableViewController: UITableViewController, AlarmTimeInputCellDelegate, GlucoseAlarmInputCellDelegate, CustomDataPickerDelegate {
+    func pickerDidPickValidRange() {
 
-    func CustomDatePickerDelegateDidTapDone(fromComponent: DateComponents?, toComponents: DateComponents?) {
-        print("alertsettings, picker was set to: from:\(String(describing: fromComponent)), to: \(String(describing: toComponents))")
+        
+        print("alertsettings, swiftui picker tap triggered")
 
-        //datepickerSender?.minValue = start
-        //datepickerSender?.maxValue = end
-        datepickerSender?.minComponents = fromComponent
+        print("from: \(String(describing:scheduleState.startComponents)) to: \(String(describing:scheduleState.endComponents))")
+
+
+
+        guard let fromComponents = scheduleState.startComponents, let toComponents = scheduleState.endComponents else {
+            print("could not retrieve schedule start and end from child view")
+            return
+        }
+
+        datepickerSender?.minComponents = fromComponents
         datepickerSender?.maxComponents = toComponents
 
         if let index = datepickerSender?.tag, let schedule = glucoseSchedules?.schedules.safeIndexAt(index, default: GlucoseSchedule()) {
-            schedule.from = fromComponent
+            schedule.from = fromComponents
             schedule.to = toComponents
             schedule.enabled = datepickerSender?.toggleIsSelected.isOn
         }
+
+
     }
 
-    func CustomDatePickerDelegateDidTapCancel() {
-        print("alertsettings: picker was cancelled")
-    }
 
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -95,41 +103,32 @@ public class AlarmSettingsTableViewController: UITableViewController, AlarmTimeI
     }
 
     private var datepickerSender: AlarmTimeInputRangeCell?
-    /*public func didPickTime(_ start: String, end: String, startComponents: DateComponents?, endComponents: DateComponents?) {
-        NSLog("YES, TIME WAS PICKED")
-        print(startComponents)
-        print(endComponents)
-        
-        //datepickerSender?.minValue = start
-        //datepickerSender?.maxValue = end
-        datepickerSender?.minComponents = startComponents
-        datepickerSender?.maxComponents = endComponents
-        
-        if let index = datepickerSender?.tag, let schedule = glucoseSchedules?.schedules.safeIndexAt(index, default: GlucoseSchedule()) {
-            schedule.from = startComponents
-            schedule.to = endComponents
-            schedule.enabled = datepickerSender?.toggleIsSelected.isOn
-            
-            
-        }
-    }*/
+
 
     private var glucoseUnit: HKUnit
     public weak var delegate: AlarmSettingsTableViewControllerDelegate?
 
+
+    private var picker: UIHostingController<AnyView>!
+
+    
+
+    var scheduleState: AlarmTimeCellExternalState!
     func AlarmTimeInputRangeCellDidTouch(_ cell: AlarmTimeInputRangeCell) {
         print("dabear:: AlarmTimeInputRangeCellDidTouch called")
-        //1. Create a LFTimePickerController
-        //let timePicker = LFTimePickerController()
 
-        //2. Present the timePicker
-        //self.navigationController?.pushViewController(timePicker, animated: true)
-        //self.navigationController?.show(timePicker, sender: cell)
-        let timePicker = CustomDatePickerViewController()
-        show(timePicker, sender: cell)
+        scheduleState = AlarmTimeCellExternalState()
 
-        timePicker.delegate = self
+        var tempPicker = CustomDataPickerView()
+        tempPicker.delegate = self
+
+        picker = UIHostingController(rootView: AnyView(tempPicker.environmentObject(scheduleState)))
+
         self.datepickerSender = cell
+        show(picker, sender: cell)
+
+        return
+        
     }
 
     public var isReadOnly = false

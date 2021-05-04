@@ -14,6 +14,7 @@
 		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		277773A72639EF2B00431547 /* BlueButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773A62639EF2B00431547 /* BlueButtonStyle.swift */; };
 		277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */; };
+		277773B62639F51300431547 /* CustomDataPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773B52639F51300431547 /* CustomDataPickerView.swift */; };
 		27850CE725672C0C0020D109 /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CD925672C0C0020D109 /* DataExtensions.swift */; };
 		27850CE925672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CDA25672C0C0020D109 /* TimeIntervalExtensions.swift */; };
 		27850CEA25672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850CDA25672C0C0020D109 /* TimeIntervalExtensions.swift */; };
@@ -50,8 +51,6 @@
 		27850D5225672DFB0020D109 /* GlucoseSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */; };
 		27850D5325672DFB0020D109 /* GlucoseAlarmInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2B25672DFB0020D109 /* GlucoseAlarmInputCell.swift */; };
 		27850D5425672DFB0020D109 /* GlucoseAlarmInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D2C25672DFB0020D109 /* GlucoseAlarmInputCell.xib */; };
-		27850D5525672DFB0020D109 /* CustomDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2E25672DFB0020D109 /* CustomDatePicker.swift */; };
-		27850D5625672DFB0020D109 /* CustomDatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2F25672DFB0020D109 /* CustomDatePickerViewController.swift */; };
 		27850D5725672DFB0020D109 /* MMTextFieldViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */; };
 		27850D5825672DFB0020D109 /* MMSwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */; };
 		27850D5925672DFB0020D109 /* MMTextFieldViewCell2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */; };
@@ -138,6 +137,7 @@
 		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
 		277773A62639EF2B00431547 /* BlueButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueButtonStyle.swift; sourceTree = "<group>"; };
 		277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTextFieldStyle.swift; sourceTree = "<group>"; };
+		277773B52639F51300431547 /* CustomDataPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDataPickerView.swift; sourceTree = "<group>"; };
 		27850BA0256724EF0020D109 /* LibreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreError.swift; sourceTree = "<group>"; };
 		27850BA1256724EF0020D109 /* Calibration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calibration.swift; sourceTree = "<group>"; };
 		27850BA2256724EF0020D109 /* LimitedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedQueue.swift; sourceTree = "<group>"; };
@@ -183,8 +183,6 @@
 		27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlucoseSettingsTableViewController.swift; sourceTree = "<group>"; };
 		27850D2B25672DFB0020D109 /* GlucoseAlarmInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlucoseAlarmInputCell.swift; sourceTree = "<group>"; };
 		27850D2C25672DFB0020D109 /* GlucoseAlarmInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlucoseAlarmInputCell.xib; sourceTree = "<group>"; };
-		27850D2E25672DFB0020D109 /* CustomDatePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDatePicker.swift; sourceTree = "<group>"; };
-		27850D2F25672DFB0020D109 /* CustomDatePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDatePickerViewController.swift; sourceTree = "<group>"; };
 		27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell.xib; sourceTree = "<group>"; };
 		27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMSwitchTableViewCell.xib; sourceTree = "<group>"; };
 		27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell2.xib; sourceTree = "<group>"; };
@@ -306,6 +304,14 @@
 			path = Styles;
 			sourceTree = "<group>";
 		};
+		277773B42639F4E300431547 /* AlarmSettings */ = {
+			isa = PBXGroup;
+			children = (
+				277773B52639F51300431547 /* CustomDataPickerView.swift */,
+			);
+			path = AlarmSettings;
+			sourceTree = "<group>";
+		};
 		27850B9F256724EE0020D109 /* LibreSensor */ = {
 			isa = PBXGroup;
 			children = (
@@ -414,7 +420,6 @@
 			isa = PBXGroup;
 			children = (
 				27850D2A25672DFB0020D109 /* GlucoseAlarmInputCell */,
-				27850D2D25672DFB0020D109 /* CustomDatePicker */,
 				27850D3025672DFB0020D109 /* mmSwitchTableViewCell */,
 				27850D3725672DFB0020D109 /* AlarmTimeInputRangeCell */,
 				27850D3A25672DFB0020D109 /* NibLoadable.swift */,
@@ -430,15 +435,6 @@
 				27850D2C25672DFB0020D109 /* GlucoseAlarmInputCell.xib */,
 			);
 			path = GlucoseAlarmInputCell;
-			sourceTree = "<group>";
-		};
-		27850D2D25672DFB0020D109 /* CustomDatePicker */ = {
-			isa = PBXGroup;
-			children = (
-				27850D2E25672DFB0020D109 /* CustomDatePicker.swift */,
-				27850D2F25672DFB0020D109 /* CustomDatePickerViewController.swift */,
-			);
-			path = CustomDatePicker;
 			sourceTree = "<group>";
 		};
 		27850D3025672DFB0020D109 /* mmSwitchTableViewCell */ = {
@@ -494,6 +490,7 @@
 				27850D4A25672DFB0020D109 /* SwiftSnoozeView.swift */,
 				27850D4B25672DFB0020D109 /* BluetoothSelection.swift */,
 				2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */,
+				277773B42639F4E300431547 /* AlarmSettings */,
 			);
 			path = SwiftUIViews;
 			sourceTree = "<group>";
@@ -869,7 +866,6 @@
 				4325E9D5210E6B4400969CE5 /* UIColor.swift in Sources */,
 				27850CEA25672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */,
 				27850D8B25672ECA0020D109 /* BluetoothSearch.swift in Sources */,
-				27850D5625672DFB0020D109 /* CustomDatePickerViewController.swift in Sources */,
 				27850DAC25672F3E0020D109 /* LimitedQueue.swift in Sources */,
 				27850D6C25672DFB0020D109 /* SwiftSnoozeView.swift in Sources */,
 				27850D6D25672DFB0020D109 /* BluetoothSelection.swift in Sources */,
@@ -885,7 +881,7 @@
 				27850CEC25672C0C0020D109 /* DoubleExtensions.swift in Sources */,
 				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
 				27850D6025672DFB0020D109 /* SegmentViewCell.swift in Sources */,
-				27850D5525672DFB0020D109 /* CustomDatePicker.swift in Sources */,
+				277773B62639F51300431547 /* CustomDataPickerView.swift in Sources */,
 				4325E9D3210E6ADA00969CE5 /* IdentifiableClass.swift in Sources */,
 				27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */,
 				27850D8525672E920020D109 /* TableViewExtensions.swift in Sources */,
@@ -1027,7 +1023,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LOCALIZED_STRING_MACRO_NAMES = (
 					NSLocalizedString,
 					CFLocalizedString,
@@ -1090,7 +1086,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LOCALIZED_STRING_MACRO_NAMES = (
 					NSLocalizedString,
 					CFLocalizedString,
@@ -1124,6 +1120,7 @@
 				);
 				INFOPLIST_FILE = LibreTransmitter/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mddub.LibreTransmitter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1148,6 +1145,7 @@
 				);
 				INFOPLIST_FILE = LibreTransmitter/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mddub.LibreTransmitter;
 				PRODUCT_NAME = "$(TARGET_NAME)";
