@@ -55,16 +55,12 @@
 		27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2625672DFB0020D109 /* AlertControllers.swift */; };
 		27850D5125672DFB0020D109 /* AlarmSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2725672DFB0020D109 /* AlarmSettingsTableViewController.swift */; };
 		27850D5225672DFB0020D109 /* GlucoseSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */; };
-		27850D5325672DFB0020D109 /* GlucoseAlarmInputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2B25672DFB0020D109 /* GlucoseAlarmInputCell.swift */; };
-		27850D5425672DFB0020D109 /* GlucoseAlarmInputCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D2C25672DFB0020D109 /* GlucoseAlarmInputCell.xib */; };
 		27850D5725672DFB0020D109 /* MMTextFieldViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */; };
 		27850D5825672DFB0020D109 /* MMSwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */; };
 		27850D5925672DFB0020D109 /* MMTextFieldViewCell2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */; };
 		27850D5A25672DFB0020D109 /* MMSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3425672DFB0020D109 /* MMSwitchTableViewCell.swift */; };
 		27850D5B25672DFB0020D109 /* MMTextFieldViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3525672DFB0020D109 /* MMTextFieldViewCell.swift */; };
 		27850D5C25672DFB0020D109 /* MMTextFieldViewCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3625672DFB0020D109 /* MMTextFieldViewCell2.swift */; };
-		27850D5D25672DFB0020D109 /* AlarmTimeInputRangeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3825672DFB0020D109 /* AlarmTimeInputRangeCell.swift */; };
-		27850D5E25672DFB0020D109 /* AlarmTimeInputRangeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3925672DFB0020D109 /* AlarmTimeInputRangeCell.xib */; };
 		27850D5F25672DFB0020D109 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3A25672DFB0020D109 /* NibLoadable.swift */; };
 		27850D6025672DFB0020D109 /* SegmentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3C25672DFB0020D109 /* SegmentViewCell.swift */; };
 		27850D6125672DFB0020D109 /* SegmentViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3D25672DFB0020D109 /* SegmentViewCell.xib */; };
@@ -193,16 +189,12 @@
 		27850D2625672DFB0020D109 /* AlertControllers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllers.swift; sourceTree = "<group>"; };
 		27850D2725672DFB0020D109 /* AlarmSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmSettingsTableViewController.swift; sourceTree = "<group>"; };
 		27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlucoseSettingsTableViewController.swift; sourceTree = "<group>"; };
-		27850D2B25672DFB0020D109 /* GlucoseAlarmInputCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlucoseAlarmInputCell.swift; sourceTree = "<group>"; };
-		27850D2C25672DFB0020D109 /* GlucoseAlarmInputCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GlucoseAlarmInputCell.xib; sourceTree = "<group>"; };
 		27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell.xib; sourceTree = "<group>"; };
 		27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMSwitchTableViewCell.xib; sourceTree = "<group>"; };
 		27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell2.xib; sourceTree = "<group>"; };
 		27850D3425672DFB0020D109 /* MMSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		27850D3525672DFB0020D109 /* MMTextFieldViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMTextFieldViewCell.swift; sourceTree = "<group>"; };
 		27850D3625672DFB0020D109 /* MMTextFieldViewCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMTextFieldViewCell2.swift; sourceTree = "<group>"; };
-		27850D3825672DFB0020D109 /* AlarmTimeInputRangeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmTimeInputRangeCell.swift; sourceTree = "<group>"; };
-		27850D3925672DFB0020D109 /* AlarmTimeInputRangeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlarmTimeInputRangeCell.xib; sourceTree = "<group>"; };
 		27850D3A25672DFB0020D109 /* NibLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
 		27850D3C25672DFB0020D109 /* SegmentViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentViewCell.swift; sourceTree = "<group>"; };
 		27850D3D25672DFB0020D109 /* SegmentViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SegmentViewCell.xib; sourceTree = "<group>"; };
@@ -444,22 +436,11 @@
 		27850D2925672DFB0020D109 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				27850D2A25672DFB0020D109 /* GlucoseAlarmInputCell */,
 				27850D3025672DFB0020D109 /* mmSwitchTableViewCell */,
-				27850D3725672DFB0020D109 /* AlarmTimeInputRangeCell */,
 				27850D3A25672DFB0020D109 /* NibLoadable.swift */,
 				27850D3B25672DFB0020D109 /* SegmentView */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		27850D2A25672DFB0020D109 /* GlucoseAlarmInputCell */ = {
-			isa = PBXGroup;
-			children = (
-				27850D2B25672DFB0020D109 /* GlucoseAlarmInputCell.swift */,
-				27850D2C25672DFB0020D109 /* GlucoseAlarmInputCell.xib */,
-			);
-			path = GlucoseAlarmInputCell;
 			sourceTree = "<group>";
 		};
 		27850D3025672DFB0020D109 /* mmSwitchTableViewCell */ = {
@@ -473,15 +454,6 @@
 				27850D3625672DFB0020D109 /* MMTextFieldViewCell2.swift */,
 			);
 			path = mmSwitchTableViewCell;
-			sourceTree = "<group>";
-		};
-		27850D3725672DFB0020D109 /* AlarmTimeInputRangeCell */ = {
-			isa = PBXGroup;
-			children = (
-				27850D3825672DFB0020D109 /* AlarmTimeInputRangeCell.swift */,
-				27850D3925672DFB0020D109 /* AlarmTimeInputRangeCell.xib */,
-			);
-			path = AlarmTimeInputRangeCell;
 			sourceTree = "<group>";
 		};
 		27850D3B25672DFB0020D109 /* SegmentView */ = {
@@ -789,14 +761,12 @@
 				27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */,
 				27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */,
 				27850D6425672DFB0020D109 /* libresensor.png in Resources */,
-				27850D5E25672DFB0020D109 /* AlarmTimeInputRangeCell.xib in Resources */,
 				27850D5925672DFB0020D109 /* MMTextFieldViewCell2.xib in Resources */,
 				27850D6625672DFB0020D109 /* icons8-slide-up-50.png in Resources */,
 				27850D5825672DFB0020D109 /* MMSwitchTableViewCell.xib in Resources */,
 				27850D5725672DFB0020D109 /* MMTextFieldViewCell.xib in Resources */,
 				27850D6525672DFB0020D109 /* bubble.png in Resources */,
 				27850D6A25672DFB0020D109 /* icons8-down-arrow-50.png in Resources */,
-				27850D5425672DFB0020D109 /* GlucoseAlarmInputCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,7 +854,6 @@
 				27850D0025672C0C0020D109 /* MessagePassing.swift in Sources */,
 				27850CFE25672C0C0020D109 /* HKUnit.swift in Sources */,
 				27850D5B25672DFB0020D109 /* MMTextFieldViewCell.swift in Sources */,
-				27850D5D25672DFB0020D109 /* AlarmTimeInputRangeCell.swift in Sources */,
 				27850D7925672E5D0020D109 /* CGFLoat+Double.swift in Sources */,
 				27850D5A25672DFB0020D109 /* MMSwitchTableViewCell.swift in Sources */,
 				27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */,
@@ -908,7 +877,6 @@
 				27850CEE25672C0C0020D109 /* DateExtensions.swift in Sources */,
 				27850CF425672C0C0020D109 /* UserDefaults+GlucoseSettings.swift in Sources */,
 				275EC99D265AFAF30043210E /* DisappearDelegate.swift in Sources */,
-				27850D5325672DFB0020D109 /* GlucoseAlarmInputCell.swift in Sources */,
 				27850CEC25672C0C0020D109 /* DoubleExtensions.swift in Sources */,
 				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
 				27850D6025672DFB0020D109 /* SegmentViewCell.swift in Sources */,
