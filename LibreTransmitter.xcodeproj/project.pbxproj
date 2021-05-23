@@ -53,7 +53,6 @@
 		27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */; };
 		27850D4F25672DFB0020D109 /* NotificationsSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */; };
 		27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2625672DFB0020D109 /* AlertControllers.swift */; };
-		27850D5125672DFB0020D109 /* AlarmSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2725672DFB0020D109 /* AlarmSettingsTableViewController.swift */; };
 		27850D5225672DFB0020D109 /* GlucoseSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */; };
 		27850D5725672DFB0020D109 /* MMTextFieldViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */; };
 		27850D5825672DFB0020D109 /* MMSwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */; };
@@ -187,7 +186,6 @@
 		27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterSetupViewController.swift; sourceTree = "<group>"; };
 		27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsTableViewController.swift; sourceTree = "<group>"; };
 		27850D2625672DFB0020D109 /* AlertControllers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllers.swift; sourceTree = "<group>"; };
-		27850D2725672DFB0020D109 /* AlarmSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmSettingsTableViewController.swift; sourceTree = "<group>"; };
 		27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlucoseSettingsTableViewController.swift; sourceTree = "<group>"; };
 		27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell.xib; sourceTree = "<group>"; };
 		27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMSwitchTableViewCell.xib; sourceTree = "<group>"; };
@@ -427,7 +425,6 @@
 				27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */,
 				27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */,
 				27850D2625672DFB0020D109 /* AlertControllers.swift */,
-				27850D2725672DFB0020D109 /* AlarmSettingsTableViewController.swift */,
 				27850D2825672DFB0020D109 /* GlucoseSettingsTableViewController.swift */,
 			);
 			path = Controllers;
@@ -884,7 +881,6 @@
 				4325E9D3210E6ADA00969CE5 /* IdentifiableClass.swift in Sources */,
 				27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */,
 				27850D8525672E920020D109 /* TableViewExtensions.swift in Sources */,
-				27850D5125672DFB0020D109 /* AlarmSettingsTableViewController.swift in Sources */,
 				43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */,
 				27850CFA25672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
 				27850CF025672C0C0020D109 /* CollectionExtensions.swift in Sources */,
