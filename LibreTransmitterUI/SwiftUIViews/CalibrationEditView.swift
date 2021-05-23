@@ -12,164 +12,8 @@ import LibreTransmitter
 
 
 
-fileprivate var valueNumberFormatter: NumberFormatter = {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .decimal
-    formatter.locale = Locale.current
-    formatter.minimumFractionDigits = 1
-
-    return formatter
-}()
-
-fileprivate var intNumberFormatter: NumberFormatter = {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .none
-    formatter.locale = Locale.current
-    formatter.minimumFractionDigits = 1
-    formatter.maximumFractionDigits = 0
-
-    return formatter
-}()
 
 
-
-
-public struct CalibrationItem: View  {
-
-
-
-    static func localeTextToDouble(_ text: String) -> Double? {
-        valueNumberFormatter.number(from: text)?.doubleValue
-    }
-    static func doubleToLocateText(_ dbl: Double) -> String? {
-        valueNumberFormatter.string(from: dbl as NSNumber)
-    }
-
-    static func localeTextToInt(_ text: String) -> Int? {
-        intNumberFormatter.number(from: text)?.intValue
-    }
-    static func intToLocateText(_ dbl: Double) -> String? {
-        intNumberFormatter.string(from: dbl as NSNumber)
-    }
-
-    @State private(set) var hasError = false {
-        didSet {
-            if oldValue != hasError {
-                formstate.childrenErrorStatus[description] = hasError
-            }
-        }
-    }
-
-    @ObservedObject fileprivate var formstate : CalibrationState = .shared
-
-
-    var textField: some View {
-
-        TextField("Calibration item \(description)", text: $numericString)
-            .onReceive(Just(numericString)) { value in
-
-                print("onreceive called")
-
-
-                guard let newValue = Self.localeTextToDouble(value) else {
-                    print("onreceive guard failed")
-                    hasError = true
-
-                    return
-                }
-
-                let isInteger = newValue.truncatingRemainder(dividingBy: 1.0) == 0.0
-
-                if requiresIntegerValue && !isInteger {
-                    //consider this or coloring view to indicate error
-                    //self.numericString = "\(numericValue)"
-                    hasError = true
-                    return
-
-                }
-
-                if self.numericValue != newValue {
-                    self.numericValue = newValue
-                }
-
-                hasError = false
-
-
-
-        }
-       .onAppear {
-            if requiresIntegerValue {
-                self.numericString = Self.intToLocateText(numericValue) ?? "unknown"
-            } else {
-                self.numericString = Self.doubleToLocateText(numericValue) ?? "unknown"
-            }
-        }
-        .textFieldStyle(RoundedBorderTextFieldStyle())
-        .disableAutocorrection(true)
-        .keyboardType(.decimalPad)
-        .border(Color(UIColor.separator))
-        .disabled(isReadOnly)
-
-
-
-    }
-
-    var textFieldWithError : some View{
-        textField
-        .overlay(
-            VStack {
-                if hasError {
-                    Rectangle()
-                    .stroke(Color.red, lineWidth: 1)
-                } else {
-                    EmptyView()
-                }
-
-            }
-        )
-    }
-
-    public var body: some View {
-        HStack {
-            Text("\(description)")
-            textFieldWithError
-        }
-        .padding(1)
-
-    }
-
-    init(description: String, numericValue:  Binding<Double>, isReadOnly:Bool=false ) {
-        self.description = description
-        self._numericValue = numericValue
-        self.requiresIntegerValue = false
-        self.isReadOnly = isReadOnly
-    }
-
-
-    init(description: String, numericValue wrapper:  Binding<Int>, isReadOnly:Bool=false) {
-        self.description = description
-        self.requiresIntegerValue = true
-        self.isReadOnly = isReadOnly
-
-
-        //allows an int to behave as a double, should be just fine in most cases
-        let bd = Binding<Double>(get: { Double(wrapper.wrappedValue) },
-                              set: { wrapper.wrappedValue = Int($0) })
-        self._numericValue = bd
-
-
-    }
-
-    var description: String
-    var isReadOnly: Bool = false
-
-    var requiresIntegerValue = false
-    //numericvalue assumes that all ints can be encoded as doubles, which might not be true always though.
-    @Binding var numericValue: Double
-    @State private var numericString: String  = ""
-
-
-}
 
 private struct ListHeader: View {
     var body: some View {
@@ -181,23 +25,6 @@ private struct ListHeader: View {
     }
 }
 
-
-struct CalibrationMessage: Identifiable {
-    var id: String { title }
-    let title: String
-    let message: String
-}
-
-// Decided to use shared instance instead of .environmentObject()
-fileprivate  class CalibrationState: ObservableObject {
-    @Published var childrenErrorStatus: [String:Bool] = [:]
-
-    var hasAnyError : Bool {
-        !childrenErrorStatus.isEmpty && childrenErrorStatus.values.contains(true)
-    }
-
-    static var shared = CalibrationState()
-}
 
 
 struct CalibrationEditView: View {
@@ -211,7 +38,7 @@ struct CalibrationEditView: View {
 
     @State private var isPressed = false
 
-    @State private var presentableStatus: CalibrationMessage?
+    @State private var presentableStatus: StatusMessage?
 
     public var isReadOnly : Bool {
         if debugMode {
@@ -222,7 +49,7 @@ struct CalibrationEditView: View {
     }
 
 
-    @ObservedObject fileprivate var formstate : CalibrationState = .shared
+    @ObservedObject fileprivate var formstate = FormErrorState.shared
 
 
 
@@ -233,12 +60,12 @@ struct CalibrationEditView: View {
                 ListHeader()
             }
             Section {
-                CalibrationItem(description: "i1", numericValue: $newParams.i1, isReadOnly: isReadOnly)
-                CalibrationItem(description: "i2", numericValue: $newParams.i2, isReadOnly: isReadOnly)
-                CalibrationItem(description: "i3", numericValue: $newParams.i3, isReadOnly: isReadOnly)
-                CalibrationItem(description: "i4", numericValue: $newParams.i4, isReadOnly: isReadOnly)
-                CalibrationItem(description: "i5", numericValue: $newParams.i5, isReadOnly: isReadOnly)
-                CalibrationItem(description: "i6", numericValue: $newParams.i6, isReadOnly: isReadOnly)
+                NumericTextField(description: "i1", showDescription: true, numericValue: $newParams.i1, isReadOnly: isReadOnly)
+                NumericTextField(description: "i2", showDescription: true, numericValue: $newParams.i2, isReadOnly: isReadOnly)
+                NumericTextField(description: "i3", showDescription: true, numericValue: $newParams.i3, isReadOnly: isReadOnly)
+                NumericTextField(description: "i4", showDescription: true, numericValue: $newParams.i4, isReadOnly: isReadOnly)
+                NumericTextField(description: "i5", showDescription: true, numericValue: $newParams.i5, isReadOnly: isReadOnly)
+                NumericTextField(description: "i6", showDescription: true, numericValue: $newParams.i6, isReadOnly: isReadOnly)
             }
             Section {
                 Text("Valid for footer: \(newParams.isValidForFooterWithReverseCRCs)")
@@ -254,12 +81,12 @@ struct CalibrationEditView: View {
                     self.isPressed.toggle()
 
                     if formstate.hasAnyError {
-                        presentableStatus = CalibrationMessage(title: "Could not save", message:"Some of the fields was not correctly entered")
+                        presentableStatus = StatusMessage(title: "Could not save", message:"Some of the fields was not correctly entered")
                         return
                     }
 
                     if isReadOnly {
-                        presentableStatus = CalibrationMessage(title: "Could not save", message:"Calibration parameters are readonly and cannot be saved")
+                        presentableStatus = StatusMessage(title: "Could not save", message:"Calibration parameters are readonly and cannot be saved")
                         return
                     }
 
@@ -267,10 +94,10 @@ struct CalibrationEditView: View {
                         try self.cgmManager?.keychain.setLibreNativeCalibrationData(newParams)
                         print("calibrationsaving completed")
 
-                        presentableStatus = CalibrationMessage(title: "OK", message: "Calibrations saved!")
+                        presentableStatus = StatusMessage(title: "OK", message: "Calibrations saved!")
                     } catch {
                         print("error: \(error.localizedDescription)")
-                        presentableStatus = CalibrationMessage(title: "Calibration error", message:"Calibrations could not be saved, Check that footer crc is non-zero and that all values have sane defaults")
+                        presentableStatus = StatusMessage(title: "Calibration error", message:"Calibrations could not be saved, Check that footer crc is non-zero and that all values have sane defaults")
                     }
 
 

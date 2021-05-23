@@ -33,9 +33,7 @@ public protocol AlarmSettingsTableViewControllerSyncSource: class {
     func deliveryLimitSettingsTableViewControllerIsReadOnly(_ viewController: AlarmSettingsTableViewController) -> Bool
 }
 
-public protocol SubViewControllerWillDisappear: class {
-    func onDisappear()
-}
+
 
 public class AlarmSettingsTableViewController: UITableViewController, AlarmTimeInputCellDelegate, GlucoseAlarmInputCellDelegate, CustomDataPickerDelegate {
     func pickerDidPickValidRange() {
@@ -254,7 +252,7 @@ public class AlarmSettingsTableViewController: UITableViewController, AlarmTimeI
                     cell.maxComponents = schedule.to
                     cell.toggleIsSelected.isOn = schedule.enabled ?? true
                 }
-
+                
                 cell.iconImageView.image = UIImage(named: "icons8-schedule-50", in: bundle, compatibleWith: traitCollection)
 
                 return cell

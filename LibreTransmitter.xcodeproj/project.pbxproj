@@ -12,6 +12,12 @@
 		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
+		275EC993265AEE970043210E /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC992265AEE970043210E /* NumericTextField.swift */; };
+		275EC998265AF64E0043210E /* StatusMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC997265AF64E0043210E /* StatusMessage.swift */; };
+		275EC99D265AFAF30043210E /* DisappearDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC99C265AFAF30043210E /* DisappearDelegate.swift */; };
+		276EF5E7264B1FCE00571021 /* AlarmSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5E6264B1FCE00571021 /* AlarmSettingsView.swift */; };
+		276EF5ED2652F4BB00571021 /* EnumeratedForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5EC2652F4BB00571021 /* EnumeratedForEach.swift */; };
+		276EF5F22652F84F00571021 /* HashableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5F12652F84F00571021 /* HashableClass.swift */; };
 		277773A72639EF2B00431547 /* BlueButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773A62639EF2B00431547 /* BlueButtonStyle.swift */; };
 		277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */; };
 		277773B62639F51300431547 /* CustomDataPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277773B52639F51300431547 /* CustomDataPickerView.swift */; };
@@ -135,6 +141,12 @@
 
 /* Begin PBXFileReference section */
 		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
+		275EC992265AEE970043210E /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
+		275EC997265AF64E0043210E /* StatusMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMessage.swift; sourceTree = "<group>"; };
+		275EC99C265AFAF30043210E /* DisappearDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisappearDelegate.swift; sourceTree = "<group>"; };
+		276EF5E6264B1FCE00571021 /* AlarmSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSettingsView.swift; sourceTree = "<group>"; };
+		276EF5EC2652F4BB00571021 /* EnumeratedForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumeratedForEach.swift; sourceTree = "<group>"; };
+		276EF5F12652F84F00571021 /* HashableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableClass.swift; sourceTree = "<group>"; };
 		277773A62639EF2B00431547 /* BlueButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueButtonStyle.swift; sourceTree = "<group>"; };
 		277773AB2639EFB800431547 /* ErrorTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTextFieldStyle.swift; sourceTree = "<group>"; };
 		277773B52639F51300431547 /* CustomDataPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDataPickerView.swift; sourceTree = "<group>"; };
@@ -295,6 +307,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		276EF5EB2652F49C00571021 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				276EF5EC2652F4BB00571021 /* EnumeratedForEach.swift */,
+				276EF5F12652F84F00571021 /* HashableClass.swift */,
+				275EC992265AEE970043210E /* NumericTextField.swift */,
+				275EC997265AF64E0043210E /* StatusMessage.swift */,
+				275EC99C265AFAF30043210E /* DisappearDelegate.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
 		277773B02639F33400431547 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,6 +332,7 @@
 			isa = PBXGroup;
 			children = (
 				277773B52639F51300431547 /* CustomDataPickerView.swift */,
+				276EF5E6264B1FCE00571021 /* AlarmSettingsView.swift */,
 			);
 			path = AlarmSettings;
 			sourceTree = "<group>";
@@ -486,6 +511,7 @@
 		27850D4825672DFB0020D109 /* SwiftUIViews */ = {
 			isa = PBXGroup;
 			children = (
+				276EF5EB2652F49C00571021 /* Utilities */,
 				277773B02639F33400431547 /* Styles */,
 				27850D4A25672DFB0020D109 /* SwiftSnoozeView.swift */,
 				27850D4B25672DFB0020D109 /* BluetoothSelection.swift */,
@@ -862,12 +888,16 @@
 				27850D7925672E5D0020D109 /* CGFLoat+Double.swift in Sources */,
 				27850D5A25672DFB0020D109 /* MMSwitchTableViewCell.swift in Sources */,
 				27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */,
+				276EF5F22652F84F00571021 /* HashableClass.swift in Sources */,
 				27850CF825672C0C0020D109 /* UserDefaults+Bluetooth.swift in Sources */,
 				4325E9D5210E6B4400969CE5 /* UIColor.swift in Sources */,
 				27850CEA25672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */,
 				27850D8B25672ECA0020D109 /* BluetoothSearch.swift in Sources */,
 				27850DAC25672F3E0020D109 /* LimitedQueue.swift in Sources */,
+				276EF5ED2652F4BB00571021 /* EnumeratedForEach.swift in Sources */,
+				275EC998265AF64E0043210E /* StatusMessage.swift in Sources */,
 				27850D6C25672DFB0020D109 /* SwiftSnoozeView.swift in Sources */,
+				276EF5E7264B1FCE00571021 /* AlarmSettingsView.swift in Sources */,
 				27850D6D25672DFB0020D109 /* BluetoothSelection.swift in Sources */,
 				2793EBE6260BDE43001A35A3 /* CalibrationEditView.swift in Sources */,
 				27850CF225672C0C0020D109 /* LocalizedString.swift in Sources */,
@@ -877,6 +907,7 @@
 				27850D5F25672DFB0020D109 /* NibLoadable.swift in Sources */,
 				27850CEE25672C0C0020D109 /* DateExtensions.swift in Sources */,
 				27850CF425672C0C0020D109 /* UserDefaults+GlucoseSettings.swift in Sources */,
+				275EC99D265AFAF30043210E /* DisappearDelegate.swift in Sources */,
 				27850D5325672DFB0020D109 /* GlucoseAlarmInputCell.swift in Sources */,
 				27850CEC25672C0C0020D109 /* DoubleExtensions.swift in Sources */,
 				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
@@ -893,6 +924,7 @@
 				277773A72639EF2B00431547 /* BlueButtonStyle.swift in Sources */,
 				27850D4F25672DFB0020D109 /* NotificationsSettingsTableViewController.swift in Sources */,
 				27850CFC25672C0C0020D109 /* GlucoseSchedules.swift in Sources */,
+				275EC993265AEE970043210E /* NumericTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

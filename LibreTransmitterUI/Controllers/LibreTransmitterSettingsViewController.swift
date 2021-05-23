@@ -592,8 +592,10 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
 
             switch AdvancedSettingsRow(rawValue: indexPath.row)! {
             case .alarms:
-                let controller = AlarmSettingsTableViewController(glucoseUnit: self.glucoseUnit)
-                controller.disappearDelegate = self
+                //let controller = AlarmSettingsTableViewController(glucoseUnit: self.glucoseUnit)
+                //controller.disappearDelegate = self
+                let controller = AlarmSettingsView.asHostedViewController(glucoseUnit: self.glucoseUnit, disappearDelegate: self)
+                
                 show(controller, sender: nil)
             case .glucoseNotifications:
                 let controller = NotificationsSettingsTableViewController(glucoseUnit: self.glucoseUnit)
