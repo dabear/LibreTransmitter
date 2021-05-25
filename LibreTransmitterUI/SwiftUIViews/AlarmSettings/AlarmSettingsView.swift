@@ -71,38 +71,38 @@ class AlarmScheduleState : ObservableObject, Identifiable, Hashable{
 
         self.highmgdl = highAlarm
     }
+
     public func getHighAlarm(forUnit unit: HKUnit) -> Double {
 
-                if unit == HKUnit.millimolesPerLiter {
-                    return (highmgdl / 18).roundTo(places: 1)
-                }
-                return highmgdl
-
-            }
-
-
+        if unit == HKUnit.millimolesPerLiter {
+            return (highmgdl / 18).roundTo(places: 1)
         }
+        return highmgdl
 
-        class AlarmSettingsState : ObservableObject {
-            @Published var schedules : [AlarmScheduleState] = []
-
-
-            static private func setDateComponentState(_ state: AlarmScheduleState) {
-                guard let from = state.alarmDateComponents.startComponents,
-                      let to = state.alarmDateComponents.endComponents else {
-                        state.alarmDateComponents.startComponents = DateComponents()
-                        state.alarmDateComponents.startComponents!.hour = 0
-                        state.alarmDateComponents.startComponents!.minute = 0
-
-                        state.alarmDateComponents.endComponents = DateComponents()
-                        state.alarmDateComponents.endComponents!.hour = 0
-                        state.alarmDateComponents.endComponents!.minute = 0
-
-                        let from2 = state.alarmDateComponents.startComponents!
-                        let to2 = state.alarmDateComponents.endComponents!
+    }
 
 
-                state.alarmDateComponents.componentsAsText = "\(from2.ToTimeString()) - \(to2.ToTimeString())"
+}
+
+class AlarmSettingsState : ObservableObject     {
+    @Published var schedules : [AlarmScheduleState] = []
+
+
+    static private func setDateComponentState(_ state: AlarmScheduleState) {
+        guard let from = state.alarmDateComponents.startComponents,
+              let to = state.alarmDateComponents.endComponents else {
+                state.alarmDateComponents.startComponents = DateComponents()
+                state.alarmDateComponents.startComponents!.hour = 0
+                state.alarmDateComponents.startComponents!.minute = 0
+
+                state.alarmDateComponents.endComponents = DateComponents()
+                state.alarmDateComponents.endComponents!.hour = 0
+                state.alarmDateComponents.endComponents!.minute = 0
+
+                let from2 = state.alarmDateComponents.startComponents!
+                let to2 = state.alarmDateComponents.endComponents!
+
+            state.alarmDateComponents.componentsAsText = "\(from2.ToTimeString()) - \(to2.ToTimeString())"
             return
         }
         state.alarmDateComponents.componentsAsText = "\(from.ToTimeString()) - \(to.ToTimeString())"
@@ -151,8 +151,6 @@ class AlarmScheduleState : ObservableObject, Identifiable, Hashable{
 
 
     }
-
-
 
 
     func trySaveState() -> StatusMessage?{
