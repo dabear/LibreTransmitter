@@ -601,6 +601,7 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                 let controller = NotificationsSettingsTableViewController(glucoseUnit: self.glucoseUnit)
                 controller.disappearDelegate = self
                 show(controller, sender: nil)
+
             case .dangermode:
                 if UserDefaults.standard.dangerModeActivated {
                     UserDefaults.standard.dangerModeActivated = false
@@ -617,8 +618,10 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                     self.presentStatus(controller)
                 }
             case .glucose:
-                let controller = GlucoseSettingsTableViewController(glucoseUnit: self.glucoseUnit)
-                controller.disappearDelegate = self
+                //let controller = GlucoseSettingsTableViewController(glucoseUnit: self.glucoseUnit)
+                //controller.disappearDelegate = self
+                let controller = GlucoseSettingsView.asHostedViewController(glucoseUnit: self.glucoseUnit, disappearDelegate: self)
+
                 show(controller, sender: nil)
             }
 
