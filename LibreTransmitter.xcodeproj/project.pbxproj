@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		270C1429266047490063405B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C1428266047490063405B /* NotificationSettingsView.swift */; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
 		273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
 		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
@@ -135,6 +136,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
 		275EC992265AEE970043210E /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		275EC997265AF64E0043210E /* StatusMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMessage.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 				2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */,
 				277773B42639F4E300431547 /* AlarmSettings */,
 				275EC9AA265EDC280043210E /* GlucoseSettingsView.swift */,
+				270C1428266047490063405B /* NotificationSettingsView.swift */,
 			);
 			path = SwiftUIViews;
 			sourceTree = "<group>";
@@ -866,6 +869,7 @@
 				27850D6C25672DFB0020D109 /* SwiftSnoozeView.swift in Sources */,
 				276EF5E7264B1FCE00571021 /* AlarmSettingsView.swift in Sources */,
 				27850D6D25672DFB0020D109 /* BluetoothSelection.swift in Sources */,
+				270C1429266047490063405B /* NotificationSettingsView.swift in Sources */,
 				2793EBE6260BDE43001A35A3 /* CalibrationEditView.swift in Sources */,
 				27850CF225672C0C0020D109 /* LocalizedString.swift in Sources */,
 				27850D5C25672DFB0020D109 /* MMTextFieldViewCell2.swift in Sources */,

@@ -598,8 +598,11 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
                 
                 show(controller, sender: nil)
             case .glucoseNotifications:
-                let controller = NotificationsSettingsTableViewController(glucoseUnit: self.glucoseUnit)
-                controller.disappearDelegate = self
+                //let controller = NotificationsSettingsTableViewController(glucoseUnit: self.glucoseUnit)
+                //controller.disappearDelegate = self
+                //show(controller, sender: nil)
+                let controller = NotificationSettingsView.asHostedViewController(glucoseUnit: self.glucoseUnit, disappearDelegate: self)
+
                 show(controller, sender: nil)
 
             case .dangermode:
