@@ -174,7 +174,7 @@ public struct NumericTextField: View  {
         }
 
 
-        //allows an int to behave as a double, should be just fine in most cases
+        //allows an int to behave as a double, should be just fine in most cases (that we care about)
         let bd = Binding<Double>(get: { Double(wrapper.wrappedValue) },
                               set: { wrapper.wrappedValue = Int($0) })
         self._numericValue = bd

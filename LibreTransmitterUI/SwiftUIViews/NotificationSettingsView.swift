@@ -106,6 +106,8 @@ struct NotificationSettingsView: View {
 
     @State private var favoriteGlucoseUnit = 0
 
+    static let formatter = NumberFormatter()
+
     var body: some View {
         List {
             Section {
@@ -116,7 +118,7 @@ struct NotificationSettingsView: View {
 
                 HStack {
                     Text("Notify per reading")
-                    TextField("", value: $mmNotifyEveryXTimes, formatter: NumberFormatter())
+                    TextField("", value: $mmNotifyEveryXTimes, formatter: Self.formatter)
                         .multilineTextAlignment(.center)
                         .disabled(true)
                         .frame(minWidth: 15, maxWidth: 60)
