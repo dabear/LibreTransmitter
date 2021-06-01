@@ -10,6 +10,7 @@ import LoopKit
 import LoopKitUI
 import LibreTransmitter
 import UIKit
+import Combine
 // swiftlint:disable:next type_body_length
 public class LibreTransmitterSettingsViewController: UITableViewController, SubViewControllerWillDisappear { //, CompletionNotifying{
     //public weak var completionDelegate: CompletionDelegate?
@@ -24,22 +25,32 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
     private let isDemoMode = false
     public var cgmManager: LibreTransmitterManager?
 
-    public let glucoseUnit: HKUnit
+    private let displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
+    private lazy var cancellables = Set<AnyCancellable>()
+
+    private var glucoseUnit: HKUnit {
+        displayGlucoseUnitObservable.displayGlucoseUnit
+    }
 
     public let allowsDeletion: Bool
 
-    public init(cgmManager: LibreTransmitterManager, glucoseUnit: HKUnit, allowsDeletion: Bool) {
+    public init(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, allowsDeletion: Bool) {
         self.cgmManager = cgmManager
-        self.glucoseUnit = glucoseUnit
+        self.displayGlucoseUnitObservable = displayGlucoseUnitObservable
+        self.allowsDeletion = allowsDeletion
+
+        super.init(style: .grouped)
 
         //only override savedglucose unit if we haven't saved this locally before
         if UserDefaults.standard.mmGlucoseUnit == nil {
             UserDefaults.standard.mmGlucoseUnit = glucoseUnit
         }
 
-        self.allowsDeletion = allowsDeletion
+        displayGlucoseUnitObservable.$displayGlucoseUnit
+            .sink { [weak self] _ in self?.tableView.reloadData() }
+            .store(in: &cancellables)
 
-        super.init(style: .grouped)
+
     }
 
     @available(*, unavailable)

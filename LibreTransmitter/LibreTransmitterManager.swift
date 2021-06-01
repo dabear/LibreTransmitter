@@ -28,11 +28,15 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+
+
+    public let isOnboarded = true   // No distinction between created and onboarded
+
     public var hasValidSensorSession: Bool {
         lastConnected != nil 
     }
 
-    public var cgmStatus: CGMManagerStatus {
+    public var cgmManagerStatus: CGMManagerStatus {
         CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
     }
 
@@ -188,8 +192,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         }
     }
 
-    public static var managerIdentifier : String {
-        self.className
+    public var managerIdentifier : String {
+        Self.className
     }
 
     public required convenience init?(rawState: CGMManager.RawStateValue) {
@@ -203,7 +207,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public let keychain = KeychainManager()
 
-    public static let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
+    public let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
 
     public let appURL: URL? = nil //URL(string: "spikeapp://")
 

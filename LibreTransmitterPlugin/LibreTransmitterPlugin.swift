@@ -12,7 +12,7 @@ import LibreTransmitter
 import LibreTransmitterUI
 import os.log
 
-class LibreTransmitterPlugin: NSObject, LoopUIPlugin {
+class LibreTransmitterPlugin: NSObject, CGMManagerUIPlugin {
     
     private let log = OSLog(category: "LibreTransmitterPlugin")
     
@@ -26,6 +26,6 @@ class LibreTransmitterPlugin: NSObject, LoopUIPlugin {
     
     override init() {
         super.init()
-        log.default("LibreTransmitterPlugin Instantiated")
+        log.default("Instantiated")
     }
 }

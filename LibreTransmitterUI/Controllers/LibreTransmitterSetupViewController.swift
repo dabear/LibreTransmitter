@@ -12,12 +12,12 @@ import LibreTransmitter
 import SwiftUI
 import UIKit
 
-class LibreTransmitterSetupViewController: UINavigationController, CGMManagerSetupViewController, CompletionNotifying {
+class LibreTransmitterSetupViewController :UINavigationController, CGMManagerCreateNotifying, CGMManagerOnboardNotifying, CompletionNotifying {
+    weak var cgmManagerCreateDelegate: CGMManagerCreateDelegate?
+    weak var cgmManagerOnboardDelegate: CGMManagerOnboardDelegate?
     weak var completionDelegate: CompletionDelegate?
 
-    // this must follow the protocol from loopkit, so it cannot be weak
-    // swiftlint:disable:next weak_delegate
-    var setupDelegate: CGMManagerSetupViewControllerDelegate?
+    
 
     lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
 
@@ -64,7 +64,8 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerSet
     @objc
     private func save() {
         if let cgmManager = cgmManager {
-            setupDelegate?.cgmManagerSetupViewController(self, didSetUpCGMManager: cgmManager)
+            cgmManagerCreateDelegate?.cgmManagerCreateNotifying(didCreateCGMManager: cgmManager)
+            cgmManagerOnboardDelegate?.cgmManagerOnboardNotifying(didOnboardCGMManager: cgmManager)
 
             if let newDevice = deviceSelect.rootView.getNewDeviceId() {
                 print("dabear: Setupcontroller will set new device to \(newDevice)")

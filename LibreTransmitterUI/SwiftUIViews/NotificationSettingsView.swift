@@ -90,7 +90,7 @@ struct NotificationSettingsView: View {
 
 
 
-    @AppStorage(Key.mmAlertLowBatteryWarning.rawValue) var mmAlertLowBatteryWarning: Bool = false
+    @AppStorage(Key.mmAlertLowBatteryWarning.rawValue) var mmAlertLowBatteryWarning: Bool = true
     @AppStorage(Key.mmAlertInvalidSensorDetected.rawValue) var mmAlertInvalidSensorDetected: Bool = true
     @AppStorage(Key.mmAlertNewSensorDetected.rawValue) var mmAlertNewSensorDetected: Bool = true
     @AppStorage(Key.mmAlertNoSensorDetected.rawValue) var mmAlertNoSensorDetected: Bool = true
@@ -143,11 +143,17 @@ struct NotificationSettingsView: View {
             }
 
             Section(header: Text("Misc")) {
-                Picker(selection: $favoriteGlucoseUnit, label: Text("Unit override")) {
-                    Text(HKUnit.millimolesPerLiter.localizedShortUnitString).tag(0)
-                    Text(HKUnit.milligramsPerDeciliter.localizedShortUnitString).tag(1)
+
+
+                HStack {
+                    Text("Unit override")
+                    Picker(selection: $favoriteGlucoseUnit, label: Text("Unit override")) {
+                        Text(HKUnit.millimolesPerLiter.localizedShortUnitString).tag(0)
+                        Text(HKUnit.milligramsPerDeciliter.localizedShortUnitString).tag(1)
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .clipped()
                 }
-                .pickerStyle(SegmentedPickerStyle())
             }
             .onAppear {
                 favoriteGlucoseUnit = glucoseSegments.firstIndex(of: glucoseUnit) ?? 0
