@@ -514,6 +514,17 @@ extension LibreTransmitterManager {
         proxy?.sensorData?.humanReadableSensorAge ?? "n/a"
     }
 
+    public var sensorEndTime : String {
+        if let endtime = proxy?.sensorData?.sensorEndTime  {
+            let mydf = DateFormatter()
+            mydf.dateStyle = .long
+            mydf.timeStyle = .full
+            mydf.locale = Locale.current
+            return mydf.string(from: endtime)
+        }
+        return "Unknown or Ended"
+    }
+
     public var sensorTimeLeft: String {
         //proxy?.OnQueue_sensorData?.humanReadableSensorAge ?? "n/a"
         proxy?.sensorData?.humanReadableTimeLeft ?? "n/a"

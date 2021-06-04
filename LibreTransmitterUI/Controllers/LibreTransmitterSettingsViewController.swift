@@ -134,6 +134,7 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
     private enum LatestSensorInfoRow: Int, CaseIterable {
         case sensorAge
         case sensorTimeLeft
+        case sensorEndTime
         case sensorState
         case sensorSerialNumber
     }
@@ -435,9 +436,13 @@ public class LibreTransmitterSettingsViewController: UITableViewController, SubV
 
                 cell.detailTextLabel?.text = isDemoMode ? "0M007DEMO1" :cgmManager?.sensorSerialNumber
             case .sensorTimeLeft:
-                cell.textLabel?.text = LocalizedString("Sensor Time Left", comment: "Title describing sensor time left")
+                cell.textLabel?.text = LocalizedString("Sensor Age Left", comment: "Title describing sensor time left")
 
                 cell.detailTextLabel?.text = cgmManager?.sensorTimeLeft
+            case .sensorEndTime:
+                cell.textLabel?.text = LocalizedString("Sensor Endtime", comment: "Title describing sensor endtime")
+
+                cell.detailTextLabel?.text = cgmManager?.sensorEndTime
             }
             return cell
         case .advanced:

@@ -82,6 +82,15 @@ public struct SensorData: Codable {
        maxMinutesWearTime - minutesSinceStart
     }
 
+    //once the sensor has ended we don't know the exact date anymore
+    var sensorEndTime: Date? {
+        if minutesLeft <= 0 {
+            return nil
+        }
+
+        return self.date.addingTimeInterval(TimeInterval(minutes: Double(self.minutesLeft)))
+    }
+
     /// Sensor state (ready, failure, starting etc.)
     var state: SensorState {
         SensorState(stateByte: header[4])

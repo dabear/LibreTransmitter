@@ -33,7 +33,7 @@ class AlarmScheduleState : ObservableObject, Identifiable, Hashable{
 
 
     @Published var lowmgdl : Double = 72
-    @Published var highmgdl : Double = 180
+    @Published var highmgdl : Double = 180  
     @Published var enabled : Bool? = false
 
 
@@ -89,23 +89,20 @@ class AlarmSettingsState : ObservableObject     {
 
 
     static private func setDateComponentState(_ state: AlarmScheduleState) {
-        guard let from = state.alarmDateComponents.startComponents,
-              let to = state.alarmDateComponents.endComponents else {
-                state.alarmDateComponents.startComponents = DateComponents()
-                state.alarmDateComponents.startComponents!.hour = 0
-                state.alarmDateComponents.startComponents!.minute = 0
-
-                state.alarmDateComponents.endComponents = DateComponents()
-                state.alarmDateComponents.endComponents!.hour = 0
-                state.alarmDateComponents.endComponents!.minute = 0
-
-                let from2 = state.alarmDateComponents.startComponents!
-                let to2 = state.alarmDateComponents.endComponents!
-
-            state.alarmDateComponents.componentsAsText = "\(from2.ToTimeString()) - \(to2.ToTimeString())"
-            return
+        if state.alarmDateComponents.startComponents == nil {
+            state.alarmDateComponents.startComponents = DateComponents(hour:0, minute: 0)
         }
-        state.alarmDateComponents.componentsAsText = "\(from.ToTimeString()) - \(to.ToTimeString())"
+
+        if state.alarmDateComponents.endComponents == nil {
+            state.alarmDateComponents.endComponents = DateComponents(hour:0, minute: 0)
+        }
+
+        let from = state.alarmDateComponents.startComponents!.ToTimeString()
+        let to = state.alarmDateComponents.endComponents!.ToTimeString()
+
+        state.alarmDateComponents.componentsAsText = "\(from) - \(to)"
+
+
     }
 
     //this is just to be able to use old serialized schedules from uikit version

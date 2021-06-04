@@ -111,6 +111,7 @@ struct CalibrationEditView: View {
 
             }
         }
+        .listStyle(InsetGroupedListStyle())
 
     }
 
