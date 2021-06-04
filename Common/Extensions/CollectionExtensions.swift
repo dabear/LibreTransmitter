@@ -14,27 +14,6 @@ extension Collection {
     }
 }
 
-extension Array {
-    public mutating func safeIndexAt(_ index: Int, default defaultValue: @autoclosure () -> Element) -> Element? {
-        guard index >= 0, index < endIndex else {
-            var val: Element?
-            while !indices.contains(index) {
-                val = defaultValue()
-                if let val = val {
-                    self.append(val)
-                } else {
-                    //unsafe to continue as this might be a never ending loop
-                    break
-                }
-            }
-
-            return val
-        }
-
-        return self[index]
-    }
-}
-
 extension Array where Element: Hashable {
     func removingDuplicates() -> [Element] {
         var addedDict = [Element: Bool]()

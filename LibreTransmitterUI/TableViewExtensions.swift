@@ -1,13 +1,13 @@
 //
 //  TableViewExtensions.swift
-//  MiaomiaoClientUI
+//  LibreTransmitterUI
 //
-//  Created by Bjørn Inge Berg on 19/10/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
-//
+//  Created by Bjørn Inge Berg on 04/06/2021.
 
 import Foundation
 import UIKit
+
+extension UITableViewCell: IdentifiableClass { }
 
 extension UITableView {
     func dequeueIdentifiableCell<T: UITableViewCell>(cell: T.Type, for indexPath: IndexPath) -> T {
@@ -15,3 +15,4 @@ extension UITableView {
         self.dequeueReusableCell(withIdentifier: T.className, for: indexPath) as! T
     }
 }
+

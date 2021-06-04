@@ -13,6 +13,7 @@
 		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
+		27578671266AC22A00845D0E /* TableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27578670266AC22A00845D0E /* TableViewExtensions.swift */; };
 		275EC993265AEE970043210E /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC992265AEE970043210E /* NumericTextField.swift */; };
 		275EC998265AF64E0043210E /* StatusMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC997265AF64E0043210E /* StatusMessage.swift */; };
 		275EC99D265AFAF30043210E /* DisappearDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC99C265AFAF30043210E /* DisappearDelegate.swift */; };
@@ -53,17 +54,7 @@
 		27850D1225672CA60020D109 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D0D25672CA60020D109 /* NotificationHelper.swift */; };
 		27850D4D25672DFB0020D109 /* LibreTransmitterSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2325672DFB0020D109 /* LibreTransmitterSettingsViewController.swift */; };
 		27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */; };
-		27850D4F25672DFB0020D109 /* NotificationsSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */; };
 		27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2625672DFB0020D109 /* AlertControllers.swift */; };
-		27850D5725672DFB0020D109 /* MMTextFieldViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */; };
-		27850D5825672DFB0020D109 /* MMSwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */; };
-		27850D5925672DFB0020D109 /* MMTextFieldViewCell2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */; };
-		27850D5A25672DFB0020D109 /* MMSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3425672DFB0020D109 /* MMSwitchTableViewCell.swift */; };
-		27850D5B25672DFB0020D109 /* MMTextFieldViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3525672DFB0020D109 /* MMTextFieldViewCell.swift */; };
-		27850D5C25672DFB0020D109 /* MMTextFieldViewCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3625672DFB0020D109 /* MMTextFieldViewCell2.swift */; };
-		27850D5F25672DFB0020D109 /* NibLoadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3A25672DFB0020D109 /* NibLoadable.swift */; };
-		27850D6025672DFB0020D109 /* SegmentViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D3C25672DFB0020D109 /* SegmentViewCell.swift */; };
-		27850D6125672DFB0020D109 /* SegmentViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 27850D3D25672DFB0020D109 /* SegmentViewCell.xib */; };
 		27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4025672DFB0020D109 /* miaomiao-small.png */; };
 		27850D6425672DFB0020D109 /* libresensor.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4125672DFB0020D109 /* libresensor.png */; };
 		27850D6525672DFB0020D109 /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4225672DFB0020D109 /* bubble.png */; };
@@ -74,8 +65,6 @@
 		27850D6A25672DFB0020D109 /* icons8-down-arrow-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4725672DFB0020D109 /* icons8-down-arrow-50.png */; };
 		27850D6C25672DFB0020D109 /* SwiftSnoozeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D4A25672DFB0020D109 /* SwiftSnoozeView.swift */; };
 		27850D6D25672DFB0020D109 /* BluetoothSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D4B25672DFB0020D109 /* BluetoothSelection.swift */; };
-		27850D7925672E5D0020D109 /* CGFLoat+Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D7825672E5D0020D109 /* CGFLoat+Double.swift */; };
-		27850D8525672E920020D109 /* TableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D8425672E920020D109 /* TableViewExtensions.swift */; };
 		27850D8B25672ECA0020D109 /* BluetoothSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BC8256725E70020D109 /* BluetoothSearch.swift */; };
 		27850D9125672F020020D109 /* CBPeripheralExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BC7256725E70020D109 /* CBPeripheralExtensions.swift */; };
 		27850D9225672F020020D109 /* LibreTransmitterMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BC6256725E70020D109 /* LibreTransmitterMetadata.swift */; };
@@ -138,6 +127,7 @@
 /* Begin PBXFileReference section */
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
+		27578670266AC22A00845D0E /* TableViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewExtensions.swift; sourceTree = "<group>"; };
 		275EC992265AEE970043210E /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		275EC997265AF64E0043210E /* StatusMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMessage.swift; sourceTree = "<group>"; };
 		275EC99C265AFAF30043210E /* DisappearDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisappearDelegate.swift; sourceTree = "<group>"; };
@@ -187,17 +177,7 @@
 		27850D0D25672CA60020D109 /* NotificationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		27850D2325672DFB0020D109 /* LibreTransmitterSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterSettingsViewController.swift; sourceTree = "<group>"; };
 		27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterSetupViewController.swift; sourceTree = "<group>"; };
-		27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsSettingsTableViewController.swift; sourceTree = "<group>"; };
 		27850D2625672DFB0020D109 /* AlertControllers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllers.swift; sourceTree = "<group>"; };
-		27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell.xib; sourceTree = "<group>"; };
-		27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMSwitchTableViewCell.xib; sourceTree = "<group>"; };
-		27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MMTextFieldViewCell2.xib; sourceTree = "<group>"; };
-		27850D3425672DFB0020D109 /* MMSwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMSwitchTableViewCell.swift; sourceTree = "<group>"; };
-		27850D3525672DFB0020D109 /* MMTextFieldViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMTextFieldViewCell.swift; sourceTree = "<group>"; };
-		27850D3625672DFB0020D109 /* MMTextFieldViewCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMTextFieldViewCell2.swift; sourceTree = "<group>"; };
-		27850D3A25672DFB0020D109 /* NibLoadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NibLoadable.swift; sourceTree = "<group>"; };
-		27850D3C25672DFB0020D109 /* SegmentViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentViewCell.swift; sourceTree = "<group>"; };
-		27850D3D25672DFB0020D109 /* SegmentViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SegmentViewCell.xib; sourceTree = "<group>"; };
 		27850D4025672DFB0020D109 /* miaomiao-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miaomiao-small.png"; sourceTree = "<group>"; };
 		27850D4125672DFB0020D109 /* libresensor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = libresensor.png; sourceTree = "<group>"; };
 		27850D4225672DFB0020D109 /* bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubble.png; sourceTree = "<group>"; };
@@ -208,8 +188,6 @@
 		27850D4725672DFB0020D109 /* icons8-down-arrow-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-down-arrow-50.png"; sourceTree = "<group>"; };
 		27850D4A25672DFB0020D109 /* SwiftSnoozeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSnoozeView.swift; sourceTree = "<group>"; };
 		27850D4B25672DFB0020D109 /* BluetoothSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothSelection.swift; sourceTree = "<group>"; };
-		27850D7825672E5D0020D109 /* CGFLoat+Double.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGFLoat+Double.swift"; sourceTree = "<group>"; };
-		27850D8425672E920020D109 /* TableViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewExtensions.swift; sourceTree = "<group>"; };
 		2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationEditView.swift; sourceTree = "<group>"; };
 		4325E9D2210E6ADA00969CE5 /* IdentifiableClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentifiableClass.swift; sourceTree = "<group>"; };
 		4325E9D4210E6B4300969CE5 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -425,42 +403,9 @@
 			children = (
 				27850D2325672DFB0020D109 /* LibreTransmitterSettingsViewController.swift */,
 				27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */,
-				27850D2525672DFB0020D109 /* NotificationsSettingsTableViewController.swift */,
 				27850D2625672DFB0020D109 /* AlertControllers.swift */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		27850D2925672DFB0020D109 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				27850D3025672DFB0020D109 /* mmSwitchTableViewCell */,
-				27850D3A25672DFB0020D109 /* NibLoadable.swift */,
-				27850D3B25672DFB0020D109 /* SegmentView */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
-		27850D3025672DFB0020D109 /* mmSwitchTableViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				27850D3125672DFB0020D109 /* MMTextFieldViewCell.xib */,
-				27850D3225672DFB0020D109 /* MMSwitchTableViewCell.xib */,
-				27850D3325672DFB0020D109 /* MMTextFieldViewCell2.xib */,
-				27850D3425672DFB0020D109 /* MMSwitchTableViewCell.swift */,
-				27850D3525672DFB0020D109 /* MMTextFieldViewCell.swift */,
-				27850D3625672DFB0020D109 /* MMTextFieldViewCell2.swift */,
-			);
-			path = mmSwitchTableViewCell;
-			sourceTree = "<group>";
-		};
-		27850D3B25672DFB0020D109 /* SegmentView */ = {
-			isa = PBXGroup;
-			children = (
-				27850D3C25672DFB0020D109 /* SegmentViewCell.swift */,
-				27850D3D25672DFB0020D109 /* SegmentViewCell.xib */,
-			);
-			path = SegmentView;
 			sourceTree = "<group>";
 		};
 		27850D3E25672DFB0020D109 /* Graphics */ = {
@@ -557,7 +502,6 @@
 		43A8EC83210E664300A81379 /* LibreTransmitterUI */ = {
 			isa = PBXGroup;
 			children = (
-				27850D2925672DFB0020D109 /* Cells */,
 				27850D2125672DFB0020D109 /* Controllers */,
 				27850D3E25672DFB0020D109 /* Graphics */,
 				27850D4825672DFB0020D109 /* SwiftUIViews */,
@@ -566,9 +510,8 @@
 				43A8EC84210E664300A81379 /* LibreTransmitterUI.h */,
 				43A8EC8E210E676500A81379 /* LibreTransmitterManager+UI.swift */,
 				4325E9D4210E6B4300969CE5 /* UIColor.swift */,
-				27850D8425672E920020D109 /* TableViewExtensions.swift */,
-				27850D7825672E5D0020D109 /* CGFLoat+Double.swift */,
 				43A8EC85210E664300A81379 /* Info.plist */,
+				27578670266AC22A00845D0E /* TableViewExtensions.swift */,
 			);
 			path = LibreTransmitterUI;
 			sourceTree = "<group>";
@@ -753,7 +696,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27850D6125672DFB0020D109 /* SegmentViewCell.xib in Resources */,
 				27850D6825672DFB0020D109 /* icons8-drop-down-arrow-50.png in Resources */,
 				43AB511B21330D1400B3D58D /* Localizable.strings in Resources */,
 				27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */,
@@ -761,10 +703,7 @@
 				27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */,
 				27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */,
 				27850D6425672DFB0020D109 /* libresensor.png in Resources */,
-				27850D5925672DFB0020D109 /* MMTextFieldViewCell2.xib in Resources */,
 				27850D6625672DFB0020D109 /* icons8-slide-up-50.png in Resources */,
-				27850D5825672DFB0020D109 /* MMSwitchTableViewCell.xib in Resources */,
-				27850D5725672DFB0020D109 /* MMTextFieldViewCell.xib in Resources */,
 				27850D6525672DFB0020D109 /* bubble.png in Resources */,
 				27850D6A25672DFB0020D109 /* icons8-down-arrow-50.png in Resources */,
 			);
@@ -853,9 +792,6 @@
 			files = (
 				27850D0025672C0C0020D109 /* MessagePassing.swift in Sources */,
 				27850CFE25672C0C0020D109 /* HKUnit.swift in Sources */,
-				27850D5B25672DFB0020D109 /* MMTextFieldViewCell.swift in Sources */,
-				27850D7925672E5D0020D109 /* CGFLoat+Double.swift in Sources */,
-				27850D5A25672DFB0020D109 /* MMSwitchTableViewCell.swift in Sources */,
 				27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */,
 				276EF5F22652F84F00571021 /* HashableClass.swift in Sources */,
 				27850CF825672C0C0020D109 /* UserDefaults+Bluetooth.swift in Sources */,
@@ -865,6 +801,7 @@
 				27850D8B25672ECA0020D109 /* BluetoothSearch.swift in Sources */,
 				27850DAC25672F3E0020D109 /* LimitedQueue.swift in Sources */,
 				276EF5ED2652F4BB00571021 /* EnumeratedForEach.swift in Sources */,
+				27578671266AC22A00845D0E /* TableViewExtensions.swift in Sources */,
 				275EC998265AF64E0043210E /* StatusMessage.swift in Sources */,
 				27850D6C25672DFB0020D109 /* SwiftSnoozeView.swift in Sources */,
 				276EF5E7264B1FCE00571021 /* AlarmSettingsView.swift in Sources */,
@@ -872,25 +809,20 @@
 				270C1429266047490063405B /* NotificationSettingsView.swift in Sources */,
 				2793EBE6260BDE43001A35A3 /* CalibrationEditView.swift in Sources */,
 				27850CF225672C0C0020D109 /* LocalizedString.swift in Sources */,
-				27850D5C25672DFB0020D109 /* MMTextFieldViewCell2.swift in Sources */,
 				27850CF625672C0C0020D109 /* UserDefaults+Alarmsettings.swift in Sources */,
 				27850D4D25672DFB0020D109 /* LibreTransmitterSettingsViewController.swift in Sources */,
-				27850D5F25672DFB0020D109 /* NibLoadable.swift in Sources */,
 				27850CEE25672C0C0020D109 /* DateExtensions.swift in Sources */,
 				27850CF425672C0C0020D109 /* UserDefaults+GlucoseSettings.swift in Sources */,
 				275EC99D265AFAF30043210E /* DisappearDelegate.swift in Sources */,
 				27850CEC25672C0C0020D109 /* DoubleExtensions.swift in Sources */,
 				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
-				27850D6025672DFB0020D109 /* SegmentViewCell.swift in Sources */,
 				277773B62639F51300431547 /* CustomDataPickerView.swift in Sources */,
 				4325E9D3210E6ADA00969CE5 /* IdentifiableClass.swift in Sources */,
 				27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */,
-				27850D8525672E920020D109 /* TableViewExtensions.swift in Sources */,
 				43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */,
 				27850CFA25672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
 				27850CF025672C0C0020D109 /* CollectionExtensions.swift in Sources */,
 				277773A72639EF2B00431547 /* BlueButtonStyle.swift in Sources */,
-				27850D4F25672DFB0020D109 /* NotificationsSettingsTableViewController.swift in Sources */,
 				27850CFC25672C0C0020D109 /* GlucoseSchedules.swift in Sources */,
 				275EC993265AEE970043210E /* NumericTextField.swift in Sources */,
 			);

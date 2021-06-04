@@ -19,4 +19,4 @@ extension IdentifiableClass {
         String(describing: Self.self)
     }
 }
-extension UITableViewCell: IdentifiableClass { }
+

@@ -9,9 +9,7 @@
 import Foundation
 
 public extension Date {
-    func isBetween(_ date1: Date, and date2: Date) -> Bool {
-         date2 >= date1 && (date1 ... date2).contains(self)
-    }
+
 
     func rounded(on amount: Int, _ component: Calendar.Component) -> Date {
         let cal = Calendar.current
@@ -62,16 +60,6 @@ extension DateComponents {
     }
 }
 
-extension TimeInterval {
-    func stringDaysFromTimeInterval() -> String {
-        let aday = 86_400.0 //in seconds
-        let time = Double(self).magnitude
-
-        let days = time / aday
-
-        return days.twoDecimals
-    }
-}
 
 extension Array where Element == DateInterval {
     // Check for intersection among the intervals in the given array and return
