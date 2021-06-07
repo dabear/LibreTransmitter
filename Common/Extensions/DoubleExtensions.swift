@@ -25,11 +25,5 @@ extension Double {
         static var formatter = NumberFormatter()
     }
 
-    var scientificStyle: String {
-        Number.formatter.numberStyle = .scientific
-        Number.formatter.positiveFormat = "0.###E+0"
-        Number.formatter.exponentSymbol = "e"
-        let number = NSNumber(value: self)
-        return Number.formatter.string(from: number) ?? description
-    }
+
 }

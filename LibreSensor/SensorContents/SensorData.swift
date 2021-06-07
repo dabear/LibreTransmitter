@@ -137,7 +137,7 @@ public struct SensorData: Codable {
         case isValidForFooterWithReverseCRCs
 
     }
-    //how to use this in a sensible way is still unknown
+    
     public class CalibrationInfo: Codable, CustomStringConvertible, ObservableObject {
         public required init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CalibrationInfoCodingKeys.self)
