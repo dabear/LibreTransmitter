@@ -17,51 +17,7 @@ private struct Defaults {
     static let background = Color(UIColor.systemGroupedBackground)
 }
 
-// CBPPeripheral's init() method is not available in swift. This is a workaround
-// This should be considered experimental and not future proof.
-// You should only use this for mock data
-/*fileprivate func createCBPeripheral(name: String?) -> CBPeripheral{
 
-
-    var aClass = NSClassFromString("CBPeripheral")!
-
-    var peripheral = aClass.alloc() as? CBPeripheral
-    print("peripheral is: \(peripheral)")
-
-    //peripheral.debugName = name
-
-    //some posts online indicate this is necessary. Not sure about that though
-    peripheral!.addObserver(peripheral!, forKeyPath: "delegate", options: .new, context: nil)
-    //peripheral.name = name
-
-
-    return peripheral!
-}
-
-//should only be used in swiftui debug area
-public extension PeripheralProtocol {
-    public var debugName : String? {
-        get {
-            return globalDebugDatas[self.asStringIdentifier]
-        }
-        set {
-            globalDebugDatas[self.asStringIdentifier] = newValue
-        }
-    }
-
-}*/
-
-private struct ListHeader: View {
-    var body: some View {
-        Text("Select the third party transmitter you want to connect to")
-            .listRowBackground(Defaults.background)
-            .padding(.top)
-        HStack {
-            Image(systemName: "link.circle")
-            Text("Libre Transmitters")
-        }
-    }
-}
 
 private struct ListFooter: View {
     var devicesCount = 0
@@ -109,6 +65,7 @@ private struct DeviceItem: View {
             details2 = details
         }
     }
+
 
     var body : some View {
         HStack {
@@ -180,11 +137,21 @@ struct BluetoothSelection: View {
         }
     }
 
+    var headerSection: some View {
+        Section {
+            Text("Select the third party transmitter you want to connect to")
+                .listRowBackground(Defaults.background)
+                .padding(.top)
+            HStack {
+                Image(systemName: "link.circle")
+                Text("Libre Transmitters")
+            }
+        }
+    }
     var list : some View {
         List {
-            Section {
-                ListHeader()
-            }
+            headerSection
+            
             Section {
                 ForEach(allDevices) { device in
                     DeviceItem(device: device, details: deviceDetails[device.asStringIdentifier]!)

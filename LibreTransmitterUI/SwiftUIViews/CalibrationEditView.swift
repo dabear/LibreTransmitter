@@ -12,21 +12,6 @@ import LibreTransmitter
 
 
 
-
-
-
-private struct ListHeader: View {
-    var body: some View {
-        HStack {
-            Image(systemName: "pencil.circle")
-            Text("Edit Calibration data")
-        }
-
-    }
-}
-
-
-
 struct CalibrationEditView: View {
     typealias Params = SensorData.CalibrationInfo
 
@@ -51,14 +36,20 @@ struct CalibrationEditView: View {
 
     @ObservedObject fileprivate var formstate = FormErrorState.shared
 
-
+    var headerSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "pencil.circle")
+                Text("Edit Calibration data")
+            }
+        }
+    }
 
 
     var body: some View {
         List {
-            Section {
-                ListHeader()
-            }
+            headerSection
+
             Section {
                 NumericTextField(description: "i1", showDescription: true, numericValue: $newParams.i1, isReadOnly: isReadOnly)
                 NumericTextField(description: "i2", showDescription: true, numericValue: $newParams.i2, isReadOnly: isReadOnly)

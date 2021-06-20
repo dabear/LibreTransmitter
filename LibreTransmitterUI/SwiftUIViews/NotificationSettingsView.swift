@@ -14,17 +14,6 @@ import HealthKit
 
 
 
-private struct ListHeader: View {
-    var body: some View {
-        HStack {
-            Image(systemName: "pencil.circle")
-            Text("Notification Settings")
-        }
-
-    }
-}
-
-
 
 struct NotificationSettingsView: View {
 
@@ -108,11 +97,21 @@ struct NotificationSettingsView: View {
 
     static let formatter = NumberFormatter()
 
+    var headerSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "pencil.circle")
+                Text("Notification Settings")
+            }
+        }
+
+
+    }
+
     var body: some View {
         List {
-            Section {
-                ListHeader()
-            }
+            headerSection
+            
             Section(header: Text("Glucose Notification visibility") ) {
                 Toggle("Always Notify Glucose", isOn: $mmAlwaysDisplayGlucose)
 

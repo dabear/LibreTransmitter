@@ -13,19 +13,6 @@ import HealthKit
 
 
 
-
-private struct ListHeader: View {
-    var body: some View {
-        HStack {
-            Image(systemName: "pencil.circle")
-            Text("Glucose settings")
-        }
-
-    }
-}
-
-
-
 struct GlucoseSettingsView: View {
 
 
@@ -60,11 +47,19 @@ struct GlucoseSettingsView: View {
     @AppStorage("no.bjorninge.mmBackfillFromTrend") var mmBackfillFromTrend: Bool = false
     @AppStorage("no.bjorninge.shouldPersistSensorData") var shouldPersistSensorData: Bool = false
 
+    var headerSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "pencil.circle")
+                Text("Glucose settings")
+            }
+        }
+    }
+
     var body: some View {
         List {
-            Section {
-                ListHeader()
-            }
+            headerSection
+            
             Section(header: Text("Backfill options"), footer:Text("Backfilling from trend is currently not well supported by Loop") ) {
                 Toggle("Backfill from history", isOn:$mmBackfillFromHistory)
                 Toggle("Backfill from trend", isOn: $mmBackfillFromTrend)
