@@ -52,7 +52,6 @@
 		27850D1025672CA60020D109 /* LibreGlucose.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D0C25672CA60020D109 /* LibreGlucose.swift */; };
 		27850D1225672CA60020D109 /* NotificationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D0D25672CA60020D109 /* NotificationHelper.swift */; };
 		27850D4E25672DFB0020D109 /* LibreTransmitterSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */; };
-		27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D2625672DFB0020D109 /* AlertControllers.swift */; };
 		27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4025672DFB0020D109 /* miaomiao-small.png */; };
 		27850D6425672DFB0020D109 /* libresensor.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4125672DFB0020D109 /* libresensor.png */; };
 		27850D6525672DFB0020D109 /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4225672DFB0020D109 /* bubble.png */; };
@@ -171,7 +170,6 @@
 		27850D0C25672CA60020D109 /* LibreGlucose.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreGlucose.swift; sourceTree = "<group>"; };
 		27850D0D25672CA60020D109 /* NotificationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationHelper.swift; sourceTree = "<group>"; };
 		27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterSetupViewController.swift; sourceTree = "<group>"; };
-		27850D2625672DFB0020D109 /* AlertControllers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllers.swift; sourceTree = "<group>"; };
 		27850D4025672DFB0020D109 /* miaomiao-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miaomiao-small.png"; sourceTree = "<group>"; };
 		27850D4125672DFB0020D109 /* libresensor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = libresensor.png; sourceTree = "<group>"; };
 		27850D4225672DFB0020D109 /* bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubble.png; sourceTree = "<group>"; };
@@ -394,7 +392,6 @@
 			isa = PBXGroup;
 			children = (
 				27850D2425672DFB0020D109 /* LibreTransmitterSetupViewController.swift */,
-				27850D2625672DFB0020D109 /* AlertControllers.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -812,7 +809,6 @@
 				27850CEC25672C0C0020D109 /* DoubleExtensions.swift in Sources */,
 				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
 				277773B62639F51300431547 /* CustomDataPickerView.swift in Sources */,
-				27850D5025672DFB0020D109 /* AlertControllers.swift in Sources */,
 				43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */,
 				27850CFA25672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
 				27850CF025672C0C0020D109 /* CollectionExtensions.swift in Sources */,
