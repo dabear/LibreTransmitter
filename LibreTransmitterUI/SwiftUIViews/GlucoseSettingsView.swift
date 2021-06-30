@@ -47,18 +47,10 @@ struct GlucoseSettingsView: View {
     @AppStorage("no.bjorninge.mmBackfillFromTrend") var mmBackfillFromTrend: Bool = false
     @AppStorage("no.bjorninge.shouldPersistSensorData") var shouldPersistSensorData: Bool = false
 
-    var headerSection: some View {
-        Section {
-            HStack {
-                Image(systemName: "pencil.circle")
-                Text("Glucose settings")
-            }
-        }
-    }
+
 
     var body: some View {
         List {
-            headerSection
             
             Section(header: Text("Backfill options"), footer:Text("Backfilling from trend is currently not well supported by Loop") ) {
                 Toggle("Backfill from history", isOn:$mmBackfillFromHistory)
@@ -79,6 +71,7 @@ struct GlucoseSettingsView: View {
         .onDisappear {
             disappearDelegate?.onDisappear()
         }
+        .navigationBarTitle("Glucose Settings")
 
     }
 

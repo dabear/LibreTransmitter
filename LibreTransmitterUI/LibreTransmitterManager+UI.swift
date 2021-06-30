@@ -10,6 +10,8 @@ import LoopKit
 import LoopKitUI
 import HealthKit
 import LibreTransmitter
+import Combine
+
 
 extension LibreTransmitterManager: CGMManagerUI {
 
@@ -26,8 +28,27 @@ extension LibreTransmitterManager: CGMManagerUI {
 
     public func settingsViewController(for displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> (UIViewController & CGMManagerOnboardNotifying & CompletionNotifying) {
 
+        /*
         let settings = LibreTransmitterSettingsViewController(cgmManager: self, displayGlucoseUnitObservable: displayGlucoseUnitObservable, allowsDeletion: true)
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
+         */
+
+
+
+        let doneNotifier = GenericObservableObject()
+
+
+        let settings = (SettingsOverview.asHostedViewController(cgmManager: self, displayGlucoseUnitObservable: displayGlucoseUnitObservable, allowsDeletion: true, notifyComplete: doneNotifier))
+        let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
+
+        doneNotifier.listenOnce {
+            print("listened once")
+            nav.notifyComplete()
+        }
+
+
+
+
         return nav
     }
 

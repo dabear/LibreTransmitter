@@ -97,20 +97,9 @@ struct NotificationSettingsView: View {
 
     static let formatter = NumberFormatter()
 
-    var headerSection: some View {
-        Section {
-            HStack {
-                Image(systemName: "pencil.circle")
-                Text("Notification Settings")
-            }
-        }
-
-
-    }
 
     var body: some View {
         List {
-            headerSection
             
             Section(header: Text("Glucose Notification visibility") ) {
                 Toggle("Always Notify Glucose", isOn: $mmAlwaysDisplayGlucose)
@@ -176,6 +165,7 @@ struct NotificationSettingsView: View {
         .onDisappear {
             disappearDelegate?.onDisappear()
         }
+        .navigationBarTitle("Notification Settings")
 
     }
 

@@ -36,19 +36,11 @@ struct CalibrationEditView: View {
 
     @ObservedObject fileprivate var formstate = FormErrorState.shared
 
-    var headerSection: some View {
-        Section {
-            HStack {
-                Image(systemName: "pencil.circle")
-                Text("Edit Calibration data")
-            }
-        }
-    }
+
 
 
     var body: some View {
         List {
-            headerSection
 
             Section {
                 NumericTextField(description: "i1", showDescription: true, numericValue: $newParams.i1, isReadOnly: isReadOnly)
@@ -103,6 +95,8 @@ struct CalibrationEditView: View {
             }
         }
         .listStyle(InsetGroupedListStyle())
+        .navigationBarTitle("Calibration Edit")
+        
 
     }
 
