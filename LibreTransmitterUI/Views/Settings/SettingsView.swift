@@ -28,11 +28,17 @@ private struct SettingsItem: View {
     }
 }
 
-private class GlucoseInfo : ObservableObject, Equatable{
+private class GlucoseInfo : ObservableObject, Equatable, Hashable{
     @Published var glucose = ""
     @Published var date = ""
     @Published var checksum = ""
     //@Published var entryErrors = ""
+
+    static func ==(lhs: GlucoseInfo, rhs: GlucoseInfo) -> Bool {
+         lhs.glucose == rhs.glucose && lhs.date == rhs.date &&
+         lhs.checksum == rhs.checksum
+
+     }
 
 
     //todo: remove all these utility functions and get this info as an observable
@@ -69,12 +75,19 @@ private class GlucoseInfo : ObservableObject, Equatable{
 
 }
 
-private class SensorInfo : ObservableObject, Equatable{
+private class SensorInfo : ObservableObject, Equatable, Hashable{
     @Published var sensorAge = ""
     @Published var sensorAgeLeft = ""
     @Published var sensorEndTime = ""
     @Published var sensorState = ""
     @Published var sensorSerial = ""
+
+    static func ==(lhs: SensorInfo, rhs: SensorInfo) -> Bool {
+         lhs.sensorAge == rhs.sensorAge && lhs.sensorAgeLeft == rhs.sensorAgeLeft &&
+         lhs.sensorEndTime == rhs.sensorEndTime && lhs.sensorState == rhs.sensorState &&
+         lhs.sensorSerial == rhs.sensorSerial
+
+     }
 
     //todo: remove all these utility functions and get this info as an observable
     // from the cgmmanager directly
@@ -97,7 +110,7 @@ private class SensorInfo : ObservableObject, Equatable{
 
 }
 
-private class TransmitterInfo : ObservableObject, Equatable{
+private class TransmitterInfo : ObservableObject, Equatable, Hashable{
     @Published var battery = ""
     @Published var hardware = ""
     @Published var firmware = ""
@@ -105,6 +118,14 @@ private class TransmitterInfo : ObservableObject, Equatable{
     @Published var transmitterType = ""
     @Published var transmitterIdentifier = "" //either mac or apple proprietary identifere
     @Published var sensorType = ""
+
+    static func ==(lhs: TransmitterInfo, rhs: TransmitterInfo) -> Bool {
+         lhs.battery == rhs.battery && lhs.hardware == rhs.hardware &&
+         lhs.firmware == rhs.firmware && lhs.connectionState == rhs.connectionState &&
+         lhs.transmitterType == rhs.transmitterType && lhs.transmitterIdentifier == rhs.transmitterIdentifier &&
+         lhs.sensorType == rhs.sensorType
+
+     }
 
     //todo: remove all these utility functions and get this info as an observable
     // from the cgmmanager directly
@@ -130,7 +151,7 @@ private class TransmitterInfo : ObservableObject, Equatable{
 }
 
 
-private class FactoryCalibrationInfo : ObservableObject, Equatable{
+private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
     @Published var i1 = ""
     @Published var i2 = ""
     @Published var i3 = ""
@@ -138,6 +159,18 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable{
     @Published var i5 = ""
     @Published var i6 = ""
     @Published var validForFooter = ""
+
+
+    // For swiftuis stateobject to be able to compare two objects for equality,
+    // we must exclude the publishers them selves in the comparison
+
+   static func ==(lhs: FactoryCalibrationInfo, rhs: FactoryCalibrationInfo) -> Bool {
+        lhs.i1 == rhs.i1 && lhs.i2 == rhs.i2 &&
+        lhs.i3 == rhs.i3 && lhs.i4 == rhs.i4 &&
+        lhs.i5 == rhs.i5 && lhs.i6 == rhs.i6 &&
+        lhs.validForFooter == rhs.validForFooter
+
+    }
 
     //todo: consider using cgmmanagers observable directly
     static func loadState(cgmManager: LibreTransmitterManager?) -> FactoryCalibrationInfo{
@@ -188,6 +221,14 @@ class GenericObservableObject : ObservableObject {
     }
 }
 
+class SettingsModel : ObservableObject {
+    @Published  fileprivate var glucoseMeasurements = [GlucoseInfo()]
+    @Published  fileprivate var sensorInfos = [SensorInfo()]
+    @Published  fileprivate var transmitterInfos = [TransmitterInfo()]
+    @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
+
+}
+
 
 struct SettingsView: View {
 
@@ -228,12 +269,13 @@ struct SettingsView: View {
     static let formatter = NumberFormatter()
 
 
-    //Yes, these *must be state and not stateobjects as implemented currently
 
-    @State private var glucoseMeasurement = GlucoseInfo()
-    @State private var sensorInfo = SensorInfo()
-    @State private var transmitterInfo = TransmitterInfo()
-    @State private var factoryCalibrationInfo = FactoryCalibrationInfo()
+    /*@State private var glucoseMeasurements = [GlucoseInfo()]
+    @State private var sensorInfos = [SensorInfo()]
+    @State private var transmitterInfos = [TransmitterInfo()]
+    @State private var factoryCalibrationInfos = [FactoryCalibrationInfo()]*/
+
+    @StateObject  var model = SettingsModel()
 
 
     @EnvironmentObject private var notifyComplete: GenericObservableObject
@@ -258,33 +300,47 @@ struct SettingsView: View {
                 .navigationBarItems(trailing: dismissButton)
         //}
                 .onAppear{
+                    print("dabear:: settingsview appeared")
                     //yes we load newstate each time settings appear. See previous todo
+                    // I know this is terribly bad,
+
                     let newTransmitterInfo = TransmitterInfo.loadState(cgmManager: self.cgmManager)
-                    if newTransmitterInfo != self.transmitterInfo {
-                        self.transmitterInfo = newTransmitterInfo
-                        self.transmitterInfo.objectWillChange.send()
+                    if newTransmitterInfo != self.model.transmitterInfos.first{
+                        self.model.transmitterInfos.removeAll()
+                        self.model.transmitterInfos.append(newTransmitterInfo)
+
                     }
 
                     let newSensorInfo = SensorInfo.loadState(cgmManager: self.cgmManager)
 
-                    if newSensorInfo != self.sensorInfo {
-                        self.sensorInfo = newSensorInfo
-                        self.sensorInfo.objectWillChange.send()
+                    if newSensorInfo != self.model.sensorInfos.first {
+                        self.model.sensorInfos.removeAll()
+                        self.model.sensorInfos.append(newSensorInfo)
+
                     }
 
                     let newFactoryInfo = FactoryCalibrationInfo.loadState(cgmManager: self.cgmManager)
 
-                    if newFactoryInfo != self.factoryCalibrationInfo {
-                        self.factoryCalibrationInfo = newFactoryInfo
-                        self.factoryCalibrationInfo.objectWillChange.send()
+
+                    if newFactoryInfo != self.model.factoryCalibrationInfos.first{
+                        print("dabear:: factoryinfo was new")
+
+                        self.model.factoryCalibrationInfos.removeAll()
+                        self.model.factoryCalibrationInfos.append(newFactoryInfo)
+
+                    } else {
+                        print("dabear:: factoryinfo was not updated")
+
                     }
 
                     let newGlucoseInfo = GlucoseInfo.loadState(cgmManager: self.cgmManager, unit: glucoseUnit)
 
-                    if newGlucoseInfo != self.glucoseMeasurement {
-                        self.glucoseMeasurement = newGlucoseInfo
-                        self.glucoseMeasurement.objectWillChange.send()
+                    if newGlucoseInfo != self.model.glucoseMeasurements.first {
+                        self.model.glucoseMeasurements.removeAll()
+                        self.model.glucoseMeasurements.append(newGlucoseInfo)
+
                     }
+
 
 
                 }
@@ -303,21 +359,24 @@ struct SettingsView: View {
 
     var measurementSection : some View {
         Section(header: Text("Last measurement")) {
-            SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose)
-            SettingsItem(title: "Date", detail: glucoseMeasurement.date)
-            SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum)
-            //SettingsItem(title: "Entry Errors", detail: glucoseMeasurement.entryErrors)
+            ForEach(self.model.glucoseMeasurements, id: \.self) { glucoseMeasurement in
+                SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose )
+                SettingsItem(title: "Date", detail: glucoseMeasurement.date )
+                SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum )
+            }
 
         }
     }
 
     var sensorInfoSection : some View {
         Section(header: Text("Sensor Info")) {
-            SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge)
-            SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft)
-            SettingsItem(title: "Sensor Endtime", detail: sensorInfo.sensorEndTime)
-            SettingsItem(title: "Sensor State", detail: sensorInfo.sensorState)
-            SettingsItem(title: "Sensor Serial", detail: sensorInfo.sensorSerial)
+            ForEach(self.model.sensorInfos, id: \.self) { sensorInfo in
+                SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge )
+                SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft )
+                SettingsItem(title: "Sensor Endtime", detail: sensorInfo.sensorEndTime )
+                SettingsItem(title: "Sensor State", detail: sensorInfo.sensorState )
+                SettingsItem(title: "Sensor Serial", detail: sensorInfo.sensorSerial )
+            }
 
 
         }
@@ -325,26 +384,31 @@ struct SettingsView: View {
 
     var transmitterInfoSection: some View {
         Section(header: Text("Transmitter Info")) {
-            SettingsItem(title: "Battery", detail: transmitterInfo.battery)
-            SettingsItem(title: "Hardware", detail: transmitterInfo.hardware)
-            SettingsItem(title: "Firmware", detail: transmitterInfo.firmware)
-            SettingsItem(title: "Connection State", detail: transmitterInfo.connectionState)
-            SettingsItem(title: "Transmitter Type", detail: transmitterInfo.transmitterType)
-            SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier)
-            SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType)
+            ForEach(self.model.transmitterInfos, id: \.self) { transmitterInfo in
+                SettingsItem(title: "Battery", detail: transmitterInfo.battery )
+                SettingsItem(title: "Hardware", detail: transmitterInfo.hardware )
+                SettingsItem(title: "Firmware", detail: transmitterInfo.firmware )
+                SettingsItem(title: "Connection State", detail: transmitterInfo.connectionState )
+                SettingsItem(title: "Transmitter Type", detail: transmitterInfo.transmitterType )
+                SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier )
+                SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType )
+            }
 
         }
     }
 
     var factoryCalibrationSection: some View {
         Section(header: Text("Factory Calibration Parameters")) {
-            SettingsItem(title: "i1", detail: factoryCalibrationInfo.i1)
-            SettingsItem(title: "i2", detail: factoryCalibrationInfo.i2)
-            SettingsItem(title: "i3", detail: factoryCalibrationInfo.i3)
-            SettingsItem(title: "i4", detail: factoryCalibrationInfo.i4)
-            SettingsItem(title: "i5", detail: factoryCalibrationInfo.i5)
-            SettingsItem(title: "i6", detail: factoryCalibrationInfo.i6)
-            SettingsItem(title: "Valid for footer", detail: factoryCalibrationInfo.validForFooter)
+            ForEach(self.model.factoryCalibrationInfos, id: \.self) { factoryCalibrationInfo in
+
+                SettingsItem(title: "i1", detail: factoryCalibrationInfo.i1 )
+                SettingsItem(title: "i2", detail: factoryCalibrationInfo.i2 )
+                SettingsItem(title: "i3", detail: factoryCalibrationInfo.i3 )
+                SettingsItem(title: "i4", detail: factoryCalibrationInfo.i4 )
+                SettingsItem(title: "i5", detail: factoryCalibrationInfo.i5 )
+                SettingsItem(title: "i6", detail: factoryCalibrationInfo.i6 )
+                SettingsItem(title: "Valid for footer", detail: factoryCalibrationInfo.validForFooter )
+            }
 
 
             ZStack {
