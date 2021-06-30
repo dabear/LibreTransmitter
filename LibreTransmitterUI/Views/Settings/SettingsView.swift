@@ -262,24 +262,28 @@ struct SettingsView: View {
                     let newTransmitterInfo = TransmitterInfo.loadState(cgmManager: self.cgmManager)
                     if newTransmitterInfo != self.transmitterInfo {
                         self.transmitterInfo = newTransmitterInfo
+                        self.transmitterInfo.objectWillChange.send()
                     }
 
                     let newSensorInfo = SensorInfo.loadState(cgmManager: self.cgmManager)
 
                     if newSensorInfo != self.sensorInfo {
                         self.sensorInfo = newSensorInfo
+                        self.sensorInfo.objectWillChange.send()
                     }
 
                     let newFactoryInfo = FactoryCalibrationInfo.loadState(cgmManager: self.cgmManager)
 
                     if newFactoryInfo != self.factoryCalibrationInfo {
                         self.factoryCalibrationInfo = newFactoryInfo
+                        self.factoryCalibrationInfo.objectWillChange.send()
                     }
 
                     let newGlucoseInfo = GlucoseInfo.loadState(cgmManager: self.cgmManager, unit: glucoseUnit)
 
                     if newGlucoseInfo != self.glucoseMeasurement {
                         self.glucoseMeasurement = newGlucoseInfo
+                        self.glucoseMeasurement.objectWillChange.send()
                     }
 
 

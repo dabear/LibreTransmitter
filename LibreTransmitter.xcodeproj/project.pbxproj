@@ -86,7 +86,6 @@
 		27850E5125673CF40020D109 /* libresensor.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4125672DFB0020D109 /* libresensor.png */; };
 		27850E5725673CF70020D109 /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4225672DFB0020D109 /* bubble.png */; };
 		2793EBE6260BDE43001A35A3 /* CalibrationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */; };
-		4325E9D5210E6B4400969CE5 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4325E9D4210E6B4300969CE5 /* UIColor.swift */; };
 		432B0E8C1CDFC3C50045347B /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43A8EC7C210E661400A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 		43A8EC86210E664300A81379 /* LibreTransmitterUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 43A8EC84210E664300A81379 /* LibreTransmitterUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -181,7 +180,6 @@
 		27850D4A25672DFB0020D109 /* SnoozeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnoozeView.swift; sourceTree = "<group>"; };
 		27850D4B25672DFB0020D109 /* BluetoothSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothSelection.swift; sourceTree = "<group>"; };
 		2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationEditView.swift; sourceTree = "<group>"; };
-		4325E9D4210E6B4300969CE5 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		432B0E881CDFC3C50045347B /* LibreTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LibreTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibreTransmitter.h; sourceTree = "<group>"; };
 		432B0E8D1CDFC3C50045347B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -505,7 +503,6 @@
 				43AB511921330D1400B3D58D /* Localizable.strings */,
 				43A8EC84210E664300A81379 /* LibreTransmitterUI.h */,
 				43A8EC8E210E676500A81379 /* LibreTransmitterManager+UI.swift */,
-				4325E9D4210E6B4300969CE5 /* UIColor.swift */,
 				43A8EC85210E664300A81379 /* Info.plist */,
 			);
 			path = LibreTransmitterUI;
@@ -791,7 +788,6 @@
 				27850CF825672C0C0020D109 /* UserDefaults+Bluetooth.swift in Sources */,
 				275786AB26753CC400845D0E /* SettingsView.swift in Sources */,
 				275EC9AB265EDC280043210E /* GlucoseSettingsView.swift in Sources */,
-				4325E9D5210E6B4400969CE5 /* UIColor.swift in Sources */,
 				27850CEA25672C0C0020D109 /* TimeIntervalExtensions.swift in Sources */,
 				27850D8B25672ECA0020D109 /* BluetoothSearch.swift in Sources */,
 				27850DAC25672F3E0020D109 /* LimitedQueue.swift in Sources */,
