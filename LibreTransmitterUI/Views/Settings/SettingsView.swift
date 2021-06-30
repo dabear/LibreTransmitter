@@ -189,7 +189,7 @@ class GenericObservableObject : ObservableObject {
 }
 
 
-struct SettingsOverview: View {
+struct SettingsView: View {
 
 
     static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, allowsDeletion: Bool, notifyComplete: GenericObservableObject) -> UIHostingController<AnyView> {
@@ -291,7 +291,7 @@ struct SettingsOverview: View {
 
     var snoozeSection: some View {
         Section {
-            NavigationLink(destination: SwiftSnoozeView(manager: cgmManager)) {
+            NavigationLink(destination: SnoozeView(manager: cgmManager)) {
                 Text("Snooze Alerts").frame(alignment: .center)
             }
         }

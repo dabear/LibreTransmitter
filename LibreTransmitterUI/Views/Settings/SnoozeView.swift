@@ -9,7 +9,7 @@
 import LibreTransmitter
 import SwiftUI
 
-struct SwiftSnoozeView: View {
+struct SnoozeView: View {
 
     var pickerTimes: [TimeInterval]! = nil
 
@@ -127,6 +127,6 @@ struct SwiftSnoozeView: View {
 
 struct TestView_Previews: PreviewProvider {
     static var previews: some View {
-        SwiftSnoozeView(manager: nil)
+        SnoozeView(manager: nil)
     }
 }

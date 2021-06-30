@@ -38,7 +38,7 @@ extension LibreTransmitterManager: CGMManagerUI {
         let doneNotifier = GenericObservableObject()
 
 
-        let settings = (SettingsOverview.asHostedViewController(cgmManager: self, displayGlucoseUnitObservable: displayGlucoseUnitObservable, allowsDeletion: true, notifyComplete: doneNotifier))
+        let settings = (SettingsView.asHostedViewController(cgmManager: self, displayGlucoseUnitObservable: displayGlucoseUnitObservable, allowsDeletion: true, notifyComplete: doneNotifier))
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
 
         doneNotifier.listenOnce {
