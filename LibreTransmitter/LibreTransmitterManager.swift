@@ -480,12 +480,14 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         }
     }
 }
-extension LibreTransmitterManager : IdentifiableClass {
 
-}
 
 
 extension LibreTransmitterManager {
+
+     static var className: String {
+        String(describing: Self.self)
+    }
     //cannot be called from managerQueue
     public var identifier: String {
         //proxy?.OnQueue_identifer?.uuidString ?? "n/a"

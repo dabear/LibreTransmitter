@@ -303,36 +303,19 @@ struct AlarmSettingsView: View {
     @StateObject var alarmState = AlarmSettingsState.loadState()
 
 
-    /**
-     Thealarm datapicker suvbview requires uikit parent navbar to be hiddden
-     */
-
-    @State private var subviewIsActive = false
-
     @State private var subviewSelection: Int? = nil
 
-    //only to stay compatible with uikit viewcontrollers in a transitionperiod
-    public weak var disappearDelegate: SubViewControllerWillDisappear? = nil
+    
 
 
     var body: some View {
-        NavigationView {
-            list
-                .navigationBarHidden(true)
 
-        }
-        //added on purpose here to hide navigation from uikit viewcontroller
-        .navigationBarHidden(subviewIsActive)
-        .onChange(of: subviewSelection) { newValue in
-            subviewIsActive = !(newValue == nil)
-        }
+        list
         .ignoresSafeArea()
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
-        .onDisappear {
-            disappearDelegate?.onDisappear()
-        }
+        
 
     }
 
@@ -378,9 +361,7 @@ struct AlarmSettingsView: View {
 
     }
 
-    static func asHostedViewController(glucoseUnit: HKUnit, disappearDelegate: SubViewControllerWillDisappear?) -> UIHostingController<Self> {
-        UIHostingController(rootView: self.init(glucoseUnit: glucoseUnit, disappearDelegate: disappearDelegate))
-    }
+    
 }
 
 struct AlarmSettingsView_Previews: PreviewProvider {

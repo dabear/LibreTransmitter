@@ -12,7 +12,7 @@ import LibreTransmitter
 import SwiftUI
 import UIKit
 
-class LibreTransmitterSetupViewController :UINavigationController, CGMManagerCreateNotifying, CGMManagerOnboardNotifying, CompletionNotifying {
+class LibreTransmitterSetupViewController: UINavigationController, CGMManagerCreateNotifying, CGMManagerOnboardNotifying, CompletionNotifying {
     weak var cgmManagerCreateDelegate: CGMManagerCreateDelegate?
     weak var cgmManagerOnboardDelegate: CGMManagerOnboardDelegate?
     weak var completionDelegate: CompletionDelegate?

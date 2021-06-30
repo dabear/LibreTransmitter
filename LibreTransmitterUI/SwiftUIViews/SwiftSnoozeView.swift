@@ -10,9 +10,6 @@ import LibreTransmitter
 import SwiftUI
 
 struct SwiftSnoozeView: View {
-    static func asHostedViewController(manager: LibreTransmitterManager?)-> UIHostingController<Self> {
-        UIHostingController(rootView: self.init(manager: manager))
-    }
 
     var pickerTimes: [TimeInterval]! = nil
 

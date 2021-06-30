@@ -434,6 +434,6 @@ struct SettingsOverview: View {
 
 struct SettingsOverview_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationSettingsView(glucoseUnit: HKUnit.millimolesPerLiter, disappearDelegate:nil)
+        NotificationSettingsView(glucoseUnit: HKUnit.millimolesPerLiter)
     }
 }

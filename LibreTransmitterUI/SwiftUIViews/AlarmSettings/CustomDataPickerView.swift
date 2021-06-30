@@ -29,7 +29,7 @@ class AlarmTimeCellExternalState :ObservableObject, Identifiable, Hashable {
 
 }
 
-
+//handle parts of alarmsettingsview's state (=externalstate)
 struct CustomDataPickerView: View {
     private var startComponentTimes : [DateComponents]
     private var endComponentTimes : [DateComponents]
@@ -109,50 +109,49 @@ struct CustomDataPickerView: View {
 
     
     var pickers: some View {
-        //NavigationView {
-            HStack {
-                Picker("", selection: $externalState.start.animation(), content: {
-                    ForEach(startTimes.indices) { i in
-                        Text("\(startTimes[i])").tag(i)
-                   }
-                })
-                //.border(Color.green)
+        HStack {
+            Picker("", selection: $externalState.start.animation(), content: {
+                ForEach(startTimes.indices) { i in
+                    Text("\(startTimes[i])").tag(i)
+               }
+            })
+            //.border(Color.green)
 
-                .zIndex(10)
-                .frame(width: 100)
-                .clipped()
-                .labelsHidden()
+            .zIndex(10)
+            .frame(width: 100)
+            .clipped()
+            .labelsHidden()
 
-                Text("To ")
+            Text("To ")
 
-                Picker("", selection: $externalState.end.animation(), content: {
-                    ForEach(endTimes.indices) { i in
-                        Text("\(endTimes[i])").tag(i)
-                   }
-                })
-                //.border(Color.red)
-                .zIndex(11)
-                .frame(width: 100)
-                .clipped()
-                .labelsHidden()
+            Picker("", selection: $externalState.end.animation(), content: {
+                ForEach(endTimes.indices) { i in
+                    Text("\(endTimes[i])").tag(i)
+               }
+            })
+            //.border(Color.red)
+            .zIndex(11)
+            .frame(width: 100)
+            .clipped()
+            .labelsHidden()
 
-            //}
-            
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading:
-                Button("Cancel"){
-                    print("cancel button pressed, restoring state...")
-                    restoreAlarmExternalState()
-                    popView()
+        //}
 
-                }.accentColor(.red), trailing:
-                    Button("Save") {
-                        print("Save button pressed...")
-                        verifyRange()
-                    }
-                    .accentColor(.red)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading:
+            Button("Cancel"){
+                print("cancel button pressed, restoring state...")
+                restoreAlarmExternalState()
+                popView()
 
-            )
+            }.accentColor(.red), trailing:
+                Button("Save") {
+                    print("Save button pressed...")
+                    verifyRange()
+                }
+                .accentColor(.red)
+
+        )
         }
 
 

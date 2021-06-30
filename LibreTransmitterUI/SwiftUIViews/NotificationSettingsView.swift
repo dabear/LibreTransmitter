@@ -18,22 +18,17 @@ import HealthKit
 struct NotificationSettingsView: View {
 
 
-    static func asHostedViewController(glucoseUnit: HKUnit, disappearDelegate: SubViewControllerWillDisappear?) -> UIHostingController<Self> {
-        UIHostingController(rootView: self.init(glucoseUnit: glucoseUnit, disappearDelegate: disappearDelegate))
-    }
-
+    
     @State private var presentableStatus: StatusMessage?
 
 
-
-    public weak var disappearDelegate: SubViewControllerWillDisappear?
 
     private var glucoseUnit: HKUnit
 
     private let glucoseSegments = [HKUnit.millimolesPerLiter, HKUnit.milligramsPerDeciliter]
     private lazy var glucoseSegmentStrings = self.glucoseSegments.map({ $0.localizedShortUnitString })
 
-    public init(glucoseUnit: HKUnit, disappearDelegate: SubViewControllerWillDisappear?=nil) {
+    public init(glucoseUnit: HKUnit) {
         if let savedGlucoseUnit = UserDefaults.standard.mmGlucoseUnit {
             self.glucoseUnit = savedGlucoseUnit
         } else {
@@ -41,7 +36,6 @@ struct NotificationSettingsView: View {
             UserDefaults.standard.mmGlucoseUnit = glucoseUnit
         }
 
-        self.disappearDelegate = disappearDelegate
 
     }
 
@@ -162,9 +156,7 @@ struct NotificationSettingsView: View {
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
-        .onDisappear {
-            disappearDelegate?.onDisappear()
-        }
+
         .navigationBarTitle("Notification Settings")
 
     }
@@ -177,6 +169,6 @@ struct NotificationSettingsView: View {
 
 struct NotificationSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        NotificationSettingsView(glucoseUnit: HKUnit.millimolesPerLiter, disappearDelegate:nil)
+        NotificationSettingsView(glucoseUnit: HKUnit.millimolesPerLiter)
     }
 }

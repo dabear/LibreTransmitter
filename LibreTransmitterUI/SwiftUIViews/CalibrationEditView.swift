@@ -15,10 +15,6 @@ import LibreTransmitter
 struct CalibrationEditView: View {
     typealias Params = SensorData.CalibrationInfo
 
-    static func asHostedViewController(cgmManager: LibreTransmitterManager?)-> UIHostingController<Self> {
-        UIHostingController(rootView:self.init(cgmManager: cgmManager, debugMode: false) )
-
-    }
 
 
     @State private var isPressed = false

@@ -16,19 +16,12 @@ import HealthKit
 struct GlucoseSettingsView: View {
 
 
-    static func asHostedViewController(glucoseUnit: HKUnit, disappearDelegate: SubViewControllerWillDisappear?) -> UIHostingController<Self> {
-        UIHostingController(rootView: self.init(glucoseUnit: glucoseUnit, disappearDelegate: disappearDelegate))
-    }
-
     @State private var presentableStatus: StatusMessage?
 
 
-
-    public weak var disappearDelegate: SubViewControllerWillDisappear?
-
     private var glucoseUnit: HKUnit
 
-    public init(glucoseUnit: HKUnit, disappearDelegate: SubViewControllerWillDisappear?=nil) {
+    public init(glucoseUnit: HKUnit) {
         if let savedGlucoseUnit = UserDefaults.standard.mmGlucoseUnit {
             self.glucoseUnit = savedGlucoseUnit
         } else {
@@ -36,7 +29,7 @@ struct GlucoseSettingsView: View {
             UserDefaults.standard.mmGlucoseUnit = glucoseUnit
         }
 
-        self.disappearDelegate = disappearDelegate
+
 
     }
 
@@ -68,9 +61,6 @@ struct GlucoseSettingsView: View {
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
-        .onDisappear {
-            disappearDelegate?.onDisappear()
-        }
         .navigationBarTitle("Glucose Settings")
 
     }
@@ -83,6 +73,6 @@ struct GlucoseSettingsView: View {
 
 struct GlucoseSettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        GlucoseSettingsView(glucoseUnit: HKUnit.millimolesPerLiter, disappearDelegate:nil)
+        GlucoseSettingsView(glucoseUnit: HKUnit.millimolesPerLiter)
     }
 }
