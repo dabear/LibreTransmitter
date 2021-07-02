@@ -364,50 +364,52 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     public var transmitterInfoObservable = TransmitterInfo()
     public var sensorInfoObservable = SensorInfo()
     public var glucoseInfoObservable = GlucoseInfo()
+
     func setObservables(sensorData: SensorData?, metaData: LibreTransmitterMetadata?) {
-        if let metaData=metaData {
-        transmitterInfoObservable.battery = metaData.batteryString ?? "n/a"
-        transmitterInfoObservable.hardware = metaData.hardware
-        transmitterInfoObservable.firmware = metaData.firmware
-        transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
-        transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
+        DispatchQueue.main.async {
+            if let metaData=metaData {
+                self.transmitterInfoObservable.battery = metaData.batteryString
+                self.transmitterInfoObservable.hardware = metaData.hardware
+                self.transmitterInfoObservable.firmware = metaData.firmware
+                self.transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
+                self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
+
+            }
+
+            self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
+            self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
+
+            if let sensorData = sensorData {
+                self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
+                self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
+
+                self.sensorInfoObservable.sensorState = sensorData.state.description 
+                self.sensorInfoObservable.sensorSerial = sensorData.serialNumber
+
+                self.glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
+
+            }
+
+
+            if let sensorEndTime = sensorData?.sensorEndTime {
+                self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
+            } else {
+                self.sensorInfoObservable.sensorEndTime = "Unknown or ended"
+            }
+
+
+
+            let formatter = QuantityFormatter()
+            let unit = UserDefaults.standard.mmGlucoseUnit ?? .milligramsPerDeciliter
+            formatter.setPreferredNumberFormatter(for: unit)
+
+
+            if let d = self.latestBackfill {
+                self.glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
+                self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
+            }
 
         }
-
-        transmitterInfoObservable.connectionState = proxy?.connectionStateString ?? "n/a"
-        transmitterInfoObservable.transmitterType = proxy?.shortTransmitterName ?? "Unknown"
-
-        if let sensorData = sensorData {
-            sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge ?? "n/a"
-            sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft ?? "n/a"
-
-            sensorInfoObservable.sensorState = sensorData.state.description ?? "n/a"
-            sensorInfoObservable.sensorSerial = sensorData.serialNumber
-
-            glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
-
-        }
-
-
-        if let sensorEndTime = sensorData?.sensorEndTime {
-            sensorInfoObservable.sensorEndTime = dateFormatter.string(from: sensorEndTime )
-        } else {
-            sensorInfoObservable.sensorEndTime = "Unknown or ended"
-        }
-
-
-
-        let formatter = QuantityFormatter()
-        var unit = UserDefaults.standard.mmGlucoseUnit ?? .milligramsPerDeciliter
-        formatter.setPreferredNumberFormatter(for: unit)
-
-
-        if let d = self.latestBackfill {
-            glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
-            glucoseInfoObservable.date = longDateFormatter.string(from: d.timestamp)
-        }
-
-
 
 
     }
