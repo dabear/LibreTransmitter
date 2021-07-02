@@ -28,128 +28,6 @@ private struct SettingsItem: View {
     }
 }
 
-/*private class GlucoseInfo : ObservableObject, Equatable, Hashable{
-    @Published var glucose = ""
-    @Published var date = ""
-    @Published var checksum = ""
-    //@Published var entryErrors = ""
-
-    static func ==(lhs: GlucoseInfo, rhs: GlucoseInfo) -> Bool {
-         lhs.glucose == rhs.glucose && lhs.date == rhs.date &&
-         lhs.checksum == rhs.checksum
-
-     }
-
-
-    //todo: remove all these utility functions and get this info as an observable
-    // from the cgmmanager directly
-    static func loadState(cgmManager: LibreTransmitterManager?, unit: HKUnit) -> GlucoseInfo{
-
-        let newState = GlucoseInfo()
-
-        guard let cgmManager = cgmManager, let d = cgmManager.latestBackfill else {
-            return newState
-        }
-
-
-        // We know we need this every time,
-        // so no point in lazying it as was done in uikit version
-
-        let formatter = QuantityFormatter()
-        formatter.setPreferredNumberFormatter(for: unit)
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .long
-        dateFormatter.doesRelativeDateFormatting = true
-
-        newState.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
-        newState.date = dateFormatter.string(from: d.timestamp)
-        newState.checksum = cgmManager.sensorFooterChecksums
-
-
-        return newState
-    }
-
-
-
-}*/
-
-/*private class SensorInfo : ObservableObject, Equatable, Hashable{
-    @Published var sensorAge = ""
-    @Published var sensorAgeLeft = ""
-    @Published var sensorEndTime = ""
-    @Published var sensorState = ""
-    @Published var sensorSerial = ""
-
-    static func ==(lhs: SensorInfo, rhs: SensorInfo) -> Bool {
-         lhs.sensorAge == rhs.sensorAge && lhs.sensorAgeLeft == rhs.sensorAgeLeft &&
-         lhs.sensorEndTime == rhs.sensorEndTime && lhs.sensorState == rhs.sensorState &&
-         lhs.sensorSerial == rhs.sensorSerial
-
-     }
-
-    //todo: remove all these utility functions and get this info as an observable
-    // from the cgmmanager directly
-    static func loadState(cgmManager: LibreTransmitterManager?) -> SensorInfo{
-
-        let newState = SensorInfo()
-
-        guard let cgmManager = cgmManager else {
-            return newState
-        }
-
-        newState.sensorAge = cgmManager.sensorAge
-        newState.sensorAgeLeft = cgmManager.sensorTimeLeft
-        newState.sensorEndTime = cgmManager.sensorEndTime
-        newState.sensorState = cgmManager.sensorStateDescription
-        newState.sensorSerial = cgmManager.sensorSerialNumber
-
-        return newState
-    }
-
-}*/
-/*
-private class TransmitterInfo : ObservableObject, Equatable, Hashable{
-    @Published var battery = ""
-    @Published var hardware = ""
-    @Published var firmware = ""
-    @Published var connectionState = ""
-    @Published var transmitterType = ""
-    @Published var transmitterIdentifier = "" //either mac or apple proprietary identifere
-    @Published var sensorType = ""
-
-    static func ==(lhs: TransmitterInfo, rhs: TransmitterInfo) -> Bool {
-         lhs.battery == rhs.battery && lhs.hardware == rhs.hardware &&
-         lhs.firmware == rhs.firmware && lhs.connectionState == rhs.connectionState &&
-         lhs.transmitterType == rhs.transmitterType && lhs.transmitterIdentifier == rhs.transmitterIdentifier &&
-         lhs.sensorType == rhs.sensorType
-
-     }
-
-    //todo: remove all these utility functions and get this info as an observable
-    // from the cgmmanager directly
-    static func loadState(cgmManager: LibreTransmitterManager?) -> TransmitterInfo{
-
-        let newState = TransmitterInfo()
-
-        guard let cgmManager = cgmManager else {
-            return newState
-        }
-
-        newState.battery = cgmManager.batteryString
-        newState.hardware = cgmManager.hardwareVersion
-        newState.firmware = cgmManager.firmwareVersion
-        newState.connectionState = cgmManager.connectionState
-        newState.transmitterType = cgmManager.getDeviceType()
-        newState.transmitterIdentifier = cgmManager.metaData?.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
-        newState.sensorType = cgmManager.metaData?.sensorType()?.description ?? "Unknown"
-
-        return newState
-    }
-
-}*/
-
 
 private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
     @Published var i1 = ""
@@ -222,9 +100,6 @@ class GenericObservableObject : ObservableObject {
 }
 
 class SettingsModel : ObservableObject {
-    //@Published  fileprivate var glucoseMeasurements = [GlucoseInfo()]
-    //@Published  fileprivate var sensorInfos = [SensorInfo()]
-    //@Published  fileprivate var transmitterInfos = [TransmitterInfo()]
     @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
 
 }
@@ -232,6 +107,21 @@ class SettingsModel : ObservableObject {
 
 struct SettingsView: View {
 
+    @EnvironmentObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
+    @EnvironmentObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
+    @EnvironmentObject private var sensorInfo: LibreTransmitter.SensorInfo
+    @EnvironmentObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
+
+
+    @EnvironmentObject private var notifyComplete: GenericObservableObject
+
+    //most of the settings are now retrieved from the cgmmanager observables instead
+    @StateObject var model = SettingsModel()
+    @State private var presentableStatus: StatusMessage?
+
+
+
+    public var cgmManager: LibreTransmitterManager?
 
     static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo) -> UIHostingController<AnyView> {
         UIHostingController(rootView: AnyView(self.init(cgmManager: cgmManager)
@@ -242,25 +132,6 @@ struct SettingsView: View {
                                                 .environmentObject(glucoseInfoObservable)
         ))
     }
-
-    @State private var presentableStatus: StatusMessage?
-
-
-    @EnvironmentObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
-    @EnvironmentObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
-    @EnvironmentObject private var sensorInfo: LibreTransmitter.SensorInfo
-    @EnvironmentObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
-
-
-    @EnvironmentObject private var notifyComplete: GenericObservableObject
-
-
-    private var glucoseUnit: HKUnit {
-        displayGlucoseUnitObservable.displayGlucoseUnit
-    }
-
-
-    public var cgmManager: LibreTransmitterManager?
 
     public init(cgmManager: LibreTransmitterManager) {
         self.cgmManager = cgmManager
@@ -274,80 +145,65 @@ struct SettingsView: View {
 
     }
 
+    @State private var showingDestructQuestion = false
+
+    private var glucoseUnit: HKUnit {
+        displayGlucoseUnitObservable.displayGlucoseUnit
+    }
+
 
     static let formatter = NumberFormatter()
 
-    @StateObject  var model = SettingsModel()
 
 
-
-
-    func bindableIsDangerModeActivated() -> Binding<Bool> {
-        return Binding(
-            get: { return UserDefaults.standard.dangerModeActivated },
+    private func bindableIsDangerModeActivated() -> Binding<Bool> {
+        Binding(
+            get: { UserDefaults.standard.dangerModeActivated },
             set: { newVal in
                 UserDefaults.standard.dangerModeActivated = newVal
             })
     }
 
-    @State private var showingDestructQuestion = false
+    var dangerModeActivated : Binding<Bool> = ({
+        Binding(
+            get: { UserDefaults.standard.dangerModeActivated },
+            set: { newVal in
+                UserDefaults.standard.dangerModeActivated = newVal
+            })
+    }
+
+    )()
+
+
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
     var body: some View {
-        //NavigationView {
-            overview
-                //.navigationViewStyle(StackNavigationViewStyle())
-                .navigationBarTitle(Text("Libre Bluetooth"), displayMode: .inline)
-                .navigationBarItems(trailing: dismissButton)
-        //}
-                .onAppear{
-                    print("dabear:: settingsview appeared")
-                    //yes we load newstate each time settings appear. See previous todo
-                    // I know this is terribly bad,
 
-                    /*
-                    let newTransmitterInfo = TransmitterInfo.loadState(cgmManager: self.cgmManager)
-                    if newTransmitterInfo != self.model.transmitterInfos.first{
-                        self.model.transmitterInfos.removeAll()
-                        self.model.transmitterInfos.append(newTransmitterInfo)
-
-                    }*/
-                    /*
-                    let newSensorInfo = SensorInfo.loadState(cgmManager: self.cgmManager)
-
-                    if newSensorInfo != self.model.sensorInfos.first {
-                        self.model.sensorInfos.removeAll()
-                        self.model.sensorInfos.append(newSensorInfo)
-
-                    }*/
-
-                    let newFactoryInfo = FactoryCalibrationInfo.loadState(cgmManager: self.cgmManager)
+        overview
+            //.navigationViewStyle(StackNavigationViewStyle())
+            .navigationBarTitle(Text("Libre Bluetooth"), displayMode: .inline)
+            .navigationBarItems(trailing: dismissButton)
+            .onAppear{
+                print("dabear:: settingsview appeared")
+                // Yes we load factory calibrationdata every time the view appears
+                // I know this is  bad, but the calibrationdata is stored in
+                // the keychain and there is no simple way of wrapping the keychain
+                // as an observable in swiftui without bringing in large third party
+                // dependencies or hand crafting it, which would be error prone
 
 
-                    if newFactoryInfo != self.model.factoryCalibrationInfos.first{
-                        print("dabear:: factoryinfo was new")
+                let newFactoryInfo = FactoryCalibrationInfo.loadState(cgmManager: self.cgmManager)
 
-                        self.model.factoryCalibrationInfos.removeAll()
-                        self.model.factoryCalibrationInfos.append(newFactoryInfo)
+                if newFactoryInfo != self.model.factoryCalibrationInfos.first{
+                    print("dabear:: factoryinfo was new")
 
-                    } else {
-                        print("dabear:: factoryinfo was not updated")
-
-                    }
-
-                    /*
-                    let newGlucoseInfo = GlucoseInfo.loadState(cgmManager: self.cgmManager, unit: glucoseUnit)
-
-                    if newGlucoseInfo != self.model.glucoseMeasurements.first {
-                        self.model.glucoseMeasurements.removeAll()
-                        self.model.glucoseMeasurements.append(newGlucoseInfo)
-
-                    }*/
-
-
+                    self.model.factoryCalibrationInfos.removeAll()
+                    self.model.factoryCalibrationInfos.append(newFactoryInfo)
 
                 }
+
+            }
 
     }
 
@@ -362,62 +218,25 @@ struct SettingsView: View {
     }
 
     var measurementSection : some View {
-        /*Section(header: Text("Last measurement")) {
-            ForEach(self.model.glucoseMeasurements, id: \.self) { glucoseMeasurement in
-                SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose )
-                SettingsItem(title: "Date", detail: glucoseMeasurement.date )
-                SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum )
-            }
-
-        }*/
-
         Section(header: Text("Last measurement")) {
                 SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose )
                 SettingsItem(title: "Date", detail: glucoseMeasurement.date )
                 SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum )
-
         }
     }
 
     var sensorInfoSection : some View {
-        /*Section(header: Text("Sensor Info")) {
-            ForEach(self.model.sensorInfos, id: \.self) { sensorInfo in
-                SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge )
-                SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft )
-                SettingsItem(title: "Sensor Endtime", detail: sensorInfo.sensorEndTime )
-                SettingsItem(title: "Sensor State", detail: sensorInfo.sensorState )
-                SettingsItem(title: "Sensor Serial", detail: sensorInfo.sensorSerial )
-            }
-
-
-        }*/
-
         Section(header: Text("Sensor Info")) {
             SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge )
                 SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft )
                 SettingsItem(title: "Sensor Endtime", detail: sensorInfo.sensorEndTime )
                 SettingsItem(title: "Sensor State", detail: sensorInfo.sensorState )
                 SettingsItem(title: "Sensor Serial", detail: sensorInfo.sensorSerial )
-
-
-
         }
     }
 
 
     var transmitterInfoSection: some View {
-        /*Section(header: Text("Transmitter Info")) {
-            ForEach(self.model.transmitterInfos, id: \.self) { transmitterInfo in
-                SettingsItem(title: "Battery", detail: transmitterInfo.battery )
-                SettingsItem(title: "Hardware", detail: transmitterInfo.hardware )
-                SettingsItem(title: "Firmware", detail: transmitterInfo.firmware )
-                SettingsItem(title: "Connection State", detail: transmitterInfo.connectionState )
-                SettingsItem(title: "Transmitter Type", detail: transmitterInfo.transmitterType )
-                SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier )
-                SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType )
-            }
-
-        }*/
 
         Section(header: Text("Transmitter Info")) {
             SettingsItem(title: "Battery", detail: transmitterInfo.battery )
@@ -427,7 +246,6 @@ struct SettingsView: View {
             SettingsItem(title: "Transmitter Type", detail: transmitterInfo.transmitterType )
             SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier )
             SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType )
-
         }
     }
 
@@ -526,8 +344,10 @@ struct SettingsView: View {
 
 
             // Decided against adding ui for activating danger mode this time
-            // Consider doing it in the future, but no rush. dangermode is only used for calibrationedit and bluetooth devices debugging. 
-            SettingsItem(title: "Danger mode", detail: bindableIsDangerModeActivated().wrappedValue ? "Activated" : "Not Activated")
+            // Consider doing it in the future, but no rush. dangermode is only used for calibrationedit and bluetooth devices debugging.
+
+
+            SettingsItem(title: "Danger mode", detail: dangerModeActivated.wrappedValue ? "Activated" : "Not Activated")
                 .onTapGesture {
                     print("danger mode tapped")
                     presentableStatus = StatusMessage(title: "Danger mode", message: "Danger was a legacy ui only feature")
