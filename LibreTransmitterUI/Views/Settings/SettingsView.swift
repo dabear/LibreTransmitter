@@ -28,7 +28,7 @@ private struct SettingsItem: View {
     }
 }
 
-private class GlucoseInfo : ObservableObject, Equatable, Hashable{
+/*private class GlucoseInfo : ObservableObject, Equatable, Hashable{
     @Published var glucose = ""
     @Published var date = ""
     @Published var checksum = ""
@@ -73,9 +73,9 @@ private class GlucoseInfo : ObservableObject, Equatable, Hashable{
 
 
 
-}
+}*/
 
-private class SensorInfo : ObservableObject, Equatable, Hashable{
+/*private class SensorInfo : ObservableObject, Equatable, Hashable{
     @Published var sensorAge = ""
     @Published var sensorAgeLeft = ""
     @Published var sensorEndTime = ""
@@ -108,8 +108,8 @@ private class SensorInfo : ObservableObject, Equatable, Hashable{
         return newState
     }
 
-}
-
+}*/
+/*
 private class TransmitterInfo : ObservableObject, Equatable, Hashable{
     @Published var battery = ""
     @Published var hardware = ""
@@ -148,7 +148,7 @@ private class TransmitterInfo : ObservableObject, Equatable, Hashable{
         return newState
     }
 
-}
+}*/
 
 
 private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
@@ -222,9 +222,9 @@ class GenericObservableObject : ObservableObject {
 }
 
 class SettingsModel : ObservableObject {
-    @Published  fileprivate var glucoseMeasurements = [GlucoseInfo()]
-    @Published  fileprivate var sensorInfos = [SensorInfo()]
-    @Published  fileprivate var transmitterInfos = [TransmitterInfo()]
+    //@Published  fileprivate var glucoseMeasurements = [GlucoseInfo()]
+    //@Published  fileprivate var sensorInfos = [SensorInfo()]
+    //@Published  fileprivate var transmitterInfos = [TransmitterInfo()]
     @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
 
 }
@@ -233,29 +233,38 @@ class SettingsModel : ObservableObject {
 struct SettingsView: View {
 
 
-    static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, allowsDeletion: Bool, notifyComplete: GenericObservableObject) -> UIHostingController<AnyView> {
-        UIHostingController(rootView: AnyView(self.init(cgmManager: cgmManager, allowsDeletion: allowsDeletion)
+    static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo) -> UIHostingController<AnyView> {
+        UIHostingController(rootView: AnyView(self.init(cgmManager: cgmManager)
                                                 .environmentObject(notifyComplete)
-                                                .environmentObject(displayGlucoseUnitObservable)))
+                                                .environmentObject(displayGlucoseUnitObservable)
+                                                .environmentObject(transmitterInfoObservable)
+                                                .environmentObject(sensorInfoObervable)
+                                                .environmentObject(glucoseInfoObservable)
+        ))
     }
 
     @State private var presentableStatus: StatusMessage?
 
 
     @EnvironmentObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
+    @EnvironmentObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
+    @EnvironmentObject private var sensorInfo: LibreTransmitter.SensorInfo
+    @EnvironmentObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
 
+
+    @EnvironmentObject private var notifyComplete: GenericObservableObject
 
 
     private var glucoseUnit: HKUnit {
         displayGlucoseUnitObservable.displayGlucoseUnit
     }
 
-    public let allowsDeletion: Bool
+
     public var cgmManager: LibreTransmitterManager?
 
-    public init(cgmManager: LibreTransmitterManager, allowsDeletion: Bool) {
+    public init(cgmManager: LibreTransmitterManager) {
         self.cgmManager = cgmManager
-        self.allowsDeletion = allowsDeletion
+
 
         //only override savedglucose unit if we haven't saved this locally before
         if UserDefaults.standard.mmGlucoseUnit == nil {
@@ -268,17 +277,9 @@ struct SettingsView: View {
 
     static let formatter = NumberFormatter()
 
-
-
-    /*@State private var glucoseMeasurements = [GlucoseInfo()]
-    @State private var sensorInfos = [SensorInfo()]
-    @State private var transmitterInfos = [TransmitterInfo()]
-    @State private var factoryCalibrationInfos = [FactoryCalibrationInfo()]*/
-
     @StateObject  var model = SettingsModel()
 
 
-    @EnvironmentObject private var notifyComplete: GenericObservableObject
 
 
     func bindableIsDangerModeActivated() -> Binding<Bool> {
@@ -305,20 +306,21 @@ struct SettingsView: View {
                     //yes we load newstate each time settings appear. See previous todo
                     // I know this is terribly bad,
 
+                    /*
                     let newTransmitterInfo = TransmitterInfo.loadState(cgmManager: self.cgmManager)
                     if newTransmitterInfo != self.model.transmitterInfos.first{
                         self.model.transmitterInfos.removeAll()
                         self.model.transmitterInfos.append(newTransmitterInfo)
 
-                    }
-
+                    }*/
+                    /*
                     let newSensorInfo = SensorInfo.loadState(cgmManager: self.cgmManager)
 
                     if newSensorInfo != self.model.sensorInfos.first {
                         self.model.sensorInfos.removeAll()
                         self.model.sensorInfos.append(newSensorInfo)
 
-                    }
+                    }*/
 
                     let newFactoryInfo = FactoryCalibrationInfo.loadState(cgmManager: self.cgmManager)
 
@@ -334,13 +336,14 @@ struct SettingsView: View {
 
                     }
 
+                    /*
                     let newGlucoseInfo = GlucoseInfo.loadState(cgmManager: self.cgmManager, unit: glucoseUnit)
 
                     if newGlucoseInfo != self.model.glucoseMeasurements.first {
                         self.model.glucoseMeasurements.removeAll()
                         self.model.glucoseMeasurements.append(newGlucoseInfo)
 
-                    }
+                    }*/
 
 
 
@@ -359,18 +362,25 @@ struct SettingsView: View {
     }
 
     var measurementSection : some View {
-        Section(header: Text("Last measurement")) {
+        /*Section(header: Text("Last measurement")) {
             ForEach(self.model.glucoseMeasurements, id: \.self) { glucoseMeasurement in
                 SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose )
                 SettingsItem(title: "Date", detail: glucoseMeasurement.date )
                 SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum )
             }
 
+        }*/
+
+        Section(header: Text("Last measurement")) {
+                SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose )
+                SettingsItem(title: "Date", detail: glucoseMeasurement.date )
+                SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum )
+
         }
     }
 
     var sensorInfoSection : some View {
-        Section(header: Text("Sensor Info")) {
+        /*Section(header: Text("Sensor Info")) {
             ForEach(self.model.sensorInfos, id: \.self) { sensorInfo in
                 SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge )
                 SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft )
@@ -380,11 +390,23 @@ struct SettingsView: View {
             }
 
 
+        }*/
+
+        Section(header: Text("Sensor Info")) {
+            SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge )
+                SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft )
+                SettingsItem(title: "Sensor Endtime", detail: sensorInfo.sensorEndTime )
+                SettingsItem(title: "Sensor State", detail: sensorInfo.sensorState )
+                SettingsItem(title: "Sensor Serial", detail: sensorInfo.sensorSerial )
+
+
+
         }
     }
 
+
     var transmitterInfoSection: some View {
-        Section(header: Text("Transmitter Info")) {
+        /*Section(header: Text("Transmitter Info")) {
             ForEach(self.model.transmitterInfos, id: \.self) { transmitterInfo in
                 SettingsItem(title: "Battery", detail: transmitterInfo.battery )
                 SettingsItem(title: "Hardware", detail: transmitterInfo.hardware )
@@ -394,6 +416,17 @@ struct SettingsView: View {
                 SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier )
                 SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType )
             }
+
+        }*/
+
+        Section(header: Text("Transmitter Info")) {
+            SettingsItem(title: "Battery", detail: transmitterInfo.battery )
+            SettingsItem(title: "Hardware", detail: transmitterInfo.hardware )
+            SettingsItem(title: "Firmware", detail: transmitterInfo.firmware )
+            SettingsItem(title: "Connection State", detail: transmitterInfo.connectionState )
+            SettingsItem(title: "Transmitter Type", detail: transmitterInfo.transmitterType )
+            SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier )
+            SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType )
 
         }
     }

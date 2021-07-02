@@ -357,6 +357,77 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         UserDefaults.standard.queuedSensorData = data
     }
 
+
+    /*
+     These properties are mostly useful for swiftui
+     */
+    public var transmitterInfoObservable = TransmitterInfo()
+    public var sensorInfoObservable = SensorInfo()
+    public var glucoseInfoObservable = GlucoseInfo()
+    func setObservables(sensorData: SensorData?, metaData: LibreTransmitterMetadata?) {
+        if let metaData=metaData {
+        transmitterInfoObservable.battery = metaData.batteryString ?? "n/a"
+        transmitterInfoObservable.hardware = metaData.hardware
+        transmitterInfoObservable.firmware = metaData.firmware
+        transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
+        transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
+
+        }
+
+        transmitterInfoObservable.connectionState = proxy?.connectionStateString ?? "n/a"
+        transmitterInfoObservable.transmitterType = proxy?.shortTransmitterName ?? "Unknown"
+
+        if let sensorData = sensorData {
+            sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge ?? "n/a"
+            sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft ?? "n/a"
+
+            sensorInfoObservable.sensorState = sensorData.state.description ?? "n/a"
+            sensorInfoObservable.sensorSerial = sensorData.serialNumber
+
+            glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
+
+        }
+
+
+        if let sensorEndTime = sensorData?.sensorEndTime {
+            sensorInfoObservable.sensorEndTime = dateFormatter.string(from: sensorEndTime )
+        } else {
+            sensorInfoObservable.sensorEndTime = "Unknown or ended"
+        }
+
+
+
+        let formatter = QuantityFormatter()
+        var unit = UserDefaults.standard.mmGlucoseUnit ?? .milligramsPerDeciliter
+        formatter.setPreferredNumberFormatter(for: unit)
+
+
+        if let d = self.latestBackfill {
+            glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
+            glucoseInfoObservable.date = longDateFormatter.string(from: d.timestamp)
+        }
+
+
+
+
+    }
+
+    var longDateFormatter : DateFormatter = ({
+        let df = DateFormatter()
+        df.dateStyle = .long
+        df.timeStyle = .long
+        df.doesRelativeDateFormatting = true
+        return df
+    })()
+
+    var dateFormatter : DateFormatter = ({
+        let df = DateFormatter()
+        df.dateStyle = .long
+        df.timeStyle = .full
+        df.locale = Locale.current
+        return df
+    })()
+
     private var countTimesWithoutData: Int = 0
     //will be called on utility queue
     public func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
@@ -385,6 +456,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         NotificationHelper.sendInvalidSensorNotificationIfNeeded(sensorData: sensorData)
         NotificationHelper.sendInvalidChecksumIfDeveloper(sensorData)
 
+        self.setObservables(sensorData: nil, metaData: Device)
+
         guard sensorData.hasValidCRCs else {
             self.delegateQueue.async {
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
@@ -406,6 +479,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
         NSLog("dabear:: got sensordata with valid crcs, sensor was ready")
         self.lastValidSensorData = sensorData
+
+
 
         self.handleGoodReading(data: sensorData) { [weak self] error, glucose in
             guard let self = self else {
@@ -463,6 +538,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 NSLog("dabear:: latestbackfill set to \(self.latestBackfill)")
                 self.countTimesWithoutData = 0
             }
+            //must be inside this handler as setobservables "depend" on latestbackfill
+            self.setObservables(sensorData: sensorData, metaData: nil)
 
             NSLog("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
             self.delegateQueue.async {
@@ -478,6 +555,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: result)
             }
         }
+
     }
 }
 
@@ -539,6 +617,8 @@ extension LibreTransmitterManager {
 
             ?? "n/a"
     }
+
+
 
     //cannot be called from managerQueue
     public var sensorStateDescription: String {

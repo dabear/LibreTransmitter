@@ -8,7 +8,7 @@
 
 extension Hashable where Self: AnyObject {
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }
 }
