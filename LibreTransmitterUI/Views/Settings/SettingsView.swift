@@ -289,6 +289,7 @@ struct SettingsView: View {
             })
     }
 
+    @State private var showingDestructQuestion = false
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
@@ -441,6 +442,32 @@ struct SettingsView: View {
     }
 
 
+    var destructSection: some View {
+        Section {
+            Button("Delete CGM") {
+                        showingDestructQuestion = true
+            }.foregroundColor(.red)
+            .alert(isPresented: $showingDestructQuestion) {
+                Alert(
+                    title: Text("Are you sure you want to remove this cgm from loop?"),
+                    message: Text("There is no undo"),
+                    primaryButton: .destructive(Text("Delete")) {
+                        print("Deleting...")
+                        if let cgmManager = self.cgmManager {
+                            cgmManager.disconnect()
+                            cgmManager.notifyDelegateOfDeletion {
+                                DispatchQueue.main.async {
+                                    self.notifyComplete.notify()
+                                }
+                            }
+                        }
+                    },
+                    secondaryButton: .cancel()
+                )
+            }
+
+        }
+    }
 
     //todo: replace sub with navigationlinks
     var advancedSection: some View {
@@ -470,6 +497,7 @@ struct SettingsView: View {
             SettingsItem(title: "Danger mode", detail: bindableIsDangerModeActivated().wrappedValue ? "Activated" : "Not Activated")
                 .onTapGesture {
                     print("danger mode tapped")
+                    presentableStatus = StatusMessage(title: "Danger mode", message: "Danger was a legacy ui only feature")
                 }
 
         }
@@ -484,6 +512,7 @@ struct SettingsView: View {
             transmitterInfoSection
             factoryCalibrationSection
             advancedSection
+            destructSection
 
         }
         .listStyle(InsetGroupedListStyle())
