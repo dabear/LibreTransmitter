@@ -19,5 +19,4 @@ public class GlucoseInfo : ObservableObject, Equatable, Hashable{
          lhs.checksum == rhs.checksum
 
      }
-
 }

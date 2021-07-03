@@ -234,9 +234,13 @@ public struct SensorData: Codable {
 
         self.serialNumber = SensorSerialNumber(withUID: uuid)?.serialNumber ?? "-"
 
+        // we disable this check as we might be dealing with an encrypted libre2 sensor
+        /*
+
         guard 0 <= nextTrendBlock && nextTrendBlock < 16 && 0 <= nextHistoryBlock && nextHistoryBlock < 32 else {
             return nil
         }
+        */
     }
 
     /// Get array of 16 trend glucose measurements. 

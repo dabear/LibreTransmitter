@@ -437,8 +437,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         var sensorData = sensorData
 
         NotificationHelper.sendLowBatteryNotificationIfNeeded(device: Device)
+        self.setObservables(sensorData: nil, metaData: Device)
 
-        if !sensorData.isLikelyLibre1FRAM {
+         if !sensorData.isLikelyLibre1FRAM {
             if let patchInfo = Device.patchInfo, let sensorType = SensorType(patchInfo: patchInfo) {
                 let needsDecryption = [SensorType.libre2, .libreUS14day].contains(sensorType)
                 if needsDecryption, let uid = Device.uid {
@@ -449,7 +450,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.encryptedSensor))
                 return
             }
-        }
+        } 
 
         print("Transmitter connected to libresensor of type \(Device.sensorType()). Details:  \(Device.description)")
 
@@ -458,7 +459,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         NotificationHelper.sendInvalidSensorNotificationIfNeeded(sensorData: sensorData)
         NotificationHelper.sendInvalidChecksumIfDeveloper(sensorData)
 
-        self.setObservables(sensorData: nil, metaData: Device)
+
 
         guard sensorData.hasValidCRCs else {
             self.delegateQueue.async {

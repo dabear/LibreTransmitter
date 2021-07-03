@@ -23,25 +23,4 @@ public class TransmitterInfo : ObservableObject, Equatable, Hashable{
 
      }
 
-    //todo: remove all these utility functions and get this info as an observable
-    // from the cgmmanager directly
-    static func loadState(cgmManager: LibreTransmitterManager?) -> TransmitterInfo{
-
-        let newState = TransmitterInfo()
-
-        guard let cgmManager = cgmManager else {
-            return newState
-        }
-
-        newState.battery = cgmManager.batteryString
-        newState.hardware = cgmManager.hardwareVersion
-        newState.firmware = cgmManager.firmwareVersion
-        newState.connectionState = cgmManager.connectionState
-        newState.transmitterType = cgmManager.getDeviceType()
-        newState.transmitterIdentifier = cgmManager.metaData?.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
-        newState.sensorType = cgmManager.metaData?.sensorType()?.description ?? "Unknown"
-
-        return newState
-    }
-
 }

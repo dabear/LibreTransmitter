@@ -21,6 +21,4 @@ public class SensorInfo : ObservableObject, Equatable, Hashable{
 
      }
 
-   
-
 }
