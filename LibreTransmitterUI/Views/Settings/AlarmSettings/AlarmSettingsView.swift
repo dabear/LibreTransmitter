@@ -208,6 +208,7 @@ struct AlarmDateRow: View {
                 }.onTapGesture {
                     print("cheduleActivationRow tapped")
                     subviewSelection = tag
+                    self.hideKeyboard()
 
                 }
 
@@ -254,6 +255,9 @@ struct AlarmLowRow: View {
                 .frame(maxWidth: 100, alignment: .trailing)
 
         }
+        .onTapGesture {
+            self.hideKeyboard()
+        }
     }
 }
 
@@ -282,6 +286,9 @@ struct AlarmHighRow: View {
                 .frame(maxWidth: 100, alignment: .trailing)
 
 
+        }
+        .onTapGesture {
+            self.hideKeyboard()
         }
     }
 }
@@ -331,6 +338,8 @@ struct AlarmSettingsView: View {
                     AlarmLowRow(schedule: schedule, glucoseUnit: glucoseUnit, glucoseUnitDesc: glucoseUnitDesc, errorReporter: errorReporter)
                     AlarmHighRow(schedule: schedule, glucoseUnit: glucoseUnit, glucoseUnitDesc: glucoseUnitDesc, errorReporter: errorReporter)
 
+                }.onTapGesture {
+                    self.hideKeyboard()
                 }
 
             }

@@ -175,6 +175,16 @@ struct SettingsView: View {
     )()
 
 
+    var hasActiveAlarm: Bool {
+        var res = false
+        if let glucoseDouble = cgmManager?.latestBackfill?.glucoseDouble, let activeAlarms = UserDefaults.standard.glucoseSchedules?.getActiveAlarms(glucoseDouble) {
+            res = [.high,.low].contains(activeAlarms)
+        }
+
+        return res
+    }
+
+
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
@@ -212,7 +222,13 @@ struct SettingsView: View {
     var snoozeSection: some View {
         Section {
             NavigationLink(destination: SnoozeView(manager: cgmManager)) {
-                Text("Snooze Alerts").frame(alignment: .center)
+                if hasActiveAlarm {
+                    Text("Snooze Alerts").frame(alignment: .center)
+                        .padding(.top, 30)
+                        .padding(.bottom, 30)
+                } else {
+                    Text("Snooze Alerts").frame(alignment: .center)
+                }
             }
         }
     }
