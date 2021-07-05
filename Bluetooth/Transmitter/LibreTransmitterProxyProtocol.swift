@@ -9,7 +9,7 @@
 import CoreBluetooth
 import Foundation
 import UIKit
-public protocol LibreTransmitterProxy: class {
+public protocol LibreTransmitterProxyProtocol: class {
     static var shortTransmitterName: String { get }
     static var smallImage: UIImage? { get }
     static var manufacturerer: String { get }
@@ -29,16 +29,16 @@ public protocol LibreTransmitterProxy: class {
     static func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String?
 }
 
-extension LibreTransmitterProxy {
+extension LibreTransmitterProxyProtocol {
     func canSupportPeripheral(_ peripheral: CBPeripheral) -> Bool {
         Self.canSupportPeripheral(peripheral)
     }
-    public var staticType: LibreTransmitterProxy.Type {
+    public var staticType: LibreTransmitterProxyProtocol.Type {
         Self.self
     }
 }
 
-extension Array where Array.Element == LibreTransmitterProxy.Type {
+extension Array where Array.Element == LibreTransmitterProxyProtocol.Type {
     func getServicesForDiscovery() -> [CBUUID] {
         self.flatMap {
             return $0.serviceUUID.map { $0.value }
@@ -47,14 +47,14 @@ extension Array where Array.Element == LibreTransmitterProxy.Type {
 }
 
 public enum LibreTransmitters {
-    public static var all: [LibreTransmitterProxy.Type] {
+    public static var all: [LibreTransmitterProxyProtocol.Type] {
         [MiaoMiaoTransmitter.self, BubbleTransmitter.self]
     }
     public static func isSupported(_ peripheral: CBPeripheral) -> Bool {
         getSupportedPlugins(peripheral)?.isEmpty == false
     }
 
-    public static func getSupportedPlugins(_ peripheral: CBPeripheral) -> [LibreTransmitterProxy.Type]? {
+    public static func getSupportedPlugins(_ peripheral: CBPeripheral) -> [LibreTransmitterProxyProtocol.Type]? {
         all.enumerated().compactMap {
             $0.element.canSupportPeripheral(peripheral) ? $0.element : nil
         }

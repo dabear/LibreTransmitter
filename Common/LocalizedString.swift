@@ -21,9 +21,9 @@ func LocalizedString(_ key: String, tableName: String? = nil, value: String? = n
         return NSLocalizedString(key, tableName: tableName, bundle: FrameworkBundle.main, comment: comment)
     }
 }
-
+/*
 extension DefaultStringInterpolation {
     mutating func appendInterpolation<T>(_ optional: T?) {
         appendInterpolation(String(describing: optional))
     }
-}
+}*/

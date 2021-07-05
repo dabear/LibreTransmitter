@@ -65,7 +65,7 @@
 		27850D9225672F020020D109 /* LibreTransmitterMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BC6256725E70020D109 /* LibreTransmitterMetadata.swift */; };
 		27850D9825672F130020D109 /* BubbleTransmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BCC256725E80020D109 /* BubbleTransmitter.swift */; };
 		27850D9E25672F170020D109 /* UUIDContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BCE256725E80020D109 /* UUIDContainer.swift */; };
-		27850D9F25672F190020D109 /* LibreTransmitterProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BCB256725E80020D109 /* LibreTransmitterProxy.swift */; };
+		27850D9F25672F190020D109 /* LibreTransmitterProxyProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BCB256725E80020D109 /* LibreTransmitterProxyProtocol.swift */; };
 		27850DA525672F1C0020D109 /* LibreTransmitterProxyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BCD256725E80020D109 /* LibreTransmitterProxyManager.swift */; };
 		27850DA625672F1E0020D109 /* MiaomiaoTransmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BCA256725E70020D109 /* MiaomiaoTransmitter.swift */; };
 		27850DAC25672F3E0020D109 /* LimitedQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850BA2256724EF0020D109 /* LimitedQueue.swift */; };
@@ -150,7 +150,7 @@
 		27850BC7256725E70020D109 /* CBPeripheralExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBPeripheralExtensions.swift; sourceTree = "<group>"; };
 		27850BC8256725E70020D109 /* BluetoothSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothSearch.swift; sourceTree = "<group>"; };
 		27850BCA256725E70020D109 /* MiaomiaoTransmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiaomiaoTransmitter.swift; sourceTree = "<group>"; };
-		27850BCB256725E80020D109 /* LibreTransmitterProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreTransmitterProxy.swift; sourceTree = "<group>"; };
+		27850BCB256725E80020D109 /* LibreTransmitterProxyProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreTransmitterProxyProtocol.swift; sourceTree = "<group>"; };
 		27850BCC256725E80020D109 /* BubbleTransmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleTransmitter.swift; sourceTree = "<group>"; };
 		27850BCD256725E80020D109 /* LibreTransmitterProxyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreTransmitterProxyManager.swift; sourceTree = "<group>"; };
 		27850BCE256725E80020D109 /* UUIDContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDContainer.swift; sourceTree = "<group>"; };
@@ -352,7 +352,7 @@
 			children = (
 				27850BCC256725E80020D109 /* BubbleTransmitter.swift */,
 				27850BCE256725E80020D109 /* UUIDContainer.swift */,
-				27850BCB256725E80020D109 /* LibreTransmitterProxy.swift */,
+				27850BCB256725E80020D109 /* LibreTransmitterProxyProtocol.swift */,
 				27850BCD256725E80020D109 /* LibreTransmitterProxyManager.swift */,
 				27850BCA256725E70020D109 /* MiaomiaoTransmitter.swift */,
 			);
@@ -767,7 +767,7 @@
 				27850CED25672C0C0020D109 /* DateExtensions.swift in Sources */,
 				27850DBE25672F530020D109 /* LibreError.swift in Sources */,
 				27DD8F24268FA13F00649010 /* HashableClass.swift in Sources */,
-				27850D9F25672F190020D109 /* LibreTransmitterProxy.swift in Sources */,
+				27850D9F25672F190020D109 /* LibreTransmitterProxyProtocol.swift in Sources */,
 				27850DCC25672F770020D109 /* Measurement.swift in Sources */,
 				27850DCB25672F770020D109 /* SensorSerialNumber.swift in Sources */,
 				27850DA525672F1C0020D109 /* LibreTransmitterProxyManager.swift in Sources */,

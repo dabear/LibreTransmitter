@@ -11,8 +11,12 @@ import Foundation
 import HealthKit
 import LoopKit
 import UserNotifications
+import os.log
+
+fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "NotificationHelper")
 
 enum NotificationHelper {
+
     private enum Identifiers: String {
         case glucocoseNotifications = "no.bjorninge.miaomiao.glucose-notification"
         case noSensorDetected = "no.bjorninge.miaomiao.nosensordetected-notification"
@@ -32,7 +36,8 @@ enum NotificationHelper {
             vibrate(times: count)
         }
     }
-		    private static func vibrate(times: Int) {
+
+    private static func vibrate(times: Int) {
         guard times >= 0 else {
             return
         }
@@ -48,7 +53,7 @@ enum NotificationHelper {
 
     public static func sendRestoredStateNotification(msg: String) {
         ensureCanSendNotification {
-            NSLog("dabear:: sending RestoredStateNotification")
+            logger.debug("dabear:: sending RestoredStateNotification")
 
             let content = UNMutableNotificationContent()
             content.title = "State was restored"
@@ -60,7 +65,7 @@ enum NotificationHelper {
 
     public static func sendBluetoothPowerOffNotification() {
         ensureCanSendNotification {
-            NSLog("dabear:: sending BluetoothPowerOffNotification")
+            logger.debug("dabear:: sending BluetoothPowerOffNotification")
 
             let content = UNMutableNotificationContent()
             content.title = "Bluetooth Power Off"
@@ -72,7 +77,7 @@ enum NotificationHelper {
 
     public static func sendNoTransmitterSelectedNotification() {
         ensureCanSendNotification {
-            NSLog("dabear:: sending NoTransmitterSelectedNotification")
+            logger.debug("dabear:: sending NoTransmitterSelectedNotification")
 
             let content = UNMutableNotificationContent()
             content.title = "No Libre Transmitter Selected"
@@ -93,11 +98,11 @@ enum NotificationHelper {
     private static func ensureCanSendNotification(_ completion: @escaping () -> Void ) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
-                NSLog("dabear:: ensureCanSendNotification failed, authorization denied")
+                logger.debug("dabear:: ensureCanSendNotification failed, authorization denied")
                 return
             }
 
-            NSLog("dabear:: sending notification was allowed")
+            logger.debug("dabear:: sending notification was allowed")
 
             completion()
         }
@@ -138,14 +143,14 @@ enum NotificationHelper {
         let shouldShowPhoneBattery = UserDefaults.standard.mmShowPhoneBattery
         let transmitterBattery = UserDefaults.standard.mmShowTransmitterBattery && battery != nil ? battery : nil
 
-        NSLog("dabear:: glucose alarmtype is \(alarm)")
+        logger.debug("dabear:: glucose alarmtype is \(String(describing:alarm))")
         // We always send glucose notifications when alarm is active,
         // even if glucose notifications are disabled in the UI
 
         if shouldSend || alarm.isAlarming() {
             sendGlucoseNotitifcation(glucose: glucose, oldValue: oldValue, alarm: alarm, isSnoozed: isSnoozed, trend: trend, showPhoneBattery: shouldShowPhoneBattery, transmitterBattery: transmitterBattery)
         } else {
-            NSLog("dabear:: not sending glucose, shouldSend and alarmIsActive was false")
+            logger.debug("dabear:: not sending glucose, shouldSend and alarmIsActive was false")
             return
         }
     }
@@ -163,11 +168,11 @@ enum NotificationHelper {
 
         center.add(request) { error in
             if let error = error {
-                NSLog("dabear:: unable to addNotificationRequest: \(error.localizedDescription)")
+                logger.debug("dabear:: unable to addNotificationRequest: \(error.localizedDescription)")
                 return
             }
 
-            NSLog("dabear:: sending \(identifier.rawValue) notification")
+            logger.debug("dabear:: sending \(identifier.rawValue) notification")
         }
     }
     private static func sendGlucoseNotitifcation(glucose: LibreGlucose, oldValue: LibreGlucose?, alarm: GlucoseScheduleAlarmResult = .none, isSnoozed: Bool = false, trend: GlucoseTrend?, showPhoneBattery: Bool = false, transmitterBattery: String?) {
@@ -253,7 +258,7 @@ enum NotificationHelper {
 
     public static func sendSensorNotDetectedNotificationIfNeeded(noSensor: Bool) {
         guard UserDefaults.standard.mmAlertNoSensorDetected && noSensor else {
-            NSLog("not sending noSensorDetected notification")
+            logger.debug("Not sending noSensorDetected notification")
             return
         }
 
@@ -272,7 +277,7 @@ enum NotificationHelper {
 
     public static func sendSensorChangeNotificationIfNeeded() {
         guard UserDefaults.standard.mmAlertNewSensorDetected else {
-            NSLog("not sending sendSensorChange notification ")
+            logger.debug("not sending sendSensorChange notification ")
             return
         }
         sendSensorChangeNotification()
@@ -294,7 +299,7 @@ enum NotificationHelper {
         let isValid = sensorData.isLikelyLibre1FRAM && (sensorData.state == .starting || sensorData.state == .ready)
 
         guard UserDefaults.standard.mmAlertInvalidSensorDetected && !isValid else {
-            NSLog("not sending invalidSensorDetected notification")
+            logger.debug("not sending invalidSensorDetected notification")
             return
         }
 
@@ -322,12 +327,12 @@ enum NotificationHelper {
 
     public static func sendLowBatteryNotificationIfNeeded(device: LibreTransmitterMetadata) {
         guard UserDefaults.standard.mmAlertLowBatteryWarning else {
-            NSLog("mmAlertLowBatteryWarning toggle was not enabled, not sending low notification")
+            logger.debug("mmAlertLowBatteryWarning toggle was not enabled, not sending low notification")
             return
         }
 
         guard device.battery <= 20 else {
-            NSLog("device battery is \(device.batteryString), not sending low notification")
+            logger.debug("device battery is \(device.batteryString), not sending low notification")
             return
         }
 
@@ -340,7 +345,7 @@ enum NotificationHelper {
                                            deviceName: device.name)
                 lastBatteryWarning = now
             } else {
-                NSLog("Device battery is running low, but lastBatteryWarning Notification was sent less than 45 minutes ago, aborting. earlierplus: \(earlierplus), now: \(now)")
+                logger.debug("Device battery is running low, but lastBatteryWarning Notification was sent less than 45 minutes ago, aborting. earlierplus: \(earlierplus), now: \(now)")
             }
         } else {
             sendLowBatteryNotification(batteryPercentage: device.batteryString,
@@ -364,12 +369,12 @@ enum NotificationHelper {
 
     public static func sendSensorExpireAlertIfNeeded(sensorData: SensorData) {
         guard UserDefaults.standard.mmAlertWillSoonExpire else {
-            NSLog("mmAlertWillSoonExpire toggle was not enabled, not sending expiresoon alarm")
+            logger.debug("mmAlertWillSoonExpire toggle was not enabled, not sending expiresoon alarm")
             return
         }
 
         guard TimeInterval(minutes: Double(sensorData.minutesLeft)) < TimeInterval(hours: 24) else {
-            NSLog("Sensor time left was more than 24 hours, not sending notification: \(sensorData.minutesLeft) minutes / \(sensorData.humanReadableTimeLeft)")
+            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(sensorData.minutesLeft) minutes / \(sensorData.humanReadableTimeLeft)")
             return
         }
 
@@ -382,7 +387,7 @@ enum NotificationHelper {
                 sendSensorExpireAlert(sensorData: sensorData)
                 lastSensorExpireAlert = now
             } else {
-                NSLog("Sensor is soon expiring, but lastSensorExpireAlert was sent less than 6 hours ago, so aborting")
+                logger.debug("Sensor is soon expiring, but lastSensorExpireAlert was sent less than 6 hours ago, so aborting")
             }
         } else {
             sendSensorExpireAlert(sensorData: sensorData)

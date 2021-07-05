@@ -11,13 +11,14 @@ import LoopKitUI
 import LibreTransmitter
 import SwiftUI
 import UIKit
+import os.log
 
 class LibreTransmitterSetupViewController: UINavigationController, CGMManagerCreateNotifying, CGMManagerOnboardNotifying, CompletionNotifying {
     weak var cgmManagerCreateDelegate: CGMManagerCreateDelegate?
     weak var cgmManagerOnboardDelegate: CGMManagerOnboardDelegate?
     weak var completionDelegate: CompletionDelegate?
 
-    
+    fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterSetupViewController")
 
     lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
 
@@ -39,7 +40,7 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerCre
     }
 
     deinit {
-        NSLog("dabear MiaomiaoClientSetupViewController() deinit was called")
+        logger.debug("dabear MiaomiaoClientSetupViewController() deinit was called")
         //cgmManager = nil
     }
 
@@ -68,7 +69,7 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerCre
             cgmManagerOnboardDelegate?.cgmManagerOnboardNotifying(didOnboardCGMManager: cgmManager)
 
             if let newDevice = deviceSelect.rootView.getNewDeviceId() {
-                print("dabear: Setupcontroller will set new device to \(newDevice)")
+                logger.debug("dabear: Setupcontroller will set new device to \(newDevice)")
                 UserDefaults.standard.preSelectedDevice = newDevice
             }
 

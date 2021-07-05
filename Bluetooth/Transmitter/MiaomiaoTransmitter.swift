@@ -181,7 +181,10 @@ extension MiaoMiaoResponseState: CustomStringConvertible {
     }
 }
 
-class MiaoMiaoTransmitter: LibreTransmitterProxy {
+class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
+
+    fileprivate let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "BubbleTransmitter")
+    
     func reset() {
         rxBuffer.resetAllBytes()
     }
@@ -224,7 +227,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
     func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral) {
         confirmSensor(peripheral: peripheral, writeCharacteristics: writeCharacteristics)
         reset()
-        print("dabear: miaomiaoRequestData")
+        logger.debug("dabear: miaomiaoRequestData")
 
         peripheral.writeValue(Data([0xF0]), for: writeCharacteristics, type: .withResponse)
     }
@@ -232,9 +235,9 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
     func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?) {
         rxBuffer.append(value)
 
-        os_log("miaomiao Appended value with length %{public}@, buffer length is: %{public}@", log: LibreTransmitterProxyManager.bt_log, type: .default, String(describing: value.count), String(describing: rxBuffer.count))
+        logger.debug("miaomiao Appended value with length  \(String(describing: value.count)), buffer length is: \(String(describing: self.rxBuffer.count))")
 
-        //os_log("rxBuffer.first is: %{public}@, value.first is: %{public}@", log: LibreTransmitterManager.bt_log, type: .default, String(describing: rxBuffer.first), String(describing: value.first))
+
 
         // When spreading a message over multiple telegrams, the miaomiao protocol
         // does not repeat that initial byte
@@ -244,7 +247,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
         //
         guard let firstByte = rxBuffer.first, let miaoMiaoResponseState = MiaoMiaoResponseState(rawValue: firstByte) else {
             reset()
-            print("miaomiaoDidUpdateValueForNotifyCharacteristics did not undestand what to do (internal error")
+            logger.error("miaomiaoDidUpdateValueForNotifyCharacteristics did not undestand what to do (internal error")
             return
         }
 
@@ -252,7 +255,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
         case .dataPacketReceived: // 0x28: // data received, append to buffer and inform delegate if end reached
 
             if rxBuffer.count >= 363 {
-                //os_log("Buffer complete, inform delegate.", log: LibreTransmitterManager.bt_log, type: .default)
+
 
                 delegate?.libreTransmitterReceivedMessage(0x0000, txFlags: 0x28, payloadData: rxBuffer)
 
@@ -276,11 +279,11 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
 
             if value.count >= 2 {
                 if value[2] == 0x01 {
-                    //os_log("Success setting time interval.", log: LibreTransmitterManager.bt_log, type: .default)
+                    //success setting time interval
                 } else if value[2] == 0x00 {
-                    //os_log("Failure setting time interval.", log: LibreTransmitterManager.bt_log, type: .default)
+                    // faioure
                 } else {
-                    //os_log("Unkown response for setting time interval.", log: LibreTransmitterManager.bt_log, type: .default)
+                    //"Unkown response for setting time interval."
                 }
             }
             reset()
@@ -317,10 +320,10 @@ class MiaoMiaoTransmitter: LibreTransmitterProxy {
     // Confirm (to replace) the sensor. Iif a new sensor is detected and shall be used, send this command (0xD301)
     func confirmSensor(peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic?) {
         guard let writeCharacteristics = writeCharacteristics else {
-            print("could not confirm sensor")
+            logger.error("could not confirm sensor")
             return
         }
-        print("confirming new sensor")
+        logger.debug("confirming new sensor")
         peripheral.writeValue(Data([0xD3, 0x01]), for: writeCharacteristics, type: .withResponse)
     }
 }

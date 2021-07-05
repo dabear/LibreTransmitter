@@ -9,6 +9,7 @@
 import CoreBluetooth
 import Foundation
 import UIKit
+import os.log
 
 public enum BubbleResponseType: UInt8 {
     case dataPacket = 130
@@ -74,6 +75,8 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
 
     private var battery: Int?
 
+    fileprivate var bLogger = Logger.init(subsystem: "no.bjorninge.libre", category: "BubbleTransmitter")
+
     override class func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String? {
         let (amac, afirmware, ahardware) = Self.getDeviceDetailsFromAdvertisementInternal(advertisementData: advertisementData)
 
@@ -85,8 +88,8 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     }
 
     private static func getDeviceDetailsFromAdvertisementInternal(advertisementData: [String: Any]?) -> (String?, String?, String?) {
-        print("dabear: deviceFromAdvertisementData is ")
-        debugPrint(advertisementData)
+
+        
 
         guard let data = advertisementData?["kCBAdvDataManufacturerData"] as? Data else {
             return (nil, nil, nil)
@@ -124,19 +127,18 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     }
 
     override func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral) {
-        print("dabear:: bubbleRequestData")
+        bLogger.debug("dabear:: bubbleRequestData")
         reset()
-        //timer?.invalidate()
-        print("-----set: ", writeCharacteristics)
+
         peripheral.writeValue(Data([0x00, 0x00, 0x05]), for: writeCharacteristics, type: .withResponse)
     }
     override func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?) {
-        print("dabear:: bubbleDidUpdateValueForNotifyCharacteristics, firstbyte is: \(value.first)")
+        bLogger.debug("dabear:: bubbleDidUpdateValueForNotifyCharacteristics, firstbyte is: \(value.first.debugDescription)")
         guard let firstByte = value.first, let bubbleResponseState = BubbleResponseType(rawValue: firstByte) else {
            return
         }
-        print("dabear:: bubble responsestate is of type \(bubbleResponseState.description)")
-        print("dabear:: bubble value is: \(value.toDebugString())")
+        bLogger.debug("dabear:: bubble responsestate is of type \(bubbleResponseState.description)")
+        bLogger.debug("dabear:: bubble value is: \(value.toDebugString())")
         switch bubbleResponseState {
         case .bubbleInfo:
             //let hardware = value[value.count-2].description + "." + value[value.count-1].description
@@ -144,14 +146,14 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
            //let patchInfo = Data(Double(firmware)! < 1.35 ? value[3...8] : value[5...10])
             battery = Int(value[4])
 
-           print("dabear:: Got bubbledevice: \(metadata)")
+            bLogger.debug("dabear:: Got bubbledevice: \(self.metadata.debugDescription)")
            if let writeCharacteristic = writeCharacteristic {
-               print("-----set: ", writeCharacteristic)
+               
                peripheral.writeValue(Data([0x02, 0x00, 0x00, 0x00, 0x00, 0x2B]), for: writeCharacteristic, type: .withResponse)
            }
         case .dataPacket://, .decryptedDataPacket:
            rxBuffer.append(value.suffix(from: 4))
-           print("dabear:: aggregated datapacket is now of length: \(rxBuffer.count)")
+            bLogger.debug("dabear:: aggregated datapacket is now of length: \(self.rxBuffer.count)")
            if rxBuffer.count >= 352 {
                handleCompleteMessage()
                reset()
@@ -170,7 +172,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
 
         case .patchInfo:
             guard value.count >= 10 else {
-                print("not able to extract patchinfo")
+                bLogger.debug("not able to extract patchinfo")
                 return
             }
             patchInfo = value.subdata(in: 5 ..< 11).hexEncodedString().uppercased()
@@ -182,7 +184,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     private var metadata: LibreTransmitterMetadata?
 
     override func handleCompleteMessage() {
-        print("dabear:: bubbleHandleCompleteMessage")
+        bLogger.debug("dabear:: bubbleHandleCompleteMessage")
 
         guard rxBuffer.count >= 352 else {
             return
@@ -191,10 +193,10 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
         metadata = .init(hardware: hardware ?? "unknown", firmware: firmware ?? "unknown", battery: battery ?? 100, name: Self.shortTransmitterName, macAddress: self.mac, patchInfo: patchInfo, uid: self.uid)
 
         let data = rxBuffer.subdata(in: 8..<352)
-        print("dabear:: bubbleHandleCompleteMessage raw data: \([UInt8](rxBuffer))")
+        bLogger.debug("dabear:: bubbleHandleCompleteMessage raw data: \([UInt8](self.rxBuffer))")
         sensorData = SensorData(uuid: rxBuffer.subdata(in: 0..<8), bytes: [UInt8](data), date: Date())
 
-        print("dabear:: bubble got sensordata \(sensorData) and metadata \(metadata), delegate is \(delegate)")
+        bLogger.debug("dabear:: bubble got sensordata \(self.sensorData.debugDescription) and metadata \(self.metadata.debugDescription), delegate is \(self.delegate.debugDescription)")
 
         if let sensorData = sensorData, let metadata = metadata {
             delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)

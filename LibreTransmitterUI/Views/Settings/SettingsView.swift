@@ -124,6 +124,8 @@ struct SettingsView: View {
 
     public var cgmManager: LibreTransmitterManager?
 
+    
+
     static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo) -> UIHostingController<AnyView> {
         UIHostingController(rootView: AnyView(self.init(glucoseMeasurement: glucoseInfoObservable, cgmManager: cgmManager)
                                                 .environmentObject(notifyComplete)

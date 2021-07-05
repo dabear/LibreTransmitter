@@ -1,18 +1,5 @@
 //
 //  LibreTransmitterManager.swift
-//  Loop
-//
-//  Copyright © 2018 LoopKit Authors. All rights reserved.
-//
-
-import LoopKit
-import HealthKit
-
-
-//
-//  MiaomiaoClient.swift
-//  MiaomiaoClient
-//
 //  Created by Bjørn Inge Berg on 25/02/2019.
 //  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
 //
@@ -28,6 +15,8 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+
+    let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
 
 
     public let isOnboarded = true   // No distinction between created and onboarded
@@ -62,7 +51,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public var batteryLevel: Double? {
-        NSLog("dabear:: MiaoMiaoClientManager was asked to return battery: \(proxy?.metadata?.battery)")
+        let batt = self.proxy?.metadata?.battery
+        logger.debug("dabear:: LibreTransmitterManager was asked to return battery: \(batt.debugDescription)")
         //convert from 8% -> 0.8
         if let battery = proxy?.metadata?.battery {
             return Double(battery) / 100
@@ -118,18 +108,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public var debugDescription: String {
-        /*var foreground = Alert.Content(title: "foreground title", body: "foreground body", acknowledgeActionButtonLabel: "ForegroundActionButtonLabel")
-        var background = Alert.Content(title: "background title", body: "background body", acknowledgeActionButtonLabel: "BackgroundActionButtonLabel")
-        var id = Alert.Identifier(managerIdentifier: "managerid", alertIdentifier: "alertid")
-        var alert = Alert(identifier: id, foregroundContent: foreground, backgroundContent: background, trigger: .delayed(interval: 15), sound: .vibrate)
 
-
-
-        cgmManagerDelegate?.issueAlert(alert )*/
-
-        //cgmManagerDelegate?.scheduleNotification(for: <#T##DeviceManager#>, identifier: <#T##String#>, content: <#T##UNNotificationContent#>, trigger: <#T##UNNotificationTrigger?#>)
         return [
-            "## MiaomiaoClientManager",
+            "## LibreTransmitterManager",
             "Testdata: foo",
             "lastConnected: \(String(describing: lastConnected))",
             "Connection state: \(connectionState)",
@@ -144,7 +125,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     //public var miaomiaoService: MiaomiaoService
 
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
-        NSLog("dabear:: fetchNewDataIfNeeded called but we don't continue")
+        logger.debug("dabear:: fetchNewDataIfNeeded called but we don't continue")
 
         completion(.noData)
     }
@@ -161,20 +142,20 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             let oldValue = latestBackfill
 
             defer {
-                NSLog("dabear:: sending glucose notification")
+                logger.debug("dabear:: sending glucose notification")
                 NotificationHelper.sendGlucoseNotitifcationIfNeeded(glucose: newValue,
                                                                     oldValue: oldValue,
                                                                     trend: trend,
                                                                     battery: batteryString)
             }
 
-            NSLog("dabear:: latestBackfill set, newvalue is \(newValue)")
+            logger.debug("dabear:: latestBackfill set, newvalue is \(newValue.description)")
 
             if let oldValue = oldValue {
                 // the idea here is to use the diff between the old and the new glucose to calculate slope and direction, rather than using trend from the glucose value.
                 // this is because the old and new glucose values represent earlier readouts, while the trend buffer contains somewhat more jumpy (noisy) values.
                 let timediff = LibreGlucose.timeDifference(oldGlucose: oldValue, newGlucose: newValue)
-                NSLog("dabear:: timediff is \(timediff)")
+                logger.debug("dabear:: timediff is \(timediff)")
                 let oldIsRecentEnough = timediff <= TimeInterval.minutes(15)
 
                 trend = oldIsRecentEnough ? newValue.GetGlucoseTrend(last: oldValue) : nil
@@ -197,8 +178,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public required convenience init?(rawState: CGMManager.RawStateValue) {
-        os_log("dabear:: MiaomiaoClientManager will init from rawstate")
+
         self.init()
+        logger.debug("dabear:: LibreTransmitterManager  has run init from rawstate")
     }
 
     public var rawState: CGMManager.RawStateValue {
@@ -223,7 +205,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         //let isui = (self is CGMManagerUI)
         //self.miaomiaoService = MiaomiaoService(keychainManager: keychain)
 
-        os_log("dabear: MiaoMiaoClientManager will be created now")
+        logger.debug("dabear: LibreTransmitterManager will be created now")
         //proxy = MiaoMiaoBluetoothManager()
         proxy?.delegate = self
     }
@@ -233,14 +215,14 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public func disconnect() {
-       NSLog("dabear:: MiaoMiaoClientManager disconnect called")
+        logger.debug("dabear:: LibreTransmitterManager disconnect called")
 
         proxy?.disconnectManually()
         proxy?.delegate = nil
     }
 
     deinit {
-        NSLog("dabear:: MiaoMiaoClientManager deinit called")
+        logger.debug("dabear:: LibreTransmitterManager deinit called")
         //cleanup any references to events to this class
         disconnect()
     }
@@ -253,7 +235,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         var entries = LibreGlucose.fromTrendMeasurements(last16, nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
 
         let text = entries.map { $0.description }.joined(separator: ",")
-        NSLog("dabear:: trend entries count: \(entries.count): \n \(text)" )
+        logger.debug("dabear:: trend entries count: \(entries.count): \n \(text)" )
         if UserDefaults.standard.mmBackfillFromHistory {
             let history = data.historyMeasurements()
             entries += LibreGlucose.fromHistoryMeasurements(history, nativeCalibrationData: calibration)
@@ -273,18 +255,18 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         let calibrationdata = keychain.getLibreNativeCalibrationData()
 
         if let calibrationdata = calibrationdata {
-            NSLog("dabear:: calibrationdata loaded")
+            logger.debug("dabear:: calibrationdata loaded")
 
             if calibrationdata.isValidForFooterWithReverseCRCs == data.footerCrc.byteSwapped {
-                NSLog("dabear:: calibrationdata correct for this sensor, returning last values")
+                logger.debug("dabear:: calibrationdata correct for this sensor, returning last values")
 
                 callback(nil, readingToGlucose(data, calibration: calibrationdata))
                 return
             } else {
-                NSLog("dabear:: calibrationdata incorrect for this sensor, calibrationdata.isValidForFooterWithReverseCRCs: \(calibrationdata.isValidForFooterWithReverseCRCs),  data.footerCrc.byteSwapped: \(data.footerCrc.byteSwapped)")
+                logger.debug("dabear:: calibrationdata incorrect for this sensor, calibrationdata.isValidForFooterWithReverseCRCs: \(calibrationdata.isValidForFooterWithReverseCRCs),  data.footerCrc.byteSwapped: \(data.footerCrc.byteSwapped)")
             }
         } else {
-            NSLog("dabear:: calibrationdata was nil")
+            logger.debug("dabear:: calibrationdata was nil")
         }
 
         calibrateSensor(sensordata: data) { [weak self] calibrationparams  in
@@ -324,19 +306,19 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             // this was the case for readouts that were not yet complete
             // but that was commented out in MiaoMiaoManager.swift, see comment there:
             // "dabear-edit: don't notify on incomplete readouts"
-            NSLog("dabear:: incomplete package or unknown response state")
+            logger.debug("dabear:: incomplete package or unknown response state")
             return
         }
 
         switch packet {
         case .newSensor:
-            NSLog("dabear:: new libresensor detected")
+            logger.debug("dabear:: new libresensor detected")
             NotificationHelper.sendSensorChangeNotificationIfNeeded()
         case .noSensor:
-            NSLog("dabear:: no libresensor detected")
+            logger.debug("dabear:: no libresensor detected")
             NotificationHelper.sendSensorNotDetectedNotificationIfNeeded(noSensor: true)
         case .frequencyChangedResponse:
-            NSLog("dabear:: transmitter readout interval has changed!")
+            logger.debug("dabear:: transmitter readout interval has changed!")
 
         default:
             //we don't care about the rest!
@@ -366,14 +348,14 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     public var glucoseInfoObservable = GlucoseInfo()
 
     func setObservables(sensorData: SensorData?, metaData: LibreTransmitterMetadata?) {
-        print("dabear:: setObservables called")
+        logger.debug("dabear:: setObservables called")
         DispatchQueue.main.async {
             var sendTransmitterInfoUpdate  = false
             var sendSensorInfoUpdate = false
             var sendGlucoseInfoUpdate = false
 
             if let metaData=metaData {
-                print("dabear::will set transmitterInfoObservable")
+                self.logger.debug("dabear::will set transmitterInfoObservable")
                 self.transmitterInfoObservable.battery = metaData.batteryString
                 self.transmitterInfoObservable.hardware = metaData.hardware
                 self.transmitterInfoObservable.firmware = metaData.firmware
@@ -387,7 +369,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
 
             if let sensorData = sensorData {
-                print("dabear::will set sensorInfoObservable")
+                self.logger.debug("dabear::will set sensorInfoObservable")
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
 
@@ -420,7 +402,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 
             if let d = self.latestBackfill {
-                print("dabear::will set glucoseInfoObservable")
+                self.logger.debug("dabear::will set glucoseInfoObservable")
                 self.glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
                 self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
                 sendGlucoseInfoUpdate = true
@@ -464,7 +446,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     private var countTimesWithoutData: Int = 0
     //will be called on utility queue
     public func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
-        print("dabear:: got sensordata: \(sensorData), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
+
+        self.logger.debug("dabear:: got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
         var sensorData = sensorData
 
         NotificationHelper.sendLowBatteryNotificationIfNeeded(device: Device)
@@ -477,13 +460,15 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                     sensorData.decrypt(patchInfo: patchInfo, uid: uid)
                 }
             } else {
-                os_log("Sensor type was incorrect, and no decryption of sensor was possible")
+                logger.debug("Sensor type was incorrect, and no decryption of sensor was possible")
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.encryptedSensor))
                 return
             }
-        } 
+        }
 
-        print("Transmitter connected to libresensor of type \(Device.sensorType()). Details:  \(Device.description)")
+        let typeDesc = Device.sensorType().debugDescription
+
+        logger.debug("Transmitter connected to libresensor of type \(typeDesc). Details:  \(Device.description)")
 
         tryPersistSensorData(with: sensorData)
 
@@ -497,32 +482,32 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
             }
 
-            os_log("dit not get sensordata with valid crcs")
+            logger.debug("did not get sensordata with valid crcs")
             return
         }
 
         NotificationHelper.sendSensorExpireAlertIfNeeded(sensorData: sensorData)
 
         guard sensorData.state == .ready || sensorData.state == .starting else {
-            os_log("dabear:: got sensordata with valid crcs, but sensor is either expired or failed")
+            logger.debug("dabear:: got sensordata with valid crcs, but sensor is either expired or failed")
             self.delegateQueue.async {
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.expiredSensor))
             }
             return
         }
 
-        NSLog("dabear:: got sensordata with valid crcs, sensor was ready")
+        logger.debug("dabear:: got sensordata with valid crcs, sensor was ready")
         self.lastValidSensorData = sensorData
 
 
 
         self.handleGoodReading(data: sensorData) { [weak self] error, glucose in
             guard let self = self else {
-                NSLog("dabear:: handleGoodReading could not lock on self, aborting")
+                print("dabear:: handleGoodReading could not lock on self, aborting")
                 return
             }
             if let error = error {
-                NSLog("dabear:: handleGoodReading returned with error: \(error)")
+                self.logger.error("dabear:: handleGoodReading returned with error: \(error.errorDescription)")
                 self.delegateQueue.async {
                     self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
                 }
@@ -530,7 +515,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             }
 
             guard let glucose = glucose else {
-                NSLog("dabear:: handleGoodReading returned with no data")
+                self.logger.debug("dabear:: handleGoodReading returned with no data")
                 self.delegateQueue.async {
                     self.cgmManagerDelegate?.cgmManager(self, hasNew: .noData)
                 }
@@ -569,13 +554,13 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.countTimesWithoutData &+= 1
             } else {
                 self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
-                NSLog("dabear:: latestbackfill set to \(self.latestBackfill)")
+                self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
                 self.countTimesWithoutData = 0
             }
             //must be inside this handler as setobservables "depend" on latestbackfill
             self.setObservables(sensorData: sensorData, metaData: nil)
 
-            NSLog("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
+            self.logger.debug("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
             self.delegateQueue.async {
                 var result: CGMReadingResult
                 // If several readings from a valid and running sensor come out empty,

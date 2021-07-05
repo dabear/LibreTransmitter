@@ -6,6 +6,11 @@
 import Foundation
 import HealthKit
 import LoopKit
+import os.log
+
+
+fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreGlucose")
+
 
 public struct LibreGlucose {
     public let unsmoothedGlucose: Double
@@ -52,7 +57,7 @@ extension LibreGlucose: GlucoseValue {
 extension LibreGlucose {
     public var description: String {
         guard let glucoseUnit = UserDefaults.standard.mmGlucoseUnit, let formatter = LibreGlucose.dynamicFormatter, let formatted = formatter.string(from: self.quantity, for: glucoseUnit) else {
-            NSLog("dabear:: glucose unit was not recognized, aborting")
+            logger.debug("dabear:: glucose unit was not recognized, aborting")
             return "Unknown"
         }
 
@@ -72,7 +77,7 @@ extension LibreGlucose {
 
     public static var dynamicFormatter: QuantityFormatter? {
         guard let glucoseUnit = UserDefaults.standard.mmGlucoseUnit else {
-            NSLog("dabear:: glucose unit was not recognized, aborting")
+            logger.debug("dabear:: glucose unit was not recognized, aborting")
             return nil
         }
 
@@ -81,7 +86,7 @@ extension LibreGlucose {
 
     public static func glucoseDiffDesc(oldValue: Self, newValue: Self) -> String {
         guard let glucoseUnit = UserDefaults.standard.mmGlucoseUnit else {
-            NSLog("dabear:: glucose unit was not recognized, aborting")
+            logger.debug("dabear:: glucose unit was not recognized, aborting")
             return "Unknown"
         }
 
@@ -124,13 +129,13 @@ extension LibreGlucose {
     }
 
     static func GetGlucoseTrend(current: Self?, last: Self?) -> GlucoseTrend {
-        //NSLog("GetGlucoseDirection:: current:\(current), last: \(last)")
+
         guard let current = current, let last = last else {
             return  .flat
         }
 
         let  s = calculateSlopeByMinute(current: current, last: last)
-        //NSLog("Got trendarrow value of \(s))")
+
 
         switch s {
         case _ where s <= (-3.5):
@@ -149,7 +154,7 @@ extension LibreGlucose {
             return .flat //flat is the new (tm) "unknown"!
 
         default:
-            NSLog("Got unknown trendarrow value of \(s))")
+
             return .flat
         }
     }
@@ -202,7 +207,7 @@ extension LibreGlucose {
                 shouldSmoothGlucose = false
             }
         }
-        //NSLog("dabear:: glucose samples before smoothing: \(String(describing: origarr))")
+        
 
         if shouldSmoothGlucose {
             arr = CalculateSmothedData5Points(origtrends: arr)
