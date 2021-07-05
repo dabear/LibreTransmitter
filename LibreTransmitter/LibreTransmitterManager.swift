@@ -366,13 +366,20 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     public var glucoseInfoObservable = GlucoseInfo()
 
     func setObservables(sensorData: SensorData?, metaData: LibreTransmitterMetadata?) {
+        print("dabear:: setObservables called")
         DispatchQueue.main.async {
+            var sendTransmitterInfoUpdate  = false
+            var sendSensorInfoUpdate = false
+            var sendGlucoseInfoUpdate = false
+
             if let metaData=metaData {
+                print("dabear::will set transmitterInfoObservable")
                 self.transmitterInfoObservable.battery = metaData.batteryString
                 self.transmitterInfoObservable.hardware = metaData.hardware
                 self.transmitterInfoObservable.firmware = metaData.firmware
                 self.transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
                 self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
+                sendTransmitterInfoUpdate = true
 
             }
 
@@ -380,6 +387,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
 
             if let sensorData = sensorData {
+                print("dabear::will set sensorInfoObservable")
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
 
@@ -388,14 +396,21 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
                 self.glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
 
+                sendGlucoseInfoUpdate = true
+
+
             }
 
 
             if let sensorEndTime = sensorData?.sensorEndTime {
                 self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
+                sendSensorInfoUpdate = true
             } else {
                 self.sensorInfoObservable.sensorEndTime = "Unknown or ended"
+                sendSensorInfoUpdate = true
             }
+
+
 
 
 
@@ -405,9 +420,25 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 
             if let d = self.latestBackfill {
+                print("dabear::will set glucoseInfoObservable")
                 self.glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
                 self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
+                sendGlucoseInfoUpdate = true
             }
+
+            if sendGlucoseInfoUpdate {
+                self.glucoseInfoObservable.objectWillChange.send()
+            }
+
+            if sendTransmitterInfoUpdate {
+                self.transmitterInfoObservable.objectWillChange.send()
+            }
+
+            if sendSensorInfoUpdate {
+                self.sensorInfoObservable.objectWillChange.send()
+            }
+
+
 
         }
 

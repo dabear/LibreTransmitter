@@ -110,7 +110,8 @@ struct SettingsView: View {
     @EnvironmentObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
     @EnvironmentObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
     @EnvironmentObject private var sensorInfo: LibreTransmitter.SensorInfo
-    @EnvironmentObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
+    //@EnvironmentObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
+    @ObservedObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
 
 
     @EnvironmentObject private var notifyComplete: GenericObservableObject
@@ -124,26 +125,15 @@ struct SettingsView: View {
     public var cgmManager: LibreTransmitterManager?
 
     static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo) -> UIHostingController<AnyView> {
-        UIHostingController(rootView: AnyView(self.init(cgmManager: cgmManager)
+        UIHostingController(rootView: AnyView(self.init(glucoseMeasurement: glucoseInfoObservable, cgmManager: cgmManager)
                                                 .environmentObject(notifyComplete)
                                                 .environmentObject(displayGlucoseUnitObservable)
                                                 .environmentObject(transmitterInfoObservable)
                                                 .environmentObject(sensorInfoObervable)
-                                                .environmentObject(glucoseInfoObservable)
+                                                //.environmentObject(glucoseInfoObservable)
         ))
     }
 
-    public init(cgmManager: LibreTransmitterManager) {
-        self.cgmManager = cgmManager
-
-
-        //only override savedglucose unit if we haven't saved this locally before
-        if UserDefaults.standard.mmGlucoseUnit == nil {
-            UserDefaults.standard.mmGlucoseUnit = glucoseUnit
-        }
-
-
-    }
 
     @State private var showingDestructQuestion = false
 
@@ -153,16 +143,6 @@ struct SettingsView: View {
 
 
     static let formatter = NumberFormatter()
-
-
-
-    private func bindableIsDangerModeActivated() -> Binding<Bool> {
-        Binding(
-            get: { UserDefaults.standard.dangerModeActivated },
-            set: { newVal in
-                UserDefaults.standard.dangerModeActivated = newVal
-            })
-    }
 
     var dangerModeActivated : Binding<Bool> = ({
         Binding(
@@ -213,6 +193,16 @@ struct SettingsView: View {
 
                 }
 
+            }
+            .onAppear{
+
+                //only override savedglucose unit if we haven't saved this locally before
+                if UserDefaults.standard.mmGlucoseUnit == nil {
+                    UserDefaults.standard.mmGlucoseUnit = glucoseUnit
+                }
+            }
+            .onChange(of: glucoseMeasurement) { newVal in
+                print("dabear:: swiftui detected glucosemeasurement change")
             }
 
     }

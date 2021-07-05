@@ -541,7 +541,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
-        os_log("Did update notification state for characteristic: %{public}@", log: Self.bt_log, type: .default, String(describing: characteristic.debugDescription))
+        os_log("Did update notification state for characteristic: %{public}@, isnotifying: %{public}@", log: Self.bt_log, type: .default, String(describing: characteristic.debugDescription), characteristic.isNotifying ? "true" : "false")
 
         if let error = error {
             os_log("Peripheral did update notification state for characteristic: %{public}@ with error", log: Self.bt_log, type: .error, "\(error.localizedDescription)")

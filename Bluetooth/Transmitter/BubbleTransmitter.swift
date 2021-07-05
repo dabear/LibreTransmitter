@@ -34,6 +34,8 @@ extension BubbleResponseType {
             return "nosensor"
         case .serialNumber:
             return "serialnumber"
+        case .patchInfo:
+            return "patchInfo"
         default:
             return "unknown"
         }
