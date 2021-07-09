@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import Combine
+
 import LibreTransmitter
 import HealthKit
 import LoopKit
@@ -80,25 +80,7 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
 
 }
 
-class GenericObservableObject : ObservableObject {
-    private var cancellables = Set<AnyCancellable>()
 
-
-    func notify(){
-        objectWillChange.send()
-    }
-
-    @discardableResult func listenOnce(listener: @escaping () -> Void) -> Self{
-        objectWillChange
-        .sink {  [weak self]_ in
-            listener()
-            self?.cancellables.removeAll()
-            
-        }
-        .store(in: &cancellables)
-        return self
-    }
-}
 
 class SettingsModel : ObservableObject {
     @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
@@ -108,14 +90,15 @@ class SettingsModel : ObservableObject {
 
 struct SettingsView: View {
 
-    @EnvironmentObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
-    @EnvironmentObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
-    @EnvironmentObject private var sensorInfo: LibreTransmitter.SensorInfo
-    //@EnvironmentObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
+    @ObservedObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
+    @ObservedObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
+    @ObservedObject private var sensorInfo: LibreTransmitter.SensorInfo
+
     @ObservedObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
 
 
-    @EnvironmentObject private var notifyComplete: GenericObservableObject
+    @ObservedObject private var notifyComplete: GenericObservableObject
+    @ObservedObject private var notifyDelete: GenericObservableObject
 
     //most of the settings are now retrieved from the cgmmanager observables instead
     @StateObject var model = SettingsModel()
@@ -124,17 +107,20 @@ struct SettingsView: View {
 
 
 
-    public weak var cgmManager: LibreTransmitterManager?
 
     
 
-    static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo, isAlarming: LibreTransmitter.AlarmStatus) -> UIHostingController<AnyView> {
-        UIHostingController(rootView: AnyView(self.init(glucoseMeasurement: glucoseInfoObservable, alarmStatus: isAlarming, cgmManager: cgmManager)
-                                                .environmentObject(notifyComplete)
-                                                .environmentObject(displayGlucoseUnitObservable)
-                                                .environmentObject(transmitterInfoObservable)
-                                                .environmentObject(sensorInfoObervable)
-                                                //.environmentObject(glucoseInfoObservable)
+    static func asHostedViewController(
+        displayGlucoseUnitObservable: DisplayGlucoseUnitObservable,
+        notifyComplete: GenericObservableObject,
+        notifyDelete: GenericObservableObject,
+        transmitterInfoObservable:LibreTransmitter.TransmitterInfo,
+        sensorInfoObervable: LibreTransmitter.SensorInfo,
+        glucoseInfoObservable: LibreTransmitter.GlucoseInfo,
+        alarmStatus: LibreTransmitter.AlarmStatus) -> UIHostingController<SettingsView> {
+        UIHostingController(rootView: self.init(
+            displayGlucoseUnitObservable: displayGlucoseUnitObservable, transmitterInfo: transmitterInfoObservable, sensorInfo: sensorInfoObervable, glucoseMeasurement: glucoseInfoObservable, notifyComplete: notifyComplete, notifyDelete: notifyDelete, alarmStatus: alarmStatus
+
         ))
     }
 
@@ -170,6 +156,11 @@ struct SettingsView: View {
             .navigationBarItems(trailing: dismissButton)
             .onAppear{
                 print("dabear:: settingsview appeared")
+
+                //only override savedglucose unit if we haven't saved this locally before
+                if UserDefaults.standard.mmGlucoseUnit == nil {
+                    UserDefaults.standard.mmGlucoseUnit = glucoseUnit
+                }
                 // Yes we load factory calibrationdata every time the view appears
                 // I know this is  bad, but the calibrationdata is stored in
                 // the keychain and there is no simple way of wrapping the keychain
@@ -187,13 +178,6 @@ struct SettingsView: View {
 
                 }
 
-            }
-            .onAppear{
-
-                //only override savedglucose unit if we haven't saved this locally before
-                if UserDefaults.standard.mmGlucoseUnit == nil {
-                    UserDefaults.standard.mmGlucoseUnit = glucoseUnit
-                }
             }
             .onReceive(glucoseMeasurement.objectWillChange) {
                 print("dabear:: swiftui detected glucosemeasurement change")
@@ -304,14 +288,15 @@ struct SettingsView: View {
                     message: Text("There is no undo"),
                     primaryButton: .destructive(Text("Delete")) {
                         print("Deleting...")
-                        if let cgmManager = self.cgmManager {
+                        /*if let cgmManager = self.cgmManager {
                             cgmManager.disconnect()
                             cgmManager.notifyDelegateOfDeletion {
                                 DispatchQueue.main.async {
                                     self.notifyComplete.notify()
                                 }
                             }
-                        }
+                        }*/
+                        notifyDelete.notify()
                     },
                     secondaryButton: .cancel()
                 )

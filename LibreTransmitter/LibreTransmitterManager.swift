@@ -17,7 +17,7 @@ import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
 
-    let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
+    public let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
 
 
     public let isOnboarded = true   // No distinction between created and onboarded

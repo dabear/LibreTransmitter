@@ -29,13 +29,31 @@ extension LibreTransmitterManager: CGMManagerUI {
     public func settingsViewController(for displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> (UIViewController & CGMManagerOnboardNotifying & CompletionNotifying) {
 
         let doneNotifier = GenericObservableObject()
+        let wantToTerminateNotifier = GenericObservableObject()
 
 
-        let settings = (SettingsView.asHostedViewController(cgmManager: self, displayGlucoseUnitObservable: displayGlucoseUnitObservable, notifyComplete: doneNotifier, transmitterInfoObservable: self.transmitterInfoObservable, sensorInfoObervable: self.sensorInfoObservable, glucoseInfoObservable: self.glucoseInfoObservable, isAlarming: self.alarmStatus))
+        let settings = SettingsView.asHostedViewController(displayGlucoseUnitObservable: displayGlucoseUnitObservable, notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier, transmitterInfoObservable: self.transmitterInfoObservable, sensorInfoObervable: self.sensorInfoObservable, glucoseInfoObservable: self.glucoseInfoObservable, alarmStatus: self.alarmStatus)
+
+
+
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
 
         doneNotifier.listenOnce {
             nav.notifyComplete()
+        }
+
+        wantToTerminateNotifier.listenOnce {
+            self.logger.debug("CGM wants to terminate")
+            self.disconnect()
+
+            self.notifyDelegateOfDeletion {
+                DispatchQueue.main.async {
+                    nav.notifyComplete()
+
+                }
+            }
+
+
         }
 
 
