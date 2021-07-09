@@ -9,6 +9,7 @@ import LoopKit
 import LoopKitUI
 import UIKit
 import UserNotifications
+import Combine
 
 import CoreBluetooth
 import HealthKit
@@ -132,6 +133,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public private(set) var lastConnected: Date?
 
+    public private(set) var alarmStatus = AlarmStatus()
+
     public private(set) var latestBackfill: LibreGlucose? {
         willSet(newValue) {
             guard let newValue = newValue else {
@@ -147,6 +150,21 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                                                                     oldValue: oldValue,
                                                                     trend: trend,
                                                                     battery: batteryString)
+
+                //once we have a new glucose value, we can update the isalarming property
+                if let activeAlarms = UserDefaults.standard.glucoseSchedules?.getActiveAlarms(newValue.glucoseDouble) {
+                    DispatchQueue.main.async {
+                        self.alarmStatus.isAlarming = ([.high,.low].contains(activeAlarms))
+                        self.alarmStatus.glucoseScheduleAlarmResult = activeAlarms
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                    self.alarmStatus.isAlarming = false
+                    self.alarmStatus.glucoseScheduleAlarmResult = .none
+                    }
+                }
+
+
             }
 
             logger.debug("dabear:: latestBackfill set, newvalue is \(newValue.description)")
@@ -171,6 +189,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.glucoseDisplay = nil
             }
         }
+
     }
 
     public var managerIdentifier : String {

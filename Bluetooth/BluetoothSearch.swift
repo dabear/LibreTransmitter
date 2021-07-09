@@ -15,7 +15,6 @@ import UIKit
 import Combine
 
 final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    static let bt_log = OSLog(subsystem: "com.LibreMonitor", category: "BluetoothSearchManager")
 
     var centralManager: CBCentralManager!
 

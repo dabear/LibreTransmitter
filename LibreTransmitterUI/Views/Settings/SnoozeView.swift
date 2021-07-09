@@ -11,24 +11,29 @@ import SwiftUI
 
 struct SnoozeView: View {
 
-    var pickerTimes: [TimeInterval]! = nil
+    var pickerTimes: [TimeInterval] = ({
+        pickerTimesArray()
 
-    var formatter = DateComponentsFormatter()
+    })()
+
+    var formatter : DateComponentsFormatter = ({
+        var f = DateComponentsFormatter()
+        f.allowsFractionalUnits = false
+        f.unitsStyle = .full
+        return f
+
+    })()
 
     func formatInterval(_ interval: TimeInterval) -> String {
         formatter.string(from: interval)!
     }
 
-    init(manager: LibreTransmitterManager?) {
-        self.pickerTimes = pickerTimesArray()
-        self.manager = manager
-        formatter.allowsFractionalUnits = false
-        formatter.unitsStyle = .full
-    }
 
-    private weak var manager: LibreTransmitterManager?
 
-    func pickerTimesArray() -> [TimeInterval] {
+    @ObservedObject var alarmStatus : LibreTransmitter.AlarmStatus
+
+
+    static func pickerTimesArray() -> [TimeInterval] {
         var arr  = [TimeInterval]()
 
         let mins10 = 0.166_67
@@ -58,17 +63,16 @@ struct SnoozeView: View {
         var snoozeDescription  = ""
         var celltext = ""
 
-        if let glucoseDouble = manager?.latestBackfill?.glucoseDouble, let activeAlarms = UserDefaults.standard.glucoseSchedules?.getActiveAlarms(glucoseDouble) {
-            switch activeAlarms {
+
+
+        let activeAlarms = alarmStatus.glucoseScheduleAlarmResult
+        switch activeAlarms {
             case .high:
                 celltext = "High Glucose Alarm active"
             case .low:
                 celltext = "Low Glucose Alarm active"
             case .none:
                 celltext = "No Glucose Alarm active"
-            }
-        } else {
-            celltext = "No Glucose Alarm active"
         }
 
         if let until = GlucoseScheduleList.snoozedUntil {
@@ -127,6 +131,6 @@ struct SnoozeView: View {
 
 struct TestView_Previews: PreviewProvider {
     static var previews: some View {
-        SnoozeView(manager: nil)
+        SnoozeView(alarmStatus: LibreTransmitter.AlarmStatus.createNew())
     }
 }

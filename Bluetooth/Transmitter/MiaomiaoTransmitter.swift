@@ -183,7 +183,7 @@ extension MiaoMiaoResponseState: CustomStringConvertible {
 
 class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
-    fileprivate let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "BubbleTransmitter")
+    fileprivate let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "MiaoMiaoTransmitter")
     
     func reset() {
         rxBuffer.resetAllBytes()

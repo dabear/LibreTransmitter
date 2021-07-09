@@ -9,8 +9,9 @@
 import SwiftUI
 import Combine
 import LibreTransmitter
+import LoopKit
 
-
+fileprivate var keychain = KeychainManager()
 
 struct CalibrationEditView: View {
     typealias Params = SensorData.CalibrationInfo
@@ -70,7 +71,7 @@ struct CalibrationEditView: View {
                     }
 
                     do {
-                        try self.cgmManager?.keychain.setLibreNativeCalibrationData(newParams)
+                        try keychain.setLibreNativeCalibrationData(newParams)
                         print("calibrationsaving completed")
 
                         presentableStatus = StatusMessage(title: "OK", message: "Calibrations saved!")
@@ -96,18 +97,16 @@ struct CalibrationEditView: View {
 
     }
 
-    public var cgmManager: LibreTransmitterManager!
     @ObservedObject private var newParams: Params
 
     private var debugMode = false
     private var hasExistingParams = false
 
-    public init(cgmManager: LibreTransmitterManager?, debugMode:Bool=false) {
-        self.cgmManager = cgmManager
+    public init(debugMode:Bool=false) {
         self.debugMode = debugMode
 
 
-        if let params = cgmManager?.keychain.getLibreNativeCalibrationData() {
+        if let params = keychain.getLibreNativeCalibrationData() {
             hasExistingParams = true
             self.newParams = params
         } else {
@@ -127,7 +126,7 @@ struct CalibrationEditView_Previews: PreviewProvider {
     static var previews: some View {
         //var testData = FormState.shared
         //testData.childStates["i1"] = true
-        CalibrationEditView(cgmManager: nil, debugMode: true)
+        CalibrationEditView(debugMode: true)
 
     }
 }

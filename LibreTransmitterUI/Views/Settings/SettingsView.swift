@@ -50,16 +50,17 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
 
     }
 
+    static private var keychain = KeychainManager()
     //todo: consider using cgmmanagers observable directly
-    static func loadState(cgmManager: LibreTransmitterManager?) -> FactoryCalibrationInfo{
+    static func loadState() -> FactoryCalibrationInfo{
 
         let newState = FactoryCalibrationInfo()
 
-        // User editable calibrationdata: cgmManager?.keychain.getLibreNativeCalibrationData()
-        // Calibrationdata stored in sensor: cgmManager?.calibrationData
+        // User editable calibrationdata: keychain.getLibreNativeCalibrationData()
+        // Default Calibrationdata stored in sensor: cgmManager?.calibrationData
 
         //do not change this, there is UI support for editing calibrationdata anyway
-        guard let c = cgmManager?.keychain.getLibreNativeCalibrationData() else {
+        guard let c = self.keychain.getLibreNativeCalibrationData() else {
             return newState
         }
 
@@ -119,15 +120,16 @@ struct SettingsView: View {
     //most of the settings are now retrieved from the cgmmanager observables instead
     @StateObject var model = SettingsModel()
     @State private var presentableStatus: StatusMessage?
+    @ObservedObject var alarmStatus: LibreTransmitter.AlarmStatus
 
 
 
-    public var cgmManager: LibreTransmitterManager?
+    public weak var cgmManager: LibreTransmitterManager?
 
     
 
-    static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo) -> UIHostingController<AnyView> {
-        UIHostingController(rootView: AnyView(self.init(glucoseMeasurement: glucoseInfoObservable, cgmManager: cgmManager)
+    static func asHostedViewController(cgmManager: LibreTransmitterManager, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, notifyComplete: GenericObservableObject, transmitterInfoObservable: LibreTransmitter.TransmitterInfo, sensorInfoObervable: LibreTransmitter.SensorInfo, glucoseInfoObservable: LibreTransmitter.GlucoseInfo, isAlarming: LibreTransmitter.AlarmStatus) -> UIHostingController<AnyView> {
+        UIHostingController(rootView: AnyView(self.init(glucoseMeasurement: glucoseInfoObservable, alarmStatus: isAlarming, cgmManager: cgmManager)
                                                 .environmentObject(notifyComplete)
                                                 .environmentObject(displayGlucoseUnitObservable)
                                                 .environmentObject(transmitterInfoObservable)
@@ -157,16 +159,6 @@ struct SettingsView: View {
     )()
 
 
-    var hasActiveAlarm: Bool {
-        var res = false
-        if let glucoseDouble = cgmManager?.latestBackfill?.glucoseDouble, let activeAlarms = UserDefaults.standard.glucoseSchedules?.getActiveAlarms(glucoseDouble) {
-            res = [.high,.low].contains(activeAlarms)
-        }
-
-        return res
-    }
-
-
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
@@ -185,7 +177,7 @@ struct SettingsView: View {
                 // dependencies or hand crafting it, which would be error prone
 
 
-                let newFactoryInfo = FactoryCalibrationInfo.loadState(cgmManager: self.cgmManager)
+                let newFactoryInfo = FactoryCalibrationInfo.loadState()
 
                 if newFactoryInfo != self.model.factoryCalibrationInfos.first{
                     print("dabear:: factoryinfo was new")
@@ -203,7 +195,7 @@ struct SettingsView: View {
                     UserDefaults.standard.mmGlucoseUnit = glucoseUnit
                 }
             }
-            .onChange(of: glucoseMeasurement) { newVal in
+            .onReceive(glucoseMeasurement.objectWillChange) {
                 print("dabear:: swiftui detected glucosemeasurement change")
             }
 
@@ -213,8 +205,8 @@ struct SettingsView: View {
 
     var snoozeSection: some View {
         Section {
-            NavigationLink(destination: SnoozeView(manager: cgmManager)) {
-                if hasActiveAlarm {
+            NavigationLink(destination: SnoozeView(alarmStatus: alarmStatus)) {
+                if alarmStatus.isAlarming {
                     Text("Snooze Alerts").frame(alignment: .center)
                         .padding(.top, 30)
                         .padding(.bottom, 30)
@@ -272,7 +264,7 @@ struct SettingsView: View {
 
 
             ZStack {
-                NavigationLink(destination: CalibrationEditView(cgmManager: cgmManager)) {
+                NavigationLink(destination: CalibrationEditView()) {
                     Button("Edit calibrations") {
                         print("edit calibration clicked")
                     }

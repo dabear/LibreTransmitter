@@ -15,7 +15,7 @@ extension Hashable where Self: AnyObject {
 
 extension Equatable where Self: AnyObject {
 
-    static func == (lhs:Self, rhs:Self) -> Bool {
+    public static func == (lhs:Self, rhs:Self) -> Bool {
         return lhs === rhs
     }
 }

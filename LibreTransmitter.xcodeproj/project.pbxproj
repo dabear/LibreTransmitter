@@ -89,6 +89,7 @@
 		27DD8F26268FA75A00649010 /* SensorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DD8F25268FA75A00649010 /* SensorInfo.swift */; };
 		27DD8F28268FA79800649010 /* GlucoseInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DD8F27268FA79800649010 /* GlucoseInfo.swift */; };
 		27DD8F2A269106A100649010 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DD8F29269106A100649010 /* ViewExtensions.swift */; };
+		27ED67B82698EF38003E5DAB /* AlarmStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B72698EF38003E5DAB /* AlarmStatus.swift */; };
 		432B0E8C1CDFC3C50045347B /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43A8EC7C210E661400A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 		43A8EC86210E664300A81379 /* LibreTransmitterUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 43A8EC84210E664300A81379 /* LibreTransmitterUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -186,6 +187,7 @@
 		27DD8F25268FA75A00649010 /* SensorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorInfo.swift; sourceTree = "<group>"; };
 		27DD8F27268FA79800649010 /* GlucoseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseInfo.swift; sourceTree = "<group>"; };
 		27DD8F29269106A100649010 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
+		27ED67B72698EF38003E5DAB /* AlarmStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmStatus.swift; sourceTree = "<group>"; };
 		432B0E881CDFC3C50045347B /* LibreTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LibreTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibreTransmitter.h; sourceTree = "<group>"; };
 		432B0E8D1CDFC3C50045347B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -440,6 +442,17 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		27ED67B62698EEEF003E5DAB /* Observables */ = {
+			isa = PBXGroup;
+			children = (
+				27DD8F22268FA0F500649010 /* TransmitterInfo.swift */,
+				27DD8F25268FA75A00649010 /* SensorInfo.swift */,
+				27DD8F27268FA79800649010 /* GlucoseInfo.swift */,
+				27ED67B72698EF38003E5DAB /* AlarmStatus.swift */,
+			);
+			path = Observables;
+			sourceTree = "<group>";
+		};
 		432B0E7E1CDFC3C50045347B = {
 			isa = PBXGroup;
 			children = (
@@ -469,6 +482,7 @@
 		432B0E8A1CDFC3C50045347B /* LibreTransmitter */ = {
 			isa = PBXGroup;
 			children = (
+				27ED67B62698EEEF003E5DAB /* Observables */,
 				27850D0B25672CA60020D109 /* ConcreteGlucoseDisplayable.swift */,
 				27850D0D25672CA60020D109 /* NotificationHelper.swift */,
 				27850D0C25672CA60020D109 /* LibreGlucose.swift */,
@@ -477,9 +491,6 @@
 				432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */,
 				432B0E8D1CDFC3C50045347B /* Info.plist */,
 				B40BF26723ABD55200A43CEE /* OSLog.swift */,
-				27DD8F22268FA0F500649010 /* TransmitterInfo.swift */,
-				27DD8F25268FA75A00649010 /* SensorInfo.swift */,
-				27DD8F27268FA79800649010 /* GlucoseInfo.swift */,
 			);
 			path = LibreTransmitter;
 			sourceTree = "<group>";
@@ -784,6 +795,7 @@
 				27DD8F26268FA75A00649010 /* SensorInfo.swift in Sources */,
 				27850DC425672F640020D109 /* GlucoseSmoothing.swift in Sources */,
 				27850DCF25672F780020D109 /* CRC.swift in Sources */,
+				27ED67B82698EF38003E5DAB /* AlarmStatus.swift in Sources */,
 				27850CFD25672C0C0020D109 /* HKUnit.swift in Sources */,
 				27850CF925672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
 			);
