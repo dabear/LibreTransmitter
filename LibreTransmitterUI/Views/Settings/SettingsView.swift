@@ -15,8 +15,23 @@ import LoopKitUI
 
 
 private struct SettingsItem: View {
-    @State var title: String = ""
-    @State var detail: String = ""
+    @State var title: String = "" // we don't want this to change after it is set
+    @Binding var detail: String
+
+    init(title: String, detail: Binding<String>) {
+        self.title = title
+        self._detail = detail
+    }
+
+    //basically allows caller to set a static string without having to use .constant
+    init(title: String, detail: String) {
+        self.title = title
+        self._detail = Binding<String>(get: {
+            detail
+        }, set: { newVal in
+            //pass
+        })
+    }
 
     var body: some View {
         HStack {
@@ -134,11 +149,12 @@ struct SettingsView: View {
 
     static let formatter = NumberFormatter()
 
-    var dangerModeActivated : Binding<Bool> = ({
+    var dangerModeActivated : Binding<String> = ({
         Binding(
-            get: { UserDefaults.standard.dangerModeActivated },
+            get: { UserDefaults.standard.dangerModeActivated ? "Activated" : "Not activated" },
             set: { newVal in
-                UserDefaults.standard.dangerModeActivated = newVal
+                //UserDefaults.standard.dangerModeActivated = newVal
+                //we dont support setting it currently
             })
     }
 
@@ -201,21 +217,23 @@ struct SettingsView: View {
         }
     }
 
+
+
     var measurementSection : some View {
         Section(header: Text("Last measurement")) {
-                SettingsItem(title: "Glucose", detail: glucoseMeasurement.glucose )
-                SettingsItem(title: "Date", detail: glucoseMeasurement.date )
-                SettingsItem(title: "Sensor Footer checksum", detail: glucoseMeasurement.checksum )
+                SettingsItem(title: "Glucose", detail: $glucoseMeasurement.glucose )
+                SettingsItem(title: "Date", detail: $glucoseMeasurement.date )
+                SettingsItem(title: "Sensor Footer checksum", detail: $glucoseMeasurement.checksum )
         }
     }
 
     var sensorInfoSection : some View {
         Section(header: Text("Sensor Info")) {
-            SettingsItem(title: "Sensor Age", detail: sensorInfo.sensorAge )
-                SettingsItem(title: "Sensor Age Left", detail: sensorInfo.sensorAgeLeft )
-                SettingsItem(title: "Sensor Endtime", detail: sensorInfo.sensorEndTime )
-                SettingsItem(title: "Sensor State", detail: sensorInfo.sensorState )
-                SettingsItem(title: "Sensor Serial", detail: sensorInfo.sensorSerial )
+            SettingsItem(title: "Sensor Age", detail: $sensorInfo.sensorAge )
+                SettingsItem(title: "Sensor Age Left", detail: $sensorInfo.sensorAgeLeft )
+                SettingsItem(title: "Sensor Endtime", detail: $sensorInfo.sensorEndTime )
+                SettingsItem(title: "Sensor State", detail: $sensorInfo.sensorState )
+                SettingsItem(title: "Sensor Serial", detail: $sensorInfo.sensorSerial )
         }
     }
 
@@ -223,13 +241,13 @@ struct SettingsView: View {
     var transmitterInfoSection: some View {
 
         Section(header: Text("Transmitter Info")) {
-            SettingsItem(title: "Battery", detail: transmitterInfo.battery )
-            SettingsItem(title: "Hardware", detail: transmitterInfo.hardware )
-            SettingsItem(title: "Firmware", detail: transmitterInfo.firmware )
-            SettingsItem(title: "Connection State", detail: transmitterInfo.connectionState )
-            SettingsItem(title: "Transmitter Type", detail: transmitterInfo.transmitterType )
-            SettingsItem(title: "Mac", detail: transmitterInfo.transmitterIdentifier )
-            SettingsItem(title: "Sensor Type", detail: transmitterInfo.sensorType )
+            SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+            SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
+            SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
+            SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
+            SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
+            SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
+            SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
         }
     }
 
@@ -287,15 +305,7 @@ struct SettingsView: View {
                     title: Text("Are you sure you want to remove this cgm from loop?"),
                     message: Text("There is no undo"),
                     primaryButton: .destructive(Text("Delete")) {
-                        print("Deleting...")
-                        /*if let cgmManager = self.cgmManager {
-                            cgmManager.disconnect()
-                            cgmManager.notifyDelegateOfDeletion {
-                                DispatchQueue.main.async {
-                                    self.notifyComplete.notify()
-                                }
-                            }
-                        }*/
+
                         notifyDelete.notify()
                     },
                     secondaryButton: .cancel()
@@ -312,18 +322,18 @@ struct SettingsView: View {
             // so we just pass glucoseunit directly on init
             ZStack {
                 NavigationLink(destination: AlarmSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Alarms")
+                    SettingsItem(title: "Alarms", detail: .constant(""))
                 }
             }
             ZStack {
                 NavigationLink(destination: GlucoseSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Glucose Settings")
+                    SettingsItem(title: "Glucose Settings", detail: .constant(""))
                 }
             }
 
             ZStack {
                 NavigationLink(destination: NotificationSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Notifications")
+                    SettingsItem(title: "Notifications", detail: .constant(""))
                 }
             }
 
@@ -332,7 +342,7 @@ struct SettingsView: View {
             // Consider doing it in the future, but no rush. dangermode is only used for calibrationedit and bluetooth devices debugging.
 
 
-            SettingsItem(title: "Danger mode", detail: dangerModeActivated.wrappedValue ? "Activated" : "Not Activated")
+            SettingsItem(title: "Danger mode", detail: dangerModeActivated)
                 .onTapGesture {
                     print("danger mode tapped")
                     presentableStatus = StatusMessage(title: "Danger mode", message: "Danger was a legacy ui only feature")
