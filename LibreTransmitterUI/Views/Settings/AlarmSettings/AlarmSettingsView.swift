@@ -182,7 +182,6 @@ class AlarmSettingsState : ObservableObject     {
 }
 
 
-
 struct AlarmDateRow: View {
     var schedule: AlarmScheduleState
     @State var tag: Int
@@ -320,7 +319,7 @@ struct AlarmSettingsView: View {
         list
         .ignoresSafeArea()
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            SwiftUI.Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
         
 

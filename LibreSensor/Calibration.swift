@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import LoopKit
+
 import os.log
 
 private let LibreCalibrationLabel =  "https://LibreCalibrationLabelNative.doesnot.exist.com"

@@ -10,8 +10,8 @@ import SwiftUI
 
 import LibreTransmitter
 import HealthKit
-import LoopKit
-import LoopKitUI
+
+
 
 
 private struct SettingsItem: View {
@@ -26,11 +26,7 @@ private struct SettingsItem: View {
     //basically allows caller to set a static string without having to use .constant
     init(title: String, detail: String) {
         self.title = title
-        self._detail = Binding<String>(get: {
-            detail
-        }, set: { newVal in
-            //pass
-        })
+        self._detail = .constant(detail)
     }
 
     var body: some View {
@@ -300,7 +296,7 @@ struct SettingsView: View {
                         showingDestructQuestion = true
             }.foregroundColor(.red)
             .alert(isPresented: $showingDestructQuestion) {
-                Alert(
+                SwiftUI.Alert(
                     title: Text("Are you sure you want to remove this cgm from loop?"),
                     message: Text("There is no undo"),
                     primaryButton: .destructive(Text("Delete")) {
@@ -364,7 +360,7 @@ struct SettingsView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            SwiftUI.Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
 
 

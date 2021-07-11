@@ -8,10 +8,7 @@
 
 import SwiftUI
 
-protocol CustomDataPickerDelegate: class {
-    func pickerDidPickValidRange()
 
-}
 
 class AlarmTimeCellExternalState :ObservableObject, Identifiable, Hashable {
 
@@ -44,7 +41,6 @@ struct CustomDataPickerView: View {
 
     @State var externalStateCopy: AlarmTimeCellExternalState = AlarmTimeCellExternalState()
 
-    public weak var delegate: CustomDataPickerDelegate?
 
     private func popView() {
         self.presentationMode.wrappedValue.dismiss()
@@ -69,12 +65,6 @@ struct CustomDataPickerView: View {
         return arr
     }
 
-
-
-    private func callDelegate() {
-        delegate?.pickerDidPickValidRange()
-    }
-
     private func verifyRange(){
 
         // This can be simplified but decided not to do so
@@ -97,7 +87,6 @@ struct CustomDataPickerView: View {
         print("is ok? \(isok)")
         if isok {
             updateTextualState()
-            callDelegate()
             popView()
 
         } else {
@@ -200,7 +189,7 @@ struct CustomDataPickerView: View {
 
         }
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            SwiftUI.Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
 
 

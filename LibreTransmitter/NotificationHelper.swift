@@ -9,7 +9,7 @@
 import AudioToolbox
 import Foundation
 import HealthKit
-import LoopKit
+
 import UserNotifications
 import os.log
 

@@ -8,7 +8,7 @@
 
 import Foundation
 import HealthKit
-import LoopKit
+
 
 public struct ConcreteGlucoseDisplayable: GlucoseDisplayable {
     public var glucoseRangeCategory: GlucoseRangeCategory?

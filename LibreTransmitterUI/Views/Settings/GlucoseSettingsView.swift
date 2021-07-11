@@ -59,7 +59,7 @@ struct GlucoseSettingsView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            SwiftUI.Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
         }
         .navigationBarTitle("Glucose Settings")
 

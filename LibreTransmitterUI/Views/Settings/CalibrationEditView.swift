@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 import LibreTransmitter
-import LoopKit
+
 
 
 struct CalibrationEditView: View {
@@ -48,7 +48,7 @@ struct CalibrationEditView: View {
                     return
                 }
 
-                if false && isReadOnly {
+                if isReadOnly {
                     presentableStatus = StatusMessage(title: "Could not save", message:"Calibration parameters are readonly and cannot be saved")
                     return
                 }
@@ -69,7 +69,7 @@ struct CalibrationEditView: View {
 
             }).buttonStyle(BlueButtonStyle())
             .alert(item: $presentableStatus) { status in
-                Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+                SwiftUI.Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
             }
 
         }
