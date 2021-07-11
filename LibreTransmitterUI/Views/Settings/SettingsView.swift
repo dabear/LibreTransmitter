@@ -65,7 +65,6 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
 
     }
 
-    static private var keychain = KeychainManager()
     //todo: consider using cgmmanagers observable directly
     static func loadState() -> FactoryCalibrationInfo{
 
@@ -75,7 +74,7 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
         // Default Calibrationdata stored in sensor: cgmManager?.calibrationData
 
         //do not change this, there is UI support for editing calibrationdata anyway
-        guard let c = self.keychain.getLibreNativeCalibrationData() else {
+        guard let c = KeychainManagerWrapper.standard.getLibreNativeCalibrationData() else {
             return newState
         }
 

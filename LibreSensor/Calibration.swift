@@ -16,8 +16,8 @@ private let LibreUsername = "LibreUsername"
 
 fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "KeychainManagerCalibration")
 
-extension KeychainManager {
-    public func setLibreNativeCalibrationData(_ calibrationData: SensorData.CalibrationInfo) throws {
+public extension KeychainManagerWrapper {
+    func setLibreNativeCalibrationData(_ calibrationData: SensorData.CalibrationInfo) throws {
         let credentials: InternetCredentials?
         credentials = InternetCredentials(username: LibreUsername, password: serializeNativeAlgorithmParameters(calibrationData), url: LibreCalibrationUrl)
         logger.debug("dabear: Setting calibrationdata to \(String(describing: calibrationData))")

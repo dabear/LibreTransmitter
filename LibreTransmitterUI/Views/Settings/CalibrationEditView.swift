@@ -11,7 +11,6 @@ import Combine
 import LibreTransmitter
 import LoopKit
 
-fileprivate var keychain = KeychainManager()
 
 struct CalibrationEditView: View {
     typealias Params = SensorData.CalibrationInfo
@@ -49,13 +48,13 @@ struct CalibrationEditView: View {
                     return
                 }
 
-                if isReadOnly {
+                if false && isReadOnly {
                     presentableStatus = StatusMessage(title: "Could not save", message:"Calibration parameters are readonly and cannot be saved")
                     return
                 }
 
                 do {
-                    try keychain.setLibreNativeCalibrationData(newParams)
+                    try KeychainManagerWrapper.standard.setLibreNativeCalibrationData(newParams)
                     print("calibrationsaving completed")
 
                     presentableStatus = StatusMessage(title: "OK", message: "Calibrations saved!")
@@ -113,7 +112,7 @@ struct CalibrationEditView: View {
         self.debugMode = debugMode
 
 
-        if let params = keychain.getLibreNativeCalibrationData() {
+        if let params = KeychainManagerWrapper.standard.getLibreNativeCalibrationData() {
             hasExistingParams = true
             self.newParams = params
         } else {

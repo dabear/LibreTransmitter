@@ -206,7 +206,6 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         [:]
     }
 
-    public let keychain = KeychainManager()
 
     public let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
 
@@ -230,7 +229,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public var calibrationData: SensorData.CalibrationInfo? {
-        keychain.getLibreNativeCalibrationData()
+        KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
     }
 
     public func disconnect() {
@@ -271,7 +270,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             return
         }
 
-        let calibrationdata = keychain.getLibreNativeCalibrationData()
+        let calibrationdata = KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
 
         if let calibrationdata = calibrationdata {
             logger.debug("dabear:: calibrationdata loaded")
@@ -290,7 +289,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
         calibrateSensor(sensordata: data) { [weak self] calibrationparams  in
             do {
-                try self?.keychain.setLibreNativeCalibrationData(calibrationparams)
+                try KeychainManagerWrapper.standard.setLibreNativeCalibrationData(calibrationparams)
             } catch {
                 NotificationHelper.sendCalibrationNotification(.invalidCalibrationData)
                 callback(.invalidCalibrationData, nil)
