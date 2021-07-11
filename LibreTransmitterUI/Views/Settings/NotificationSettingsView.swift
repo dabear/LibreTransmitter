@@ -22,7 +22,6 @@ struct NotificationSettingsView: View {
     @State private var presentableStatus: StatusMessage?
 
 
-
     private var glucoseUnit: HKUnit
 
     private let glucoseSegments = [HKUnit.millimolesPerLiter, HKUnit.milligramsPerDeciliter]
@@ -91,52 +90,61 @@ struct NotificationSettingsView: View {
 
     static let formatter = NumberFormatter()
 
+    var glucoseVisibilitySection : some View {
+        Section(header: Text("Glucose Notification visibility") ) {
+            Toggle("Always Notify Glucose", isOn: $mmAlwaysDisplayGlucose)
+
+            HStack {
+                Text("Notify per reading")
+                TextField("", value: $mmNotifyEveryXTimes, formatter: Self.formatter)
+                    .multilineTextAlignment(.center)
+                    .disabled(true)
+                    .frame(minWidth: 15, maxWidth: 60)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                Stepper("Value", value: $mmNotifyEveryXTimes, in: 0...9)
+                    .labelsHidden()
+
+            }.clipped()
+
+            Toggle("Adds Phone Battery", isOn: $mmShowPhoneBattery)
+            Toggle("Adds Transmitter Battery", isOn: $mmShowTransmitterBattery)
+            Toggle("Also vibrate", isOn: $mmGlucoseAlarmsVibrate)
+
+        }
+    }
+
+    var additionalNotificationsSection : some View {
+        Section(header: Text("Additional notification types")) {
+            Toggle("Low battery", isOn:$mmAlertLowBatteryWarning)
+            Toggle("Invalid sensor", isOn:$mmAlertInvalidSensorDetected)
+            Toggle("Sensor change", isOn:$mmAlertNewSensorDetected)
+            Toggle("Sensor not found", isOn:$mmAlertNoSensorDetected)
+            Toggle("Sensor expires soon", isOn:$mmAlertSensorSoonExpire)
+
+        }
+    }
+
+    var miscSection : some View {
+        Section(header: Text("Misc")) {
+            HStack {
+                Text("Unit override")
+                Picker(selection: $favoriteGlucoseUnit, label: Text("Unit override")) {
+                    Text(HKUnit.millimolesPerLiter.localizedShortUnitString).tag(0)
+                    Text(HKUnit.milligramsPerDeciliter.localizedShortUnitString).tag(1)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .clipped()
+            }
+        }
+    }
 
     var body: some View {
         List {
             
-            Section(header: Text("Glucose Notification visibility") ) {
-                Toggle("Always Notify Glucose", isOn: $mmAlwaysDisplayGlucose)
+            glucoseVisibilitySection
+            additionalNotificationsSection
 
-                HStack {
-                    Text("Notify per reading")
-                    TextField("", value: $mmNotifyEveryXTimes, formatter: Self.formatter)
-                        .multilineTextAlignment(.center)
-                        .disabled(true)
-                        .frame(minWidth: 15, maxWidth: 60)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                    Stepper("Value", value: $mmNotifyEveryXTimes, in: 0...9)
-                        .labelsHidden()
-
-                }.clipped()
-
-                Toggle("Adds Phone Battery", isOn: $mmShowPhoneBattery)
-                Toggle("Adds Transmitter Battery", isOn: $mmShowTransmitterBattery)
-                Toggle("Also vibrate", isOn: $mmGlucoseAlarmsVibrate)
-
-            }
-            Section(header: Text("Additional notification types")) {
-                Toggle("Low battery", isOn:$mmAlertLowBatteryWarning)
-                Toggle("Invalid sensor", isOn:$mmAlertInvalidSensorDetected)
-                Toggle("Sensor change", isOn:$mmAlertNewSensorDetected)
-                Toggle("Sensor not found", isOn:$mmAlertNoSensorDetected)
-                Toggle("Sensor expires soon", isOn:$mmAlertSensorSoonExpire)
-
-            }
-
-            Section(header: Text("Misc")) {
-
-
-                HStack {
-                    Text("Unit override")
-                    Picker(selection: $favoriteGlucoseUnit, label: Text("Unit override")) {
-                        Text(HKUnit.millimolesPerLiter.localizedShortUnitString).tag(0)
-                        Text(HKUnit.milligramsPerDeciliter.localizedShortUnitString).tag(1)
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .clipped()
-                }
-            }
+            miscSection
             .onAppear {
                 favoriteGlucoseUnit = glucoseSegments.firstIndex(of: glucoseUnit) ?? 0
             }
@@ -147,9 +155,7 @@ struct NotificationSettingsView: View {
                 } else if newUnit == HKUnit.millimolesPerLiter {
                     mmGlucoseUnit = "mmol"
                 }
-
             }
-
 
         }
         .listStyle(InsetGroupedListStyle())

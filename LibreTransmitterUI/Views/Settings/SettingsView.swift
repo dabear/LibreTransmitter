@@ -345,7 +345,7 @@ struct SettingsView: View {
             SettingsItem(title: "Danger mode", detail: dangerModeActivated)
                 .onTapGesture {
                     print("danger mode tapped")
-                    presentableStatus = StatusMessage(title: "Danger mode", message: "Danger was a legacy ui only feature")
+                    presentableStatus = StatusMessage(title: "Danger mode", message: "Danger mode was a legacy ui only feature")
                 }
 
         }

@@ -85,44 +85,57 @@ struct SnoozeView: View {
     @State private var selectedInterval = 0
     @State private var snoozeDescription = "nothing to see here"
 
+    var snoozeButton: some View {
+        VStack(alignment: .leading) {
+            Button(action: {
+                print("snooze from testview clicked")
+                let interval = pickerTimes[selectedInterval]
+                let snoozeFor = formatter.string(from: interval)!
+                let untilDate = Date() + interval
+                UserDefaults.standard.snoozedUntil = untilDate < Date() ? nil : untilDate
+                print("will snooze for \(snoozeFor) until \(untilDate.description(with: .current))")
+                snoozeDescription = getSnoozeDescription()
+            }) {
+                Text("Click to Snooze Alerts")
+                    .padding()
+            }
+        }
+
+    }
+
+    var snoozePicker: some View {
+        VStack {
+            Picker(selection: $selectedInterval, label: Text("Strength")) {
+                ForEach(0 ..< pickerTimes.count) {
+                    Text(formatInterval(self.pickerTimes[$0]))
+                }
+            }
+
+            .scaledToFill()
+        }
+
+    }
+
+    var snoozeDesc : some View {
+        VStack(alignment: .leading) {
+            Text(snoozeDescription)
+        }
+    }
+
     var body: some View {
         VStack {
-            VStack(alignment: .leading) {
-                Button(action: {
-                            print("snooze from testview clicked")
-                            let interval = pickerTimes[selectedInterval]
-                            let snoozeFor = formatter.string(from: interval)!
-                            let untilDate = Date() + interval
-                            UserDefaults.standard.snoozedUntil = untilDate < Date() ? nil : untilDate
-                            print("will snooze for \(snoozeFor) until \(untilDate.description(with: .current))")
-                            snoozeDescription = getSnoozeDescription()
-                        }) {
-                            Text("Click to Snooze Alerts")
-                                .padding()
-                }
-            }
+
+            snoozeButton
             .frame( minHeight: 100, alignment: .top)
 
-            VStack {
-                Picker(selection: $selectedInterval, label: Text("Strength")) {
-                    ForEach(0 ..< pickerTimes.count) {
-                        Text(formatInterval(self.pickerTimes[$0]))
-                    }
-                }
-
-                .scaledToFill()
-            }
+            snoozePicker
             .frame(minHeight: 150, maxHeight: 500, alignment: .center)
 
-            VStack(alignment: .leading) {
-                Text(snoozeDescription)
-            }
+            snoozeDesc
             .frame( minHeight: 100, alignment: .bottom)
         }
         .onAppear {
             snoozeDescription = getSnoozeDescription()
-        }.onDisappear {
-            print("ContentView disappeared!")
         }
     }
 }
