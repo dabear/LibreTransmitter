@@ -30,7 +30,8 @@ struct SnoozeView: View {
 
 
 
-    @ObservedObject var alarmStatus : LibreTransmitter.AlarmStatus
+    @Binding var isAlarming : Bool
+    @Binding var activeAlarms: LibreTransmitter.GlucoseScheduleAlarmResult
 
 
     static func pickerTimesArray() -> [TimeInterval] {
@@ -63,9 +64,6 @@ struct SnoozeView: View {
         var snoozeDescription  = ""
         var celltext = ""
 
-
-
-        let activeAlarms = alarmStatus.glucoseScheduleAlarmResult
         switch activeAlarms {
             case .high:
                 celltext = "High Glucose Alarm active"
@@ -131,6 +129,6 @@ struct SnoozeView: View {
 
 struct TestView_Previews: PreviewProvider {
     static var previews: some View {
-        SnoozeView(alarmStatus: LibreTransmitter.AlarmStatus.createNew())
+        SnoozeView(isAlarming: .constant(true), activeAlarms: .constant(.none))
     }
 }

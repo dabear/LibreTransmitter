@@ -205,7 +205,7 @@ struct SettingsView: View {
 
     var snoozeSection: some View {
         Section {
-            NavigationLink(destination: SnoozeView(alarmStatus: alarmStatus)) {
+            NavigationLink(destination: SnoozeView(isAlarming: $alarmStatus.isAlarming, activeAlarms: $alarmStatus.glucoseScheduleAlarmResult)) {
                 if alarmStatus.isAlarming {
                     Text("Snooze Alerts").frame(alignment: .center)
                         .padding(.top, 30)
