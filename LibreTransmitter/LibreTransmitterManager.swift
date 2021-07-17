@@ -6,7 +6,7 @@
 
 import Foundation
 import LoopKit
-import LoopKitUI
+//import LoopKitUI
 import UIKit
 import UserNotifications
 import Combine
@@ -16,6 +16,13 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+    public var cgmStatus : CGMManagerStatus {
+        cgmManagerStatus
+    }
+
+    public static var localizedTitle = "LibreTransmitterManager"
+    //static public let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
+
 
     public let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
 
@@ -192,7 +199,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     }
 
-    public var managerIdentifier : String {
+    static public var managerIdentifier : String {
         Self.className
     }
 
@@ -207,7 +214,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
 
-    public let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
+
 
     public let appURL: URL? = nil //URL(string: "spikeapp://")
 

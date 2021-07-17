@@ -9,10 +9,14 @@
 /* Begin PBXBuildFile section */
 		270C1429266047490063405B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C1428266047490063405B /* NotificationSettingsView.swift */; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
-		273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
-		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
+		274261AC26A225CF00B4062E /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
+		274261AD26A225CF00B4062E /* LoopKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		274261AF26A225DE00B4062E /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
+		274261B026A225DE00B4062E /* LoopKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		274261B226A225E500B4062E /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC8B210E665600A81379 /* LoopKitUI.framework */; };
+		274261B326A225E500B4062E /* LoopKitUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC8B210E665600A81379 /* LoopKitUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		275786AB26753CC400845D0E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275786AA26753CC400845D0E /* SettingsView.swift */; };
 		275EC993265AEE970043210E /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC992265AEE970043210E /* NumericTextField.swift */; };
 		275EC998265AF64E0043210E /* StatusMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC997265AF64E0043210E /* StatusMessage.swift */; };
@@ -93,18 +97,13 @@
 		27ED67BA26990D6B003E5DAB /* GenericObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */; };
 		27ED67BC269B8277003E5DAB /* KeyChainManagerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */; };
 		432B0E8C1CDFC3C50045347B /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		43A8EC7C210E661400A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 		43A8EC86210E664300A81379 /* LibreTransmitterUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 43A8EC84210E664300A81379 /* LibreTransmitterUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		43A8EC8A210E664C00A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
-		43A8EC8C210E665700A81379 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC8B210E665600A81379 /* LoopKitUI.framework */; };
 		43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC8E210E676500A81379 /* LibreTransmitterManager+UI.swift */; };
 		43A8EC95210E67B000A81379 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC94210E67B000A81379 /* HealthKit.framework */; };
 		43A8EC9D210E68CE00A81379 /* LibreTransmitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */; };
 		43AB511B21330D1400B3D58D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB511921330D1400B3D58D /* Localizable.strings */; };
 		43AB5127213315D300B3D58D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB5125213315D300B3D58D /* Localizable.strings */; };
-		B40BF26623ABD4E700A43CEE /* LibreTransmitterPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26523ABD4E700A43CEE /* LibreTransmitterPlugin.swift */; };
 		B40BF26823ABD55200A43CEE /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26723ABD55200A43CEE /* OSLog.swift */; };
-		B40BF26923ABD55200A43CEE /* OSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26723ABD55200A43CEE /* OSLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,14 +114,33 @@
 			remoteGlobalIDString = 432B0E871CDFC3C50045347B;
 			remoteInfo = LibreTransmitter;
 		};
-		B40BF26A23ABD5E100A43CEE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 43A8EC81210E664300A81379;
-			remoteInfo = LibreTransmitterUI;
-		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		274261AE26A225CF00B4062E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				274261AD26A225CF00B4062E /* LoopKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		274261B126A225DE00B4062E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				274261B026A225DE00B4062E /* LoopKit.framework in Embed Frameworks */,
+				274261B326A225E500B4062E /* LoopKitUI.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
@@ -240,7 +258,6 @@
 		7D9BF12F2336FFAF005DCFD6 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7D9BF1302336FFAF005DCFD6 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A9ED4DAE225EB9390080DEBA /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
-		B40BF25E23ABD47400A43CEE /* LibreTransmitterPlugin.loopplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LibreTransmitterPlugin.loopplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		B40BF26023ABD47400A43CEE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B40BF26423ABD4E600A43CEE /* LibreTransmitterPlugin-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LibreTransmitterPlugin-Bridging-Header.h"; sourceTree = "<group>"; };
 		B40BF26523ABD4E700A43CEE /* LibreTransmitterPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibreTransmitterPlugin.swift; sourceTree = "<group>"; };
@@ -253,7 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43A8EC95210E67B000A81379 /* HealthKit.framework in Frameworks */,
-				43A8EC7C210E661400A81379 /* LoopKit.framework in Frameworks */,
+				274261AC26A225CF00B4062E /* LoopKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,16 +279,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */,
-				43A8EC8C210E665700A81379 /* LoopKitUI.framework in Frameworks */,
-				43A8EC8A210E664C00A81379 /* LoopKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B40BF25B23ABD47400A43CEE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */,
+				274261AF26A225DE00B4062E /* LoopKit.framework in Frameworks */,
+				274261B226A225E500B4062E /* LoopKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -480,7 +489,6 @@
 			children = (
 				432B0E881CDFC3C50045347B /* LibreTransmitter.framework */,
 				43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */,
-				B40BF25E23ABD47400A43CEE /* LibreTransmitterPlugin.loopplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -586,6 +594,7 @@
 				432B0E841CDFC3C50045347B /* Frameworks */,
 				432B0E851CDFC3C50045347B /* Headers */,
 				432B0E861CDFC3C50045347B /* Resources */,
+				274261AE26A225CF00B4062E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -604,6 +613,7 @@
 				43A8EC7E210E664300A81379 /* Frameworks */,
 				43A8EC7F210E664300A81379 /* Headers */,
 				43A8EC80210E664300A81379 /* Resources */,
+				274261B126A225DE00B4062E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -614,25 +624,6 @@
 			productName = LibreTransmitterUI;
 			productReference = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		B40BF25D23ABD47400A43CEE /* LibreTransmitterPlugin */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B40BF26323ABD47400A43CEE /* Build configuration list for PBXNativeTarget "LibreTransmitterPlugin" */;
-			buildPhases = (
-				B40BF25A23ABD47400A43CEE /* Sources */,
-				B40BF25B23ABD47400A43CEE /* Frameworks */,
-				B40BF25C23ABD47400A43CEE /* Resources */,
-				273BFDCC25ACA9D00042E1EC /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B40BF26B23ABD5E100A43CEE /* PBXTargetDependency */,
-			);
-			name = LibreTransmitterPlugin;
-			productName = LibreTransmitterPlugin;
-			productReference = B40BF25E23ABD47400A43CEE /* LibreTransmitterPlugin.loopplugin */;
-			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
@@ -651,11 +642,6 @@
 					43A8EC81210E664300A81379 = {
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1020;
-						ProvisioningStyle = Automatic;
-					};
-					B40BF25D23ABD47400A43CEE = {
-						CreatedOnToolsVersion = 11.0;
-						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -692,7 +678,6 @@
 			targets = (
 				432B0E871CDFC3C50045347B /* LibreTransmitter */,
 				43A8EC81210E664300A81379 /* LibreTransmitterUI */,
-				B40BF25D23ABD47400A43CEE /* LibreTransmitterPlugin */,
 			);
 		};
 /* End PBXProject section */
@@ -727,37 +712,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B40BF25C23ABD47400A43CEE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		273BFDCC25ACA9D00042E1EC /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/LibreTransmitter.framework/LibreTransmitter",
-				"$(BUILT_PRODUCTS_DIR)/LibreTransmitterUI.framework/LibreTransmitterUI",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		432B0E831CDFC3C50045347B /* Sources */ = {
@@ -846,15 +801,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B40BF25A23ABD47400A43CEE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B40BF26923ABD55200A43CEE /* OSLog.swift in Sources */,
-				B40BF26623ABD4E700A43CEE /* LibreTransmitterPlugin.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -862,11 +808,6 @@
 			isa = PBXTargetDependency;
 			target = 432B0E871CDFC3C50045347B /* LibreTransmitter */;
 			targetProxy = A9E521F6225E949400EDDEF2 /* PBXContainerItemProxy */;
-		};
-		B40BF26B23ABD5E100A43CEE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 43A8EC81210E664300A81379 /* LibreTransmitterUI */;
-			targetProxy = B40BF26A23ABD5E100A43CEE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1168,66 +1109,6 @@
 			};
 			name = Release;
 		};
-		B40BF26123ABD47400A43CEE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = LibreTransmitterPlugin/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "@rpath $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.loopkit.LibreTransmitterPlugin;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "LibreTransmitterPlugin/LibreTransmitterPlugin-Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				WRAPPER_EXTENSION = loopplugin;
-			};
-			name = Debug;
-		};
-		B40BF26223ABD47400A43CEE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = LibreTransmitterPlugin/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				LD_RUNPATH_SEARCH_PATHS = "@rpath $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.loopkit.LibreTransmitterPlugin;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "LibreTransmitterPlugin/LibreTransmitterPlugin-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				WRAPPER_EXTENSION = loopplugin;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1254,15 +1135,6 @@
 			buildConfigurations = (
 				43A8EC88210E664300A81379 /* Debug */,
 				43A8EC89210E664300A81379 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B40BF26323ABD47400A43CEE /* Build configuration list for PBXNativeTarget "LibreTransmitterPlugin" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B40BF26123ABD47400A43CEE /* Debug */,
-				B40BF26223ABD47400A43CEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

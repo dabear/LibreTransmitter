@@ -17,16 +17,56 @@ extension LibreTransmitterManager: CGMManagerUI {
 
 
     // TODO Placeholder.
-    public var cgmStatusBadge: DeviceStatusBadge? {
+    /*public var cgmStatusBadge: DeviceStatusBadge? {
         nil
+    }*/
+
+    public static func setupViewController(glucoseTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CGMManagerSetupViewController & CompletionNotifying)? {
+        return LibreTransmitterSetupViewController()
+
     }
 
+    public func settingsViewController(for glucoseUnit: HKUnit, glucoseTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CompletionNotifying) {
 
-    public static func setupViewController(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & CGMManagerCreateNotifying & CGMManagerOnboardNotifying & CompletionNotifying, CGMManagerUI> {
+        let doneNotifier = GenericObservableObject()
+        let wantToTerminateNotifier = GenericObservableObject()
+
+
+        let settings = SettingsView.asHostedViewController(
+            //displayGlucoseUnitObservable: displayGlucoseUnitObservable,
+            notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier, transmitterInfoObservable: self.transmitterInfoObservable, sensorInfoObervable: self.sensorInfoObservable, glucoseInfoObservable: self.glucoseInfoObservable, alarmStatus: self.alarmStatus)
+
+        let nav = SettingsNavigationViewController(rootViewController: settings)
+
+        doneNotifier.listenOnce {
+            nav.notifyComplete()
+            
+        }
+
+        wantToTerminateNotifier.listenOnce {
+            self.logger.debug("CGM wants to terminate")
+            self.disconnect()
+
+            self.notifyDelegateOfDeletion {
+                DispatchQueue.main.async {
+                    nav.notifyComplete()
+
+                }
+            }
+
+
+        }
+
+
+        return nav
+
+    }
+
+    /*public static func setupViewController(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & CGMManagerCreateNotifying & CGMManagerOnboardNotifying & CompletionNotifying, CGMManagerUI> {
             return .userInteractionRequired(LibreTransmitterSetupViewController())
-    }
+    }*/
 
-    public func settingsViewController(for displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> (UIViewController & CGMManagerOnboardNotifying & CompletionNotifying) {
+    /*public func settingsViewController(for displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> (UIViewController & CGMManagerOnboardNotifying & CompletionNotifying) {
 
         let doneNotifier = GenericObservableObject()
         let wantToTerminateNotifier = GenericObservableObject()
@@ -58,7 +98,7 @@ extension LibreTransmitterManager: CGMManagerUI {
 
 
         return nav
-    }
+    }*/
 
 
     
