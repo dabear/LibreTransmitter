@@ -614,6 +614,7 @@
 				43A8EC7F210E664300A81379 /* Headers */,
 				43A8EC80210E664300A81379 /* Resources */,
 				274261B126A225DE00B4062E /* Embed Frameworks */,
+				274261B926A365A700B4062E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -713,6 +714,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		274261B926A365A700B4062E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/LibreTransmitter.framework/LibreTransmitter",
+				"$(BUILT_PRODUCTS_DIR)/LibreTransmitter.framework/LibreTransmitterUI",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		432B0E831CDFC3C50045347B /* Sources */ = {

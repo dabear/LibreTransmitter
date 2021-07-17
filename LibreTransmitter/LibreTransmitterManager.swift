@@ -422,7 +422,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 
             let formatter = QuantityFormatter()
-            let unit = UserDefaults.standard.mmGlucoseUnit ?? .milligramsPerDeciliter
+            let unit = UserDefaults.standard.mmGlucoseUnit ?? .millimolesPerLiter
             formatter.setPreferredNumberFormatter(for: unit)
 
 

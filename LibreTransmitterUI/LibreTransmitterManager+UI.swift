@@ -51,6 +51,7 @@ extension LibreTransmitterManager: CGMManagerUI {
                 DispatchQueue.main.async {
                     nav.notifyComplete()
 
+
                 }
             }
 
