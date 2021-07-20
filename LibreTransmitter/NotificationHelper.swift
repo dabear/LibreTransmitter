@@ -15,7 +15,7 @@ import os.log
 
 fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "NotificationHelper")
 
-enum NotificationHelper {
+public enum NotificationHelper {
 
     private enum Identifiers: String {
         case glucocoseNotifications = "no.bjorninge.miaomiao.glucose-notification"
@@ -93,6 +93,32 @@ enum NotificationHelper {
                 completion(glucoseUnit)
             }
         }
+    }
+
+    public static func requestNotificationPermissionsIfNeeded(){
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            logger.debug("settings.authorizationStatus: \(String(describing: settings.authorizationStatus.rawValue))")
+            if ![.authorized,.provisional].contains(settings.authorizationStatus) {
+                requestNotificationPermissions()
+            }
+
+        }
+
+    }
+
+    private static func requestNotificationPermissions() {
+        logger.debug("requestNotificationPermissions called")
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.badge, .sound, .alert]) { (granted, error) in
+            if granted {
+                logger.debug("requestNotificationPermissions was granted")
+            } else {
+                logger.debug("requestNotificationPermissions failed because of error: \(String(describing: error))")
+            }
+
+        }
+
+
     }
 
     private static func ensureCanSendNotification(_ completion: @escaping () -> Void ) {
@@ -236,7 +262,7 @@ enum NotificationHelper {
         }
     }
 
-    enum CalibrationMessage: String {
+    public enum CalibrationMessage: String {
         case starting = "Calibrating sensor, please stand by!"
         case noCalibration = "Could not calibrate sensor, check libreoopweb permissions and internet connection"
         case invalidCalibrationData = "Could not calibrate sensor, invalid calibrationdata"

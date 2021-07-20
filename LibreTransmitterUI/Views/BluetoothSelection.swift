@@ -128,6 +128,10 @@ struct BluetoothSelection: View {
         } else {
             self.searcher = BluetoothSearchManager()
         }
+
+        LibreTransmitter.NotificationHelper.requestNotificationPermissionsIfNeeded()
+
+
     }
 
     public mutating func stopScan(_ removeSearcher: Bool = false) {
