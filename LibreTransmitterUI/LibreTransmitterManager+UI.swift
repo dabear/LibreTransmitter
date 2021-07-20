@@ -38,17 +38,19 @@ extension LibreTransmitterManager: CGMManagerUI {
 
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
 
-        doneNotifier.listenOnce {
-            nav.notifyComplete()
+        doneNotifier.listenOnce { [weak nav] in
+            nav?.notifyComplete()
+
         }
 
-        wantToTerminateNotifier.listenOnce {
-            self.logger.debug("CGM wants to terminate")
-            self.disconnect()
+        wantToTerminateNotifier.listenOnce { [weak self, weak nav] in
+            self?.logger.debug("CGM wants to terminate")
+            self?.disconnect()
 
-            self.notifyDelegateOfDeletion {
+            self?.notifyDelegateOfDeletion {
                 DispatchQueue.main.async {
-                    nav.notifyComplete()
+                    nav?.notifyComplete()
+
 
                 }
             }
