@@ -106,7 +106,7 @@ public enum NotificationHelper {
 
     }
 
-    private static func requestNotificationPermissions() {
+    public static func requestNotificationPermissions() {
         logger.debug("requestNotificationPermissions called")
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.badge, .sound, .alert]) { (granted, error) in

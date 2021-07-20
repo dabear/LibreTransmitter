@@ -227,8 +227,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public init() {
         lastConnected = nil
-        //let isui = (self is CGMManagerUI)
-        //self.miaomiaoService = MiaomiaoService(keychainManager: keychain)
+
+        NotificationHelper.requestNotificationPermissions()
 
         logger.debug("dabear: LibreTransmitterManager will be created now")
         //proxy = MiaoMiaoBluetoothManager()
