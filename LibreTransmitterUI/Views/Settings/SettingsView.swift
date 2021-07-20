@@ -171,6 +171,8 @@ struct SettingsView: View {
             .navigationBarItems(trailing: dismissButton)
             .onAppear{
                 print("dabear:: settingsview appeared")
+                //While loop does this request on our behalf, freeaps does not
+                NotificationHelper.requestNotificationPermissionsIfNeeded()
 
                 //only override savedglucose unit if we haven't saved this locally before
                 if UserDefaults.standard.mmGlucoseUnit == nil {
@@ -193,10 +195,10 @@ struct SettingsView: View {
 
                 }
 
+
+
             }
-            .onReceive(glucoseMeasurement.objectWillChange) {
-                print("dabear:: swiftui detected glucosemeasurement change")
-            }
+
 
     }
 

@@ -421,6 +421,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
             if let d = self.latestBackfill {
                 self.logger.debug("dabear::will set glucoseInfoObservable")
+                
                 self.glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
                 self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
                 sendGlucoseInfoUpdate = true
