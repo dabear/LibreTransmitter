@@ -84,6 +84,7 @@
 		27850E5125673CF40020D109 /* libresensor.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4125672DFB0020D109 /* libresensor.png */; };
 		27850E5725673CF70020D109 /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4225672DFB0020D109 /* bubble.png */; };
 		2793EBE6260BDE43001A35A3 /* CalibrationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */; };
+		279CBE6926ACCAA300FEBEC2 /* MessagePassing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279CBE6826ACCAA300FEBEC2 /* MessagePassing.swift */; };
 		27DD8F23268FA0F500649010 /* TransmitterInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DD8F22268FA0F500649010 /* TransmitterInfo.swift */; };
 		27DD8F24268FA13F00649010 /* HashableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5F12652F84F00571021 /* HashableClass.swift */; };
 		27DD8F26268FA75A00649010 /* SensorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DD8F25268FA75A00649010 /* SensorInfo.swift */; };
@@ -185,6 +186,7 @@
 		27850D4A25672DFB0020D109 /* SnoozeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnoozeView.swift; sourceTree = "<group>"; };
 		27850D4B25672DFB0020D109 /* BluetoothSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothSelection.swift; sourceTree = "<group>"; };
 		2793EBE5260BDE43001A35A3 /* CalibrationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationEditView.swift; sourceTree = "<group>"; };
+		279CBE6826ACCAA300FEBEC2 /* MessagePassing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePassing.swift; sourceTree = "<group>"; };
 		27DD8F22268FA0F500649010 /* TransmitterInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransmitterInfo.swift; sourceTree = "<group>"; };
 		27DD8F25268FA75A00649010 /* SensorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorInfo.swift; sourceTree = "<group>"; };
 		27DD8F27268FA79800649010 /* GlucoseInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseInfo.swift; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 				27850CE525672C0C0020D109 /* HKUnit.swift */,
 				27850CDE25672C0C0020D109 /* LocalizedString.swift */,
 				27850CDF25672C0C0020D109 /* Settings */,
+				279CBE6826ACCAA300FEBEC2 /* MessagePassing.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -797,6 +800,7 @@
 				27DD8F28268FA79800649010 /* GlucoseInfo.swift in Sources */,
 				27850DD025672F780020D109 /* PreLibre2.swift in Sources */,
 				27DD8F23268FA0F500649010 /* TransmitterInfo.swift in Sources */,
+				279CBE6926ACCAA300FEBEC2 /* MessagePassing.swift in Sources */,
 				27850CF525672C0C0020D109 /* UserDefaults+Alarmsettings.swift in Sources */,
 				27850D9225672F020020D109 /* LibreTransmitterMetadata.swift in Sources */,
 				27DD8F26268FA75A00649010 /* SensorInfo.swift in Sources */,

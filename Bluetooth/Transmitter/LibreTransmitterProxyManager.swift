@@ -163,7 +163,8 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         super.init()
         logger.debug("LibreTransmitterProxyManager called")
         managerQueue.sync {
-            centralManager = CBCentralManager(delegate: self, queue: managerQueue, options: [CBCentralManagerOptionShowPowerAlertKey: true, CBCentralManagerOptionRestoreIdentifierKey: "LibreMonitorCoreBluetoothRestaurationKeyString"])
+            let restoreID = (bundleSeedID() ?? "Unknown") + "BluetoothRestoreIdentifierKey"
+            centralManager = CBCentralManager(delegate: self, queue: managerQueue, options: [CBCentralManagerOptionShowPowerAlertKey: true, CBCentralManagerOptionRestoreIdentifierKey: restoreID])
         }
     }
 
