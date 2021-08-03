@@ -85,6 +85,8 @@ struct Measurement: MeasurementProtocol {
         //not really needed when setting the other properties above explicitly
         self.bytes = []
         self.byteString = ""
+        self.error = [MeasurementError.OK]
+        self.counter = 0
 
     }
 
