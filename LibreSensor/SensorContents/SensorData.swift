@@ -358,12 +358,19 @@ public struct SensorData: Codable {
         Crc.bytesWithCorrectCRC(header) + Crc.bytesWithCorrectCRC(body) + Crc.bytesWithCorrectCRC(footer)
     }
 
+
+
+
+}
+
+
+
+extension SensorData {
     /// Reads Libredata in bits converts and the result to int
     ///
     /// Makes it possible to read for example 7 bits from a 1 byte (8 bit) buffer.
     /// Can be used to read both FRAM and Libre2 Bluetooth buffer data . Buffer is expected to be unencrypted
     /// - Returns: bits from buffer
-
     static func readBits(_ buffer: [UInt8], _ byteOffset: Int, _ bitOffset: Int, _ bitCount: Int) -> Int {
         guard bitCount != 0 else {
             return 0
@@ -390,5 +397,71 @@ public struct SensorData: Codable {
             res[byte] = (res[byte] & ~(1 << bit) | (UInt8(bitValue) << bit))
         }
         return res
+    }
+}
+
+public extension SensorData {
+
+    private func average(_ input: [Double]) -> Double {
+        return input.reduce(0, +) / Double(input.count)
+    }
+
+    private func multiply(_ a: [Double], _ b: [Double]) -> [Double] {
+        return zip(a, b).map(*)
+    }
+    //https://github.com/raywenderlich/swift-algorithm-club/blob/master/Linear%20Regression/LinearRegression.playground/Contents.swift
+    private func linearRegression(_ xs: [Double], _ ys: [Double]) -> (Double) -> Double {
+        let sum1 = average(multiply(xs, ys)) - average(xs) * average(ys)
+        let sum2 = average(multiply(xs, xs)) - pow(average(xs), 2)
+        let slope = sum1 / sum2
+        let intercept = average(ys) - slope * average(xs)
+        return { x in intercept + slope * x }
+    }
+
+    /// Uses trend data to predict a measurement 10 minutes into the future
+    ///
+    /// This makes it possible to better align glucose data  from the intertestual fluid with actual blood sugar values,
+    /// Intertestual fluid lags about 10 to 15 minutes (for most people) behind blood sugar values measuretd by a finger stick
+    ///
+    /// - Returns: a  predicted measurement 10 minutes into the future, or the most recent glucose value if such prediction is impossible. If no reading exists, this will return nil
+    ///
+
+    internal func predictBloodSugar(_ minutes: Double = 10) -> Measurement? {
+        let trends = self.trendMeasurements()
+
+        guard trends.count > 15 else {
+            return trends.first
+        }
+
+        guard let mostRecent = trends.first else {
+            return nil
+        }
+
+        let sorted = trends.sorted{ $0.date < $1.date}
+
+        //keep the recent raw temperatures, we don't want to apply linear regression to them
+        let mostRecentTemperature = mostRecent.rawTemperature
+        let mostRecentAdjustment = mostRecent.rawTemperatureAdjustment
+        let mostRecentDate = mostRecent.date
+        let futureDate = mostRecentDate.addingTimeInterval(60*minutes)
+
+
+        var glucoseAge = sorted.compactMap { measurement in
+            Double(measurement.date.timeIntervalSince1970)
+        }
+
+        var rawGlucoseValues = sorted.compactMap { measurement in
+            Double(measurement.rawGlucose)
+        }
+
+        var glucosePrediction = linearRegression(glucoseAge, rawGlucoseValues)(futureDate.timeIntervalSince1970)
+
+        let predicted = Measurement(date: futureDate,
+                                   rawGlucose: Int(glucosePrediction.rounded()),
+                                   rawTemperature: mostRecentTemperature,
+                                   rawTemperatureAdjustment: mostRecentAdjustment)
+        return predicted
+
+
     }
 }

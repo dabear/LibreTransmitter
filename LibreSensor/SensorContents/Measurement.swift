@@ -76,6 +76,18 @@ struct Measurement: MeasurementProtocol {
 
     let error : [MeasurementError]
 
+    init(date: Date, rawGlucose: Int, rawTemperature: Int, rawTemperatureAdjustment: Int) {
+        self.date = date
+        self.rawGlucose = rawGlucose
+        self.rawTemperature = rawTemperature
+        self.rawTemperatureAdjustment = rawTemperatureAdjustment
+
+        //not really needed when setting the other properties above explicitly
+        self.bytes = []
+        self.byteString = ""
+
+    }
+
     ///
     /// - parameter bytes:  raw data bytes as read from the sensor
     /// - parameter slope:  slope to calculate glucose from raw value in (mg/dl)/raw

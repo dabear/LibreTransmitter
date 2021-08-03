@@ -21,7 +21,7 @@ public struct LibreGlucose {
     }
     //trend is deprecated here, it should only be calculated once in latestbackfill
     //public var trend: UInt8
-    public let timestamp: Date
+    public var timestamp: Date
     //public let collector: String?
 
     public static func timeDifference(oldGlucose: LibreGlucose, newGlucose: LibreGlucose) -> TimeInterval {

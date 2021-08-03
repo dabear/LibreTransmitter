@@ -248,16 +248,47 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     private lazy var proxy: LibreTransmitterProxyManager? = LibreTransmitterProxyManager()
 
     private func readingToGlucose(_ data: SensorData, calibration: SensorData.CalibrationInfo) -> [LibreGlucose] {
-        let last16 = data.trendMeasurements()
 
-        var entries = LibreGlucose.fromTrendMeasurements(last16, nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
+        var entries: [LibreGlucose] = []
 
-        let text = entries.map { $0.description }.joined(separator: ",")
-        logger.debug("dabear:: trend entries count: \(entries.count): \n \(text)" )
-        if UserDefaults.standard.mmBackfillFromHistory {
-            let history = data.historyMeasurements()
-            entries += LibreGlucose.fromHistoryMeasurements(history, nativeCalibrationData: calibration)
+        let predictGlucose = false
+
+        //NB! dont ever change to more than 16
+        let glucosePredictionMinutes : Double = 10
+
+        if predictGlucose {
+            // We cheat here by forcing the loop to think that the predicted glucose value is the current blood sugar value.
+            logger.debug("predicting glucose value")
+            if let prediction = data.predictBloodSugar(glucosePredictionMinutes){
+                let currentBg = prediction.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+                let bgDate = prediction.date.addingTimeInterval(60 * -glucosePredictionMinutes)
+                entries.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
+            } else {
+                logger.debug("Tried to predict glucose value but failed!")
+            }
+
+            if UserDefaults.standard.mmBackfillFromHistory {
+
+                let history = LibreGlucose.fromHistoryMeasurements(data.historyMeasurements(), nativeCalibrationData: calibration)
+                // when predicting, all history values need to be shifted 16 minutes into the past
+                entries += history.map({ glucose in
+                    var newGlucose = glucose
+                    newGlucose.timestamp.addTimeInterval(60 * -16)
+                    return newGlucose
+                })
+            }
+
+        } else {
+            logger.debug("Not predicting glucose value")
+
+            entries = LibreGlucose.fromTrendMeasurements(data.trendMeasurements(), nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
+
+            if UserDefaults.standard.mmBackfillFromHistory {
+                let history = data.historyMeasurements()
+                entries += LibreGlucose.fromHistoryMeasurements(history, nativeCalibrationData: calibration)
+            }
         }
+
 
         return entries
     }
