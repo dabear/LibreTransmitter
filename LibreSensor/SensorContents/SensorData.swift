@@ -427,7 +427,9 @@ public extension SensorData {
     ///
 
     internal func predictBloodSugar(_ minutes: Double = 10) -> Measurement? {
-        let trends = self.trendMeasurements()
+
+        let trends = self.trendMeasurements().filter { !$0.error.contains(.SENSOR_SIGNAL_LOW)}
+
 
         guard trends.count > 15 else {
             return trends.first

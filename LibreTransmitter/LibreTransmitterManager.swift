@@ -251,43 +251,49 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
         var entries: [LibreGlucose] = []
 
-        let predictGlucose = false
+        let predictGlucose = true
 
         //NB! dont ever change to more than 16
         let glucosePredictionMinutes : Double = 10
 
         if predictGlucose {
             // We cheat here by forcing the loop to think that the predicted glucose value is the current blood sugar value.
-            logger.debug("predicting glucose value")
+            logger.debug("Predicting glucose value")
             if let prediction = data.predictBloodSugar(glucosePredictionMinutes){
                 let currentBg = prediction.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
                 let bgDate = prediction.date.addingTimeInterval(60 * -glucosePredictionMinutes)
-                entries.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
+                //entries.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
+                logger.debug("Predicted glucose (not used) was: \(currentBg)")
             } else {
                 logger.debug("Tried to predict glucose value but failed!")
             }
 
-            if UserDefaults.standard.mmBackfillFromHistory {
-
-                let history = LibreGlucose.fromHistoryMeasurements(data.historyMeasurements(), nativeCalibrationData: calibration)
-                // when predicting, all history values need to be shifted 16 minutes into the past
-                entries += history.map({ glucose in
-                    var newGlucose = glucose
-                    newGlucose.timestamp.addTimeInterval(60 * -16)
-                    return newGlucose
-                })
-            }
-
-        } else {
-            logger.debug("Not predicting glucose value")
-
-            entries = LibreGlucose.fromTrendMeasurements(data.trendMeasurements(), nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
-
-            if UserDefaults.standard.mmBackfillFromHistory {
-                let history = data.historyMeasurements()
-                entries += LibreGlucose.fromHistoryMeasurements(history, nativeCalibrationData: calibration)
-            }
         }
+
+        /*if UserDefaults.standard.mmBackfillFromHistory {
+
+            let history = LibreGlucose.fromHistoryMeasurements(data.historyMeasurements(), nativeCalibrationData: calibration)
+            // when predicting, all history values need to be shifted 16 minutes into the past
+            entries += history.map({ glucose in
+                var newGlucose = glucose
+                newGlucose.timestamp.addTimeInterval(60 * -16)
+                return newGlucose
+            })
+        }
+
+    } else {
+        logger.debug("Not predicting glucose value") */
+
+        let trends = data.trendMeasurements()
+        let firstTrend = trends.first?.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+        logger.debug("first trend was: \(String(describing: firstTrend))")
+        entries = LibreGlucose.fromTrendMeasurements(data.trendMeasurements(), nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
+
+        if UserDefaults.standard.mmBackfillFromHistory {
+            let history = data.historyMeasurements()
+            entries += LibreGlucose.fromHistoryMeasurements(history, nativeCalibrationData: calibration)
+        }
+        //}
 
 
         return entries
@@ -564,6 +570,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 return
             }
 
+
             guard let glucose = glucose else {
                 self.logger.debug("dabear:: handleGoodReading returned with no data")
                 self.delegateQueue.async {
@@ -571,6 +578,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 }
                 return
             }
+
+            //through investigation, we have discovered that some error bit fields
+
 
             //We prefer to use local cached glucose value for the date to filter
             var startDate = self.latestBackfill?.startDate
@@ -588,17 +598,29 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             startDate = startDate?.addingTimeInterval(1)
 
             let device = self.proxy?.device
-            let newGlucose = glucose
+
+            //through investigation, low signal often means sensor is off-body
+            var gotLowSignal = false
+            let newGlucose : [NewGlucoseSample] = glucose
                 .filterDateRange(startDate, nil)
                 .filter { $0.isStateValid }
-                .map {
-                NewGlucoseSample(date: $0.startDate,
+                .compactMap {
+                    if $0.error.contains(.SENSOR_SIGNAL_LOW) {
+                        gotLowSignal = true
+                        return nil
+                    }
+                    return NewGlucoseSample(date: $0.startDate,
                                  quantity: $0.quantity,
                                  isDisplayOnly: false,
                                  wasUserEntered: false,
                                  syncIdentifier: $0.syncId,
                                  device: device)
                 }
+
+            if gotLowSignal {
+                self.logger.debug("Got signal low message")
+                NotificationHelper.sendSensorTryAgainLaterNotification()
+            }
 
             if newGlucose.isEmpty {
                 self.countTimesWithoutData &+= 1

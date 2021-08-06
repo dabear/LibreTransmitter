@@ -20,6 +20,7 @@ public enum NotificationHelper {
     private enum Identifiers: String {
         case glucocoseNotifications = "no.bjorninge.miaomiao.glucose-notification"
         case noSensorDetected = "no.bjorninge.miaomiao.nosensordetected-notification"
+        case tryAgainLater = "no.bjorninge.miaomiao.glucoseNotAvailableTryAgainLater-notification"
         case sensorChange = "no.bjorninge.miaomiao.sensorchange-notification"
         case invalidSensor = "no.bjorninge.miaomiao.invalidsensor-notification"
         case lowBattery = "no.bjorninge.miaomiao.lowbattery-notification"
@@ -320,6 +321,20 @@ public enum NotificationHelper {
 
         }
     }
+
+    public static func sendSensorTryAgainLaterNotification() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "Invalid Glucose sample detected, try again later"
+            content.body = "Sensor might have temporarily stopped, fallen off or is too cold or too warm"
+
+            addRequest(identifier: .tryAgainLater, content: content)
+            //content.sound = UNNotificationSound.
+
+        }
+    }
+
+    
 
     public static func sendInvalidSensorNotificationIfNeeded(sensorData: SensorData) {
         let isValid = sensorData.isLikelyLibre1FRAM && (sensorData.state == .starting || sensorData.state == .ready)
