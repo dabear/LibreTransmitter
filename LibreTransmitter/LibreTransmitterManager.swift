@@ -605,10 +605,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 .filterDateRange(startDate, nil)
                 .filter { $0.isStateValid }
                 .compactMap {
-                    if $0.error.contains(.SENSOR_SIGNAL_LOW) {
-                        gotLowSignal = true
-                        return nil
-                    }
+                    self.logger.debug("glucose errors: \($0.error)")
+
                     return NewGlucoseSample(date: $0.startDate,
                                  quantity: $0.quantity,
                                  isDisplayOnly: false,
@@ -617,11 +615,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                                  device: device)
                 }
 
-            if gotLowSignal {
-                self.logger.debug("Got signal low message")
-                NotificationHelper.sendSensorTryAgainLaterNotification()
-            }
-
+            
             if newGlucose.isEmpty {
                 self.countTimesWithoutData &+= 1
             } else {
