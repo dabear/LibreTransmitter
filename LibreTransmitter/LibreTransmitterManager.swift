@@ -16,7 +16,7 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
-
+    public typealias GlucoseArrayWithPrediction = (glucose:[LibreGlucose], prediction:[LibreGlucose])
     public let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
 
 
@@ -135,6 +135,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public private(set) var alarmStatus = AlarmStatus()
 
+
+    public private(set) var latestPrediction: LibreGlucose?
     public private(set) var latestBackfill: LibreGlucose? {
         willSet(newValue) {
             guard let newValue = newValue else {
@@ -247,22 +249,25 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     private lazy var proxy: LibreTransmitterProxyManager? = LibreTransmitterProxyManager()
 
-    private func readingToGlucose(_ data: SensorData, calibration: SensorData.CalibrationInfo) -> [LibreGlucose] {
+    private func readingToGlucose(_ data: SensorData, calibration: SensorData.CalibrationInfo) -> GlucoseArrayWithPrediction {
 
         var entries: [LibreGlucose] = []
+        var prediction: [LibreGlucose] = []
 
         let predictGlucose = true
 
-        //NB! dont ever change to more than 16
+        // Increase to up to 15 to move closer to real blood sugar
+        // The cost is slightly more noise on consecutive readings
         let glucosePredictionMinutes : Double = 10
 
         if predictGlucose {
             // We cheat here by forcing the loop to think that the predicted glucose value is the current blood sugar value.
             logger.debug("Predicting glucose value")
-            if let prediction = data.predictBloodSugar(glucosePredictionMinutes){
-                let currentBg = prediction.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
-                let bgDate = prediction.date.addingTimeInterval(60 * -glucosePredictionMinutes)
-                //entries.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
+            if let predicted = data.predictBloodSugar(glucosePredictionMinutes){
+                let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+                let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
+
+                prediction.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
                 logger.debug("Predicted glucose (not used) was: \(currentBg)")
             } else {
                 logger.debug("Tried to predict glucose value but failed!")
@@ -270,36 +275,22 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
         }
 
-        /*if UserDefaults.standard.mmBackfillFromHistory {
-
-            let history = LibreGlucose.fromHistoryMeasurements(data.historyMeasurements(), nativeCalibrationData: calibration)
-            // when predicting, all history values need to be shifted 16 minutes into the past
-            entries += history.map({ glucose in
-                var newGlucose = glucose
-                newGlucose.timestamp.addTimeInterval(60 * -16)
-                return newGlucose
-            })
-        }
-
-    } else {
-        logger.debug("Not predicting glucose value") */
-
         let trends = data.trendMeasurements()
         let firstTrend = trends.first?.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
         logger.debug("first trend was: \(String(describing: firstTrend))")
-        entries = LibreGlucose.fromTrendMeasurements(data.trendMeasurements(), nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
+        entries = LibreGlucose.fromTrendMeasurements(trends, nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
 
         if UserDefaults.standard.mmBackfillFromHistory {
             let history = data.historyMeasurements()
             entries += LibreGlucose.fromHistoryMeasurements(history, nativeCalibrationData: calibration)
         }
-        //}
 
 
-        return entries
+
+        return (glucose: entries, prediction: prediction)
     }
 
-    public func handleGoodReading(data: SensorData?, _ callback: @escaping (LibreError?, [LibreGlucose]?) -> Void) {
+    public func handleGoodReading(data: SensorData?, _ callback: @escaping (LibreError?, GlucoseArrayWithPrediction?) -> Void) {
         //only care about the once per minute readings here, historical data will not be considered
 
         guard let data = data else {
@@ -405,9 +396,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     func setObservables(sensorData: SensorData?, metaData: LibreTransmitterMetadata?) {
         logger.debug("dabear:: setObservables called")
         DispatchQueue.main.async {
-            var sendTransmitterInfoUpdate  = false
-            var sendSensorInfoUpdate = false
-            var sendGlucoseInfoUpdate = false
+
 
             if let metaData=metaData {
                 self.logger.debug("dabear::will set transmitterInfoObservable")
@@ -416,7 +405,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.transmitterInfoObservable.firmware = metaData.firmware
                 self.transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
                 self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
-                sendTransmitterInfoUpdate = true
+
 
             }
 
@@ -433,7 +422,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
                 self.glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
 
-                sendGlucoseInfoUpdate = true
+
 
 
             }
@@ -441,10 +430,10 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
             if let sensorEndTime = sensorData?.sensorEndTime {
                 self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
-                sendSensorInfoUpdate = true
+
             } else {
                 self.sensorInfoObservable.sensorEndTime = "Unknown or ended"
-                sendSensorInfoUpdate = true
+
             }
 
 
@@ -452,29 +441,44 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 
             let formatter = QuantityFormatter()
-            let unit = UserDefaults.standard.mmGlucoseUnit ?? .milligramsPerDeciliter
-            formatter.setPreferredNumberFormatter(for: unit)
+            let preferredUnit = UserDefaults.standard.mmGlucoseUnit ?? .millimolesPerLiter
 
 
             if let d = self.latestBackfill {
                 self.logger.debug("dabear::will set glucoseInfoObservable")
-                
-                self.glucoseInfoObservable.glucose = formatter.string(from: d.quantity, for: unit) ?? "-"
+
+                formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
+                self.glucoseInfoObservable.glucoseMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
+
+
+                formatter.setPreferredNumberFormatter(for: .milligramsPerDeciliter)
+                self.glucoseInfoObservable.glucoseMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
+
+                //backward compat
+                if preferredUnit == .millimolesPerLiter {
+                    self.glucoseInfoObservable.glucose = self.glucoseInfoObservable.glucoseMMOL
+                } else if preferredUnit == .milligramsPerDeciliter {
+                    self.glucoseInfoObservable.glucose = self.glucoseInfoObservable.glucoseMGDL
+                }
+
+
+
                 self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
-                sendGlucoseInfoUpdate = true
             }
 
-            if sendGlucoseInfoUpdate {
-                self.glucoseInfoObservable.objectWillChange.send()
+            if let d = self.latestPrediction {
+                formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
+                self.glucoseInfoObservable.predictionMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
+
+
+                formatter.setPreferredNumberFormatter(for: .milligramsPerDeciliter)
+                self.glucoseInfoObservable.predictionMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
+                self.glucoseInfoObservable.predictionDate = self.longDateFormatter.string(from: d.timestamp)
+
+
             }
 
-            if sendTransmitterInfoUpdate {
-                self.transmitterInfoObservable.objectWillChange.send()
-            }
 
-            if sendSensorInfoUpdate {
-                self.sensorInfoObservable.objectWillChange.send()
-            }
 
 
 
@@ -557,7 +561,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 
 
-        self.handleGoodReading(data: sensorData) { [weak self] error, glucose in
+        self.handleGoodReading(data: sensorData) { [weak self] error, glucoseArrayWithPrediction in
             guard let self = self else {
                 print("dabear:: handleGoodReading could not lock on self, aborting")
                 return
@@ -571,13 +575,15 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             }
 
 
-            guard let glucose = glucose else {
+            guard let glucose = glucoseArrayWithPrediction?.glucose else {
                 self.logger.debug("dabear:: handleGoodReading returned with no data")
                 self.delegateQueue.async {
                     self.cgmManagerDelegate?.cgmManager(self, hasNew: .noData)
                 }
                 return
             }
+
+            let prediction = glucoseArrayWithPrediction?.prediction
 
             //through investigation, we have discovered that some error bit fields
 
@@ -623,6 +629,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
                 self.countTimesWithoutData = 0
             }
+
+            self.latestPrediction = prediction?.first
+
             //must be inside this handler as setobservables "depend" on latestbackfill
             self.setObservables(sensorData: sensorData, metaData: nil)
 

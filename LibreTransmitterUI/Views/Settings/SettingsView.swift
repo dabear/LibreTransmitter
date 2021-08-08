@@ -222,9 +222,27 @@ struct SettingsView: View {
 
     var measurementSection : some View {
         Section(header: Text("Last measurement")) {
-                SettingsItem(title: "Glucose", detail: $glucoseMeasurement.glucose )
-                SettingsItem(title: "Date", detail: $glucoseMeasurement.date )
-                SettingsItem(title: "Sensor Footer checksum", detail: $glucoseMeasurement.checksum )
+            if glucoseUnit == .millimolesPerLiter {
+                    SettingsItem(title: "Glucose", detail: $glucoseMeasurement.glucoseMMOL)
+            } else if glucoseUnit == .milligramsPerDeciliter {
+                    SettingsItem(title: "Glucose", detail: $glucoseMeasurement.glucoseMGDL)
+            }
+
+            SettingsItem(title: "Date", detail: $glucoseMeasurement.date )
+            SettingsItem(title: "Sensor Footer checksum", detail: $glucoseMeasurement.checksum )
+        }
+    }
+
+    var predictionSection : some View {
+        Section(header: Text("Last Blood Sugar prediction")) {
+            if glucoseUnit == .millimolesPerLiter {
+                    SettingsItem(title: "CurrentBG", detail: $glucoseMeasurement.predictionMMOL)
+            } else if glucoseUnit == .milligramsPerDeciliter {
+                    SettingsItem(title: "Glucose", detail: $glucoseMeasurement.predictionMGDL)
+            }
+
+            SettingsItem(title: "Date", detail: $glucoseMeasurement.predictionDate )
+
         }
     }
 
@@ -357,6 +375,7 @@ struct SettingsView: View {
 
             snoozeSection
             measurementSection
+            predictionSection
             sensorInfoSection
             transmitterInfoSection
             factoryCalibrationSection
