@@ -301,6 +301,8 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
             patchInfo = Data(rxBuffer[363...368]).hexEncodedString().uppercased()
         }
 
+        logger.debug("rxbuffer length: \(self.rxBuffer.count ), patchinfo: \(String(describing: patchInfo))")
+
         metadata = LibreTransmitterMetadata(
             hardware: String(describing: rxBuffer[16...17].hexEncodedString()),
             firmware: String(describing: rxBuffer[14...15].hexEncodedString()),

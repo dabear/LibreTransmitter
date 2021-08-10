@@ -93,6 +93,8 @@
 		27ED67B82698EF38003E5DAB /* AlarmStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B72698EF38003E5DAB /* AlarmStatus.swift */; };
 		27ED67BA26990D6B003E5DAB /* GenericObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */; };
 		27ED67BC269B8277003E5DAB /* KeyChainManagerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */; };
+		27FED6CC26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */; };
+		27FED6CD26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */; };
 		432B0E8C1CDFC3C50045347B /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43A8EC7C210E661400A81379 /* LoopKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC7B210E661400A81379 /* LoopKit.framework */; };
 		43A8EC86210E664300A81379 /* LibreTransmitterUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 43A8EC84210E664300A81379 /* LibreTransmitterUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -194,6 +196,7 @@
 		27ED67B72698EF38003E5DAB /* AlarmStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmStatus.swift; sourceTree = "<group>"; };
 		27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericObservableObject.swift; sourceTree = "<group>"; };
 		27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainManagerWrapper.swift; sourceTree = "<group>"; };
+		27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_bubble_mini_3-2.png"; sourceTree = "<group>"; };
 		432B0E881CDFC3C50045347B /* LibreTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LibreTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibreTransmitter.h; sourceTree = "<group>"; };
 		432B0E8D1CDFC3C50045347B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -414,6 +417,7 @@
 		27850D3E25672DFB0020D109 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */,
 				27850D4325672DFB0020D109 /* icons8-slide-up-50.png */,
 				27850D4425672DFB0020D109 /* icons8-schedule-50.png */,
 				27850D4525672DFB0020D109 /* icons8-drop-down-arrow-50.png */,
@@ -708,6 +712,7 @@
 				27850E5125673CF40020D109 /* libresensor.png in Resources */,
 				27850E5725673CF70020D109 /* bubble.png in Resources */,
 				43AB5127213315D300B3D58D /* Localizable.strings in Resources */,
+				27FED6CC26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */,
 				273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */,
 				27850E4B25673CE60020D109 /* miaomiao-small.png in Resources */,
 			);
@@ -717,6 +722,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27FED6CD26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */,
 				27850D6825672DFB0020D109 /* icons8-drop-down-arrow-50.png in Resources */,
 				43AB511B21330D1400B3D58D /* Localizable.strings in Resources */,
 				27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */,
