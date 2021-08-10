@@ -13,9 +13,9 @@ import SwiftUI
 import UIKit
 import os.log
 
-class LibreTransmitterSetupViewController: UINavigationController, CGMManagerCreateNotifying, CGMManagerOnboardNotifying, CompletionNotifying {
-    weak var cgmManagerCreateDelegate: CGMManagerCreateDelegate?
-    weak var cgmManagerOnboardDelegate: CGMManagerOnboardDelegate?
+
+class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnboarding, CompletionNotifying {
+    weak var cgmManagerOnboardingDelegate: CGMManagerOnboardingDelegate?
     weak var completionDelegate: CompletionDelegate?
 
     fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterSetupViewController")
@@ -65,8 +65,8 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerCre
     @objc
     private func save() {
         if let cgmManager = cgmManager {
-            cgmManagerCreateDelegate?.cgmManagerCreateNotifying(didCreateCGMManager: cgmManager)
-            cgmManagerOnboardDelegate?.cgmManagerOnboardNotifying(didOnboardCGMManager: cgmManager)
+            cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
+            cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
 
             if let newDevice = deviceSelect.rootView.getNewDeviceId() {
                 logger.debug("dabear: Setupcontroller will set new device to \(newDevice)")

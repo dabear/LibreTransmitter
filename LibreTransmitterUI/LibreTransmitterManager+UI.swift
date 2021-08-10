@@ -21,12 +21,13 @@ extension LibreTransmitterManager: CGMManagerUI {
         nil
     }
 
+    public static func setupViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> SetupUIResult<CGMManagerViewController, CGMManagerUI> {
 
-    public static func setupViewController(bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> SetupUIResult<UIViewController & CGMManagerCreateNotifying & CGMManagerOnboardNotifying & CompletionNotifying, CGMManagerUI> {
             return .userInteractionRequired(LibreTransmitterSetupViewController())
     }
 
-    public func settingsViewController(for displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, bluetoothProvider: BluetoothProvider, colorPalette: LoopUIColorPalette) -> (UIViewController & CGMManagerOnboardNotifying & CompletionNotifying) {
+    public func settingsViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) ->CGMManagerViewController {
+
 
         let doneNotifier = GenericObservableObject()
         let wantToTerminateNotifier = GenericObservableObject()
@@ -76,6 +77,10 @@ extension LibreTransmitterManager: CGMManagerUI {
 }
 
 extension LibreTransmitterManager: DeviceManagerUI {
+    public static var onboardingImage: UIImage? {
+        nil
+    }
+
     public var smallImage: UIImage? {
        self.getSmallImage()
     }
