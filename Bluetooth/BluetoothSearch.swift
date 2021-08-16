@@ -14,6 +14,12 @@ import UIKit
 
 import Combine
 
+struct RSSI {
+    let bledeviceID:  String
+    let signalStrength: Int
+
+}
+
 final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     var centralManager: CBCentralManager!
@@ -27,10 +33,12 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     public let passThrough = PassthroughSubject<CBPeripheral, Never>()
     public let passThroughMetaData = PassthroughSubject<(CBPeripheral, [String: Any]), Never>()
+    public let throttledRSSI = GenericThrottler<RSSI,String>(identificator: \RSSI.bledeviceID, interval: 5)
 
-    public func addDiscoveredDevice(_ device: CBPeripheral, with metadata: [String: Any] ) {
+    public func addDiscoveredDevice(_ device: CBPeripheral, with metadata: [String: Any], rssi: Int) {
         passThrough.send(device)
         passThroughMetaData.send((device, metadata))
+        throttledRSSI.incoming.send(RSSI(bledeviceID: device.identifier.uuidString, signalStrength: rssi))
     }
 
     override init() {
@@ -82,7 +90,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
         if LibreTransmitters.isSupported(peripheral) {
             logger.debug("dabear:: did recognize device: \(name): \(peripheral.identifier)")
-            self.addDiscoveredDevice(peripheral, with: advertisementData)
+            self.addDiscoveredDevice(peripheral, with: advertisementData, rssi: RSSI.intValue)
         } else {
             if UserDefaults.standard.dangerModeActivated {
                 //allow listing any device when danger mode is active
@@ -90,7 +98,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
                 let name = String(describing: peripheral.name)
 
                 logger.debug("dabear:: did add unknown device due to dangermode being active \(name): \(peripheral.identifier)")
-                self.addDiscoveredDevice(peripheral, with: advertisementData)
+                self.addDiscoveredDevice(peripheral, with: advertisementData, rssi: RSSI.intValue)
             } else {
                 logger.debug("dabear:: did not add unknown device: \(name): \(peripheral.identifier)")
             }

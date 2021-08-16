@@ -182,6 +182,11 @@ struct BluetoothSelection: View {
         }
     }
 
+    func receiveRSSI(_ rssi: RSSI) {
+        let now = Date().description
+        print("\(now) got rssi \(rssi.signalStrength) for bluetoothdevice \(rssi.bledeviceID)")
+    }
+
     var body: some View {
         if debugMode {
             list
@@ -206,7 +211,10 @@ struct BluetoothSelection: View {
                         allDevices.append(SomePeripheral.Left(newDevice))
                     }
                 }
+                .onReceive(searcher.throttledRSSI.throttledPublisher, perform: receiveRSSI)
         }
+
+
     }
 }
 
