@@ -17,6 +17,35 @@ private struct Defaults {
     static let background = Color(UIColor.systemGroupedBackground)
 }
 
+//https://www.objc.io/blog/2020/02/18/a-signal-strength-indicator/
+struct SignalStrengthIndicator: View {
+    @Binding var bars : Int
+    var totalBars: Int = 5
+    var body: some View {
+        HStack {
+            ForEach(0..<totalBars) { bar in
+                RoundedRectangle(cornerRadius: 3)
+                    .divided(amount: (CGFloat(bar) + 1) / CGFloat(self.totalBars))
+                    .fill(Color.primary.opacity(bar < self.bars ? 1 : 0.3))
+            }
+        }
+    }
+}
+
+extension Shape {
+    func divided(amount: CGFloat) -> Divided<Self> {
+        return Divided(amount: amount, shape: self)
+    }
+}
+
+struct Divided<S: Shape>: Shape {
+    var amount: CGFloat // Should be in range 0...1
+    var shape: S
+    func path(in rect: CGRect) -> Path {
+        shape.path(in: rect.divided(atDistance: amount * rect.height, from: .maxYEdge).slice)
+    }
+}
+
 
 
 private struct ListFooter: View {
@@ -28,6 +57,7 @@ private struct ListFooter: View {
 
 private struct DeviceItem: View {
     var device: SomePeripheral
+    @Binding var rssi: RSSI?
     var details1: String
     var details2: String?
     var details3: String?
@@ -52,8 +82,9 @@ private struct DeviceItem: View {
         Defaults.selectedRowBackground : Defaults.rowBackground
     }
 
-    init(device: SomePeripheral, details: String) {
+    init(device: SomePeripheral, details: String, rssi: Binding<RSSI?>) {
         self.device = device
+        self._rssi = rssi
 
         details1 = device.name ?? "UnknownDevice"
         let split = details.split(separator: "\n")
@@ -81,7 +112,18 @@ private struct DeviceItem: View {
                 if let details3 = details3 {
                     Text("\(details3)")
                 }
+
+
             }
+            Spacer()
+            VStack(alignment: .center, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, content: {
+                if let rssi = rssi {
+                    SignalStrengthIndicator(bars: .constant(rssi.signalBars), totalBars: rssi.totalBars)
+                        .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                }
+            })
+
+
         }
         .listRowBackground(getRowBackground(device: device))
         .onTapGesture {
@@ -115,6 +157,7 @@ struct BluetoothSelection: View {
     // This list is expected to contain 10 or 20 items at the most
     @State var allDevices = [SomePeripheral]()
     @State var deviceDetails = [String: String]()
+    @State var rssi = [String: RSSI]()
 
     var nullPubliser: Empty<CBPeripheral, Never>!
     var debugMode = false
@@ -125,13 +168,14 @@ struct BluetoothSelection: View {
         if self.debugMode {
             allDevices = Self.getMockData()
             nullPubliser = Empty<CBPeripheral, Never>()
+
         } else {
             self.searcher = BluetoothSearchManager()
         }
 
         LibreTransmitter.NotificationHelper.requestNotificationPermissionsIfNeeded()
 
-
+       
     }
 
     public mutating func stopScan(_ removeSearcher: Bool = false) {
@@ -155,10 +199,22 @@ struct BluetoothSelection: View {
     var list : some View {
         List {
             headerSection
-            
+
             Section {
                 ForEach(allDevices) { device in
-                    DeviceItem(device: device, details: deviceDetails[device.asStringIdentifier]!)
+                    if debugMode {
+                        let randomRSSI = RSSI(bledeviceID: device.asStringIdentifier, signalStrength: -90 + (1...70).randomElement()!)
+                        DeviceItem(device: device, details: "mockdatamockdata mockdata mockdata\nmockdata2 nmockdata2", rssi: .constant(randomRSSI))
+                    } else {
+                        DeviceItem(device: device, details: deviceDetails[device.asStringIdentifier]!, rssi: Binding<RSSI?>(get: {
+                            rssi[device.asStringIdentifier]
+                        }, set: { newVal in
+                            //not ever needed
+                        }) )
+                    }
+
+
+
                 }
             }
             Section {
@@ -185,6 +241,8 @@ struct BluetoothSelection: View {
     func receiveRSSI(_ rssi: RSSI) {
         let now = Date().description
         print("\(now) got rssi \(rssi.signalStrength) for bluetoothdevice \(rssi.bledeviceID)")
+        self.rssi[rssi.bledeviceID] = rssi
+
     }
 
     var body: some View {
@@ -233,6 +291,9 @@ struct BluetoothSelection_Previews: PreviewProvider {
     static var previews: some View {
         var testData = SelectionState.shared
         testData.selectedStringIdentifier = "device4"
-        return BluetoothSelection(debugMode: true)
+        return Group {
+            BluetoothSelection(debugMode: true)
+            BluetoothSelection(debugMode: true)
+        }
     }
 }

@@ -18,6 +18,22 @@ struct RSSI {
     let bledeviceID:  String
     let signalStrength: Int
 
+    var totalBars : Int {
+        3
+    }
+
+    var signalBars : Int {
+        if signalStrength < -80 {
+            return 1  //near
+        }
+
+        if signalStrength > -50 {
+            return 3 //immediate
+        }
+
+        return 2 //near
+    }
+
 }
 
 final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
