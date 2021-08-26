@@ -57,7 +57,7 @@ private struct ListFooter: View {
 
 private struct DeviceItem: View {
     var device: SomePeripheral
-    @Binding var rssi: RSSI?
+    @Binding var rssi: RSSIInfo?
     var details1: String
     var details2: String?
     var details3: String?
@@ -82,7 +82,7 @@ private struct DeviceItem: View {
         Defaults.selectedRowBackground : Defaults.rowBackground
     }
 
-    init(device: SomePeripheral, details: String, rssi: Binding<RSSI?>) {
+    init(device: SomePeripheral, details: String, rssi: Binding<RSSIInfo?>) {
         self.device = device
         self._rssi = rssi
 
@@ -157,7 +157,7 @@ struct BluetoothSelection: View {
     // This list is expected to contain 10 or 20 items at the most
     @State var allDevices = [SomePeripheral]()
     @State var deviceDetails = [String: String]()
-    @State var rssi = [String: RSSI]()
+    @State var rssi = [String: RSSIInfo]()
 
     var nullPubliser: Empty<CBPeripheral, Never>!
     var debugMode = false
@@ -203,10 +203,10 @@ struct BluetoothSelection: View {
             Section {
                 ForEach(allDevices) { device in
                     if debugMode {
-                        let randomRSSI = RSSI(bledeviceID: device.asStringIdentifier, signalStrength: -90 + (1...70).randomElement()!)
+                        let randomRSSI = RSSIInfo(bledeviceID: device.asStringIdentifier, signalStrength: -90 + (1...70).randomElement()!)
                         DeviceItem(device: device, details: "mockdatamockdata mockdata mockdata\nmockdata2 nmockdata2", rssi: .constant(randomRSSI))
                     } else {
-                        DeviceItem(device: device, details: deviceDetails[device.asStringIdentifier]!, rssi: Binding<RSSI?>(get: {
+                        DeviceItem(device: device, details: deviceDetails[device.asStringIdentifier]!, rssi: Binding<RSSIInfo?>(get: {
                             rssi[device.asStringIdentifier]
                         }, set: { newVal in
                             //not ever needed
@@ -238,7 +238,7 @@ struct BluetoothSelection: View {
         }
     }
 
-    func receiveRSSI(_ rssi: RSSI) {
+    func receiveRSSI(_ rssi: RSSIInfo) {
         let now = Date().description
         print("\(now) got rssi \(rssi.signalStrength) for bluetoothdevice \(rssi.bledeviceID)")
         self.rssi[rssi.bledeviceID] = rssi
@@ -291,9 +291,7 @@ struct BluetoothSelection_Previews: PreviewProvider {
     static var previews: some View {
         var testData = SelectionState.shared
         testData.selectedStringIdentifier = "device4"
-        return Group {
-            BluetoothSelection(debugMode: true)
-            BluetoothSelection(debugMode: true)
-        }
+
+        return BluetoothSelection(debugMode: true)
     }
 }

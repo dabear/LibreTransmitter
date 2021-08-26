@@ -23,6 +23,7 @@ public protocol LibreTransmitterProxyProtocol: class {
     init(delegate: LibreTransmitterDelegate, advertisementData: [String: Any]? )
     func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral)
     func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?)
+    func didDiscoverWriteCharacteristics()
 
     func reset()
 
@@ -35,6 +36,10 @@ extension LibreTransmitterProxyProtocol {
     }
     public var staticType: LibreTransmitterProxyProtocol.Type {
         Self.self
+    }
+
+    func didDiscoverWriteCharacteristics() {
+        
     }
 }
 

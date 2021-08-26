@@ -527,6 +527,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                 }
                 if characteristic.uuid == writeCharachteristicUUID {
                     writeCharacteristic = characteristic
+                    self.activePlugin?.didDiscoverWriteCharacteristics()
                 }
             }
         } else {

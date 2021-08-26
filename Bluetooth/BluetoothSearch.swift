@@ -14,7 +14,7 @@ import UIKit
 
 import Combine
 
-struct RSSI {
+struct RSSIInfo {
     let bledeviceID:  String
     let signalStrength: Int
 
@@ -34,6 +34,8 @@ struct RSSI {
         return 2 //near
     }
 
+
+
 }
 
 final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
@@ -49,19 +51,62 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     public let passThrough = PassthroughSubject<CBPeripheral, Never>()
     public let passThroughMetaData = PassthroughSubject<(CBPeripheral, [String: Any]), Never>()
-    public let throttledRSSI = GenericThrottler<RSSI,String>(identificator: \RSSI.bledeviceID, interval: 5)
+    public let throttledRSSI = GenericThrottler<RSSIInfo,String>(identificator: \RSSIInfo.bledeviceID, interval: 5)
+
+
+    private var rescanTimerBag = Set<AnyCancellable>()
 
     public func addDiscoveredDevice(_ device: CBPeripheral, with metadata: [String: Any], rssi: Int) {
         passThrough.send(device)
         passThroughMetaData.send((device, metadata))
-        throttledRSSI.incoming.send(RSSI(bledeviceID: device.identifier.uuidString, signalStrength: rssi))
+        throttledRSSI.incoming.send(RSSIInfo(bledeviceID: device.identifier.uuidString, signalStrength: rssi))
     }
 
     override init() {
         super.init()
+        // calling readrssi on a peripheral is only supported on connected peripherals
+        // here we want the AllowDuplicatesKey to be true so that we get a continous feed of new rssi values for
+        // discovered but unconnected peripherals
+        // This should work, but in practice, most devices will still only be discovered once, meaning that we cannot update rssi values
+        // without either a new scan, or connecting to the peripheral and using .readrssi()
+        //centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
         centralManager = CBCentralManager(delegate: self, queue: nil, options: nil)
         //        slipBuffer.delegate = self
         logger.debug("BluetoothSearchManager init called ")
+
+        // Ugly hack to be able to update rssi continously without connecting to peripheral
+        // Yes, this consumes extra power, but this feature is very convenient when needed, but very rarely used (only during setup)
+        startTimer()
+    }
+
+    public func startTimer(){
+        stopTimer()
+
+        Timer.publish(every: 10, on: .main, in: .default)
+        .autoconnect()
+        .sink(
+            receiveValue: { [weak self ] _ in
+                self?.rescan()
+            }
+        )
+        .store(in: &rescanTimerBag)
+    }
+
+    public func stopTimer() {
+        if !rescanTimerBag.isEmpty {
+            rescanTimerBag.forEach { cancel in
+                cancel.cancel()
+            }
+        }
+    }
+
+    func rescan() {
+        if centralManager.isScanning {
+            centralManager.stopScan()
+        }
+        logger.debug("Rescanning")
+
+        self.scanForCompatibleDevices()
     }
 
     func scanForCompatibleDevices() {
@@ -82,6 +127,8 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
                 centralManager.stopScan()
             }
     }
+
+
 
     // MARK: - CBCentralManagerDelegate
 
@@ -107,6 +154,8 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         if LibreTransmitters.isSupported(peripheral) {
             logger.debug("dabear:: did recognize device: \(name): \(peripheral.identifier)")
             self.addDiscoveredDevice(peripheral, with: advertisementData, rssi: RSSI.intValue)
+            //peripheral.delegate = self
+            //peripheral.readRSSI()
         } else {
             if UserDefaults.standard.dangerModeActivated {
                 //allow listing any device when danger mode is active
@@ -115,6 +164,9 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
                 logger.debug("dabear:: did add unknown device due to dangermode being active \(name): \(peripheral.identifier)")
                 self.addDiscoveredDevice(peripheral, with: advertisementData, rssi: RSSI.intValue)
+                //peripheral.delegate = self
+                //peripheral.readRSSI()
+
             } else {
                 logger.debug("dabear:: did not add unknown device: \(name): \(peripheral.identifier)")
             }
@@ -175,6 +227,13 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         }
     }
 
+    func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
+
+        //throttledRSSI.incoming.send(RSSIInfo(bledeviceID: peripheral.identifier.uuidString, signalStrength: RSSI.intValue))
+
+        //peripheral.readRSSI() //we keep contuing to update the rssi (only works if peripheral is already connected....
+
+    }
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         logger.debug("Did update notification state for characteristic: \(String(describing: characteristic.debugDescription))")
     }
