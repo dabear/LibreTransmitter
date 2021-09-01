@@ -45,7 +45,7 @@ public struct SensorData: Codable {
         Int(body[293]) << 8 + Int(body[292])
     }
     /// Maximum time in Minutes he sensor can be worn before it expires
-    var maxMinutesWearTime: Int {
+    public var maxMinutesWearTime: Int {
         Int(footer[7]) << 8 + Int(footer[6])
     }
     /// Index on the next block of trend data that the sensor will measure and store
@@ -216,10 +216,10 @@ public struct SensorData: Codable {
         "var someFRAM=" + self.toJson + ";"
     }
 
-    init?(bytes: [UInt8], date: Date = Date()) {
+    public init?(bytes: [UInt8], date: Date = Date()) {
         self.init(uuid: Data(), bytes: bytes, date: date)
     }
-    init?(uuid: Data, bytes: [UInt8], date: Date = Date()) {
+    public init?(uuid: Data, bytes: [UInt8], date: Date = Date()) {
         guard bytes.count == numberOfBytes else {
             return nil
         }

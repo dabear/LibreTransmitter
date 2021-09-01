@@ -62,6 +62,11 @@ private struct DeviceItem: View {
     var details2: String?
     var details3: String?
 
+    var requiresPhoneNFC : Bool
+    var requiresSetup: Bool
+
+    @State private var presentableStatus: StatusMessage?
+
     @ObservedObject var selection: SelectionState = .shared
 
     func getDeviceImage(_ device: SomePeripheral) -> Image {
@@ -82,9 +87,11 @@ private struct DeviceItem: View {
         Defaults.selectedRowBackground : Defaults.rowBackground
     }
 
-    init(device: SomePeripheral, details: String, rssi: Binding<RSSIInfo?>) {
+    init(device: SomePeripheral, requiresSetup: Bool, requiresPhoneNFC: Bool, details: String, rssi: Binding<RSSIInfo?>) {
         self.device = device
         self._rssi = rssi
+        self.requiresPhoneNFC = requiresPhoneNFC
+        self.requiresSetup = requiresSetup
 
         details1 = device.name ?? "UnknownDevice"
         let split = details.split(separator: "\n")
@@ -97,8 +104,28 @@ private struct DeviceItem: View {
         }
     }
 
+    @State var isShowingSetup = false
+
+
 
     var body : some View {
+        //todo: make a generic setup protocol and views, but we don't plan to support other
+        // sensors than the libre2 directly via bluetooth.
+        /*if requiresSetup {
+            NavigationLink(destination: Libre2DirectSetup(device: device), isActive: $isShowingSetup) {
+                list
+            }
+            
+        } else {
+            list
+        } */
+        //we hide libre2 devices from this view, because we have a new parentview (modeselection) that calls Libre2DirectSetup() directly
+        if !requiresSetup {
+            list
+        }
+    }
+
+    var list : some View {
         HStack {
             getDeviceImage(device)
             .frame(width: 100, height: 50, alignment: .leading)
@@ -125,9 +152,29 @@ private struct DeviceItem: View {
 
 
         }
+        .alert(item: $presentableStatus) { status in
+            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+        }
         .listRowBackground(getRowBackground(device: device))
         .onTapGesture {
-            print("tapped \(device.asStringIdentifier)")
+            print("dabear:: tapped \(device.asStringIdentifier)")
+
+            if requiresPhoneNFC && !Features.phoneNFCAvailable {
+                //cannot select, show gui somehow
+                presentableStatus = StatusMessage(title: "Not availble", message: "The device selected is not available due to lack of NFC support on your phone")
+                isShowingSetup = false
+                print("dabear:: tapped  \(device.asStringIdentifier) but it requires nfc, not available")
+                return
+            }
+
+            if requiresSetup {
+                print("dabear:: tapped  \(device.asStringIdentifier) but it requires setup, so aborting")
+                isShowingSetup = true
+
+                return
+            }
+
+            print("dabear:: tapped and set \(device.asStringIdentifier) as new identifier")
             selection.selectedStringIdentifier = device.asStringIdentifier
         }
     }
@@ -137,11 +184,16 @@ private struct DeviceItem: View {
 class SelectionState: ObservableObject {
     @Published var selectedStringIdentifier: String? = ""
 
+    @Published var selectedUID: Data? = nil
+
+
     static var shared = SelectionState()
 }
 
 struct BluetoothSelection: View {
     @ObservedObject var selection: SelectionState = .shared
+    @ObservedObject public var cancelNotifier: GenericObservableObject
+    @ObservedObject public var saveNotifier: GenericObservableObject
 
     public func getNewDeviceId () -> String? {
         selection.selectedStringIdentifier
@@ -149,21 +201,44 @@ struct BluetoothSelection: View {
 
     private var searcher: BluetoothSearchManager!
 
-    static func asHostedViewController() -> UIHostingController<Self> {
+    /*static func asHostedViewController() -> UIHostingController<Self> {
         UIHostingController(rootView: self.init())
-    }
+    }*/
 
     // Should contain all discovered and compatible devices
     // This list is expected to contain 10 or 20 items at the most
     @State var allDevices = [SomePeripheral]()
     @State var deviceDetails = [String: String]()
+    @State var deviceRequiresPhoneNFC = [String: Bool]()
+    @State var deviceRequiresSetup = [String: Bool]()
     @State var rssi = [String: RSSIInfo]()
 
     var nullPubliser: Empty<CBPeripheral, Never>!
     var debugMode = false
 
-    init(debugMode: Bool = false) {
+
+    var cancelButton: some View {
+        Button("Cancel"){
+            print("cancel button pressed")
+            cancelNotifier.notify()
+
+        }//.accentColor(.red)
+    }
+
+    var saveButton: some View {
+        Button("Save"){
+            print("Save button pressed")
+            saveNotifier.notify()
+            
+
+        }//.accentColor(.red)
+    }
+
+
+    init(debugMode: Bool = false, cancelNotifier: GenericObservableObject, saveNotifier: GenericObservableObject) {
         self.debugMode = debugMode
+        self.cancelNotifier = cancelNotifier
+        self.saveNotifier = saveNotifier
 
         if self.debugMode {
             allDevices = Self.getMockData()
@@ -172,6 +247,8 @@ struct BluetoothSelection: View {
         } else {
             self.searcher = BluetoothSearchManager()
         }
+
+
 
         LibreTransmitter.NotificationHelper.requestNotificationPermissionsIfNeeded()
 
@@ -204,13 +281,19 @@ struct BluetoothSelection: View {
                 ForEach(allDevices) { device in
                     if debugMode {
                         let randomRSSI = RSSIInfo(bledeviceID: device.asStringIdentifier, signalStrength: -90 + (1...70).randomElement()!)
-                        DeviceItem(device: device, details: "mockdatamockdata mockdata mockdata\nmockdata2 nmockdata2", rssi: .constant(randomRSSI))
+                        let requiresPhoneNFC = Bool.random()
+                        DeviceItem(device: device, requiresSetup: false, requiresPhoneNFC: requiresPhoneNFC,  details: "mockdatamockdata mockdata mockdata\nmockdata2 nmockdata2", rssi: .constant(randomRSSI))
                     } else {
-                        DeviceItem(device: device, details: deviceDetails[device.asStringIdentifier]!, rssi: Binding<RSSIInfo?>(get: {
+                        let requiresPhoneNFC = deviceRequiresPhoneNFC[device.asStringIdentifier, default: false]
+
+                        let requiresSetup = deviceRequiresSetup[device.asStringIdentifier, default: false]
+                        let rssigetter = Binding<RSSIInfo?>(get: {
                             rssi[device.asStringIdentifier]
                         }, set: { newVal in
-                            //not ever needed
-                        }) )
+                        //not ever needed
+                        })
+
+                        DeviceItem(device: device, requiresSetup: requiresSetup, requiresPhoneNFC: requiresPhoneNFC , details: deviceDetails[device.asStringIdentifier]!, rssi: rssigetter)
                     }
 
 
@@ -233,9 +316,14 @@ struct BluetoothSelection: View {
         .onDisappear {
             if !self.debugMode {
                 print("dabear:: asking searcher to stop searching!")
+                self.searcher?.stopTimer()
                 self.searcher?.disconnectManually()
+
+                
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: cancelButton, trailing: saveButton)
     }
 
     func receiveRSSI(_ rssi: RSSIInfo) {
@@ -244,6 +332,8 @@ struct BluetoothSelection: View {
         self.rssi[rssi.bledeviceID] = rssi
 
     }
+
+    
 
     var body: some View {
         if debugMode {
@@ -261,11 +351,25 @@ struct BluetoothSelection: View {
                         existingDevice.asStringIdentifier == newDevice.asStringIdentifier
                     }
                     if !alreadyAdded {
-                        if let parsedAdvertisement = LibreTransmitters.getSupportedPlugins(newDevice)?.first?.getDeviceDetailsFromAdvertisement(advertisementData: advertisement) {
-                            deviceDetails[newDevice.asStringIdentifier] = parsedAdvertisement
+                        if let pluginForDevice = LibreTransmitters.getSupportedPlugins(newDevice)?.first {
+
+                            deviceRequiresPhoneNFC[newDevice.asStringIdentifier] = pluginForDevice.requiresPhoneNFC
+                            deviceRequiresSetup[newDevice.asStringIdentifier] = pluginForDevice.requiresSetup
+
+                            if let parsedAdvertisement = pluginForDevice.getDeviceDetailsFromAdvertisement(advertisementData: advertisement) {
+
+                                deviceDetails[newDevice.asStringIdentifier] = parsedAdvertisement
+                            } else {
+                                deviceDetails[newDevice.asStringIdentifier] = ""
+                            }
+
+
                         } else {
                             deviceDetails[newDevice.asStringIdentifier] = newDevice.asStringIdentifier
                         }
+
+
+
                         allDevices.append(SomePeripheral.Left(newDevice))
                     }
                 }
@@ -292,6 +396,6 @@ struct BluetoothSelection_Previews: PreviewProvider {
         var testData = SelectionState.shared
         testData.selectedStringIdentifier = "device4"
 
-        return BluetoothSelection(debugMode: true)
+        return BluetoothSelection(debugMode: true, cancelNotifier: GenericObservableObject(), saveNotifier: GenericObservableObject())
     }
 }

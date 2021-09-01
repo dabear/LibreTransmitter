@@ -51,7 +51,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     public let passThrough = PassthroughSubject<CBPeripheral, Never>()
     public let passThroughMetaData = PassthroughSubject<(CBPeripheral, [String: Any]), Never>()
-    public let throttledRSSI = GenericThrottler<RSSIInfo,String>(identificator: \RSSIInfo.bledeviceID, interval: 5)
+    public let throttledRSSI = GenericThrottler(identificator: \RSSIInfo.bledeviceID, interval: 5)
 
 
     private var rescanTimerBag = Set<AnyCancellable>()
@@ -76,7 +76,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
         // Ugly hack to be able to update rssi continously without connecting to peripheral
         // Yes, this consumes extra power, but this feature is very convenient when needed, but very rarely used (only during setup)
-        startTimer()
+        //startTimer()
     }
 
     public func startTimer(){
@@ -111,10 +111,24 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     func scanForCompatibleDevices() {
 
-        if centralManager.state == .poweredOn && !centralManager.isScanning {
-            logger.debug("Before scan for MiaoMiao while central manager state \(String(describing: self.centralManager.state.rawValue))")
+        
 
-            centralManager.scanForPeripherals(withServices: nil, options: nil)
+        if centralManager.state == .poweredOn && !centralManager.isScanning {
+            logger.debug("Before scan for transmitter while central manager state \(String(describing: self.centralManager.state.rawValue))")
+
+            let allServices : [CBUUID] = LibreTransmitters.all.compactMap { atype in
+                atype.serviceUUID.first?.value
+            }
+
+
+            logger.debug("Will scan for the following services: \(String(describing: allServices))")
+
+            centralManager.scanForPeripherals(withServices: allServices, options: nil)
+
+
+            // Ugly hack to be able to update rssi continously without connecting to peripheral
+            // Yes, this consumes extra power, but this feature is very convenient when needed, but very rarely used (only during setup)
+            startTimer()
         }
     }
 
@@ -138,8 +152,11 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         case .poweredOff, .resetting, .unauthorized, .unknown, .unsupported:
             logger.debug("Central Manager was either .poweredOff, .resetting, .unauthorized, .unknown, .unsupported: \(String(describing: central.state))")
         case .poweredOn:
+            //we don't want this to start scanning right away, but rather wait until the view has appeared
+            // this means that the view is responsible for calling scanForCompatibleDevices it self
+            //scanForCompatibleDevices() // power was switched on, while app is running -> reconnect.
+            break
 
-                scanForCompatibleDevices() // power was switched on, while app is running -> reconnect.
         @unknown default:
             fatalError("libre bluetooth state unhandled")
         }
@@ -227,6 +244,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         }
     }
 
+    
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
 
         //throttledRSSI.incoming.send(RSSIInfo(bledeviceID: peripheral.identifier.uuidString, signalStrength: RSSI.intValue))

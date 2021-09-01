@@ -6,7 +6,8 @@ For all supported sensors you need such a transmitter, even for the libre 2 whic
 * US Libre 1 10 day sensors (tested)
 * US Libre 1 14 day sensors (untested)
 * International Libre 1 sensors (tested)
-* European Libre 2 sensors (tested, but you need a transmitter with an updated firmware as well)
+* European Libre 2 sensors via Transmitters
+* European Libre 2 directly via bluetooth
 
 # Unsupported sensors
 * US libre 2 sensors

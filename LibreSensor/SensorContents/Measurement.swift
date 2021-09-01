@@ -58,7 +58,7 @@ struct SimplifiedMeasurement: MeasurementProtocol {
 }
 
 /// Structure for one glucose measurement including value, date and raw data bytes
-struct Measurement: MeasurementProtocol {
+public struct Measurement: MeasurementProtocol {
     /// The date for this measurement
     let date: Date
     /// The minute counter for this measurement
@@ -76,7 +76,9 @@ struct Measurement: MeasurementProtocol {
 
     let error : [MeasurementError]
 
-    init(date: Date, rawGlucose: Int, rawTemperature: Int, rawTemperatureAdjustment: Int) {
+    let idValue : Int
+
+    init(date: Date, rawGlucose: Int, rawTemperature: Int, rawTemperatureAdjustment: Int, idValue: Int = 0) {
         self.date = date
         self.rawGlucose = rawGlucose
         self.rawTemperature = rawTemperature
@@ -88,6 +90,9 @@ struct Measurement: MeasurementProtocol {
         self.error = [MeasurementError.OK]
         self.counter = 0
 
+        //only used for sorting purposes
+        self.idValue = idValue
+
     }
 
     ///
@@ -97,7 +102,7 @@ struct Measurement: MeasurementProtocol {
     /// - parameter date:   date of the measurement
     ///
     /// - returns: Measurement
-    init(bytes: [UInt8], slope: Double = 0.1, offset: Double = 0.0, counter: Int = 0, date: Date) {
+    init(bytes: [UInt8], slope: Double = 0.1, offset: Double = 0.0, counter: Int = 0, date: Date, idValue: Int = 0) {
         self.bytes = bytes
         self.byteString = bytes.reduce("", { $0 + String(format: "%02X", arguments: [$1]) })
         //self.rawGlucose = (Int(bytes[1] & 0x1F) << 8) + Int(bytes[0]) // switched to 13 bit mask on 2018-03-15
@@ -116,9 +121,9 @@ struct Measurement: MeasurementProtocol {
 
         let errorBitField = SensorData.readBits(bytes,0, 0xe, 0xc)
         self.error = Self.extractErrorBitField(errorBitField)
-//        self.oopSlope = slope_slope * Double(rawTemperature) + offset_slope
-//        self.oopOffset = slope_offset * Double(rawTemperature) + offset_offset
-//        self.oopGlucose = oopSlope * Double(rawGlucose) + oopOffset
+
+        //only used for sorting purposes
+        self.idValue = idValue
 
     }
 

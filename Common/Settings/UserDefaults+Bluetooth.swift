@@ -12,6 +12,22 @@ import Foundation
 extension UserDefaults {
     private enum Key: String {
         case bluetoothDeviceUUIDString = "no.bjorninge.bluetoothDeviceUUIDString"
+        case libre2UiD = "no.bjorninge.libre2uid"
+    }
+
+    public var preSelectedUid: Data? {
+        get {
+            return data(forKey: Key.libre2UiD.rawValue)
+
+        }
+        set {
+            if let newValue = newValue {
+                set(newValue, forKey: Key.libre2UiD.rawValue)
+            } else {
+                print("Removing preSelectedUid")
+                removeObject(forKey: Key.libre2UiD.rawValue)
+            }
+        }
     }
 
     public var preSelectedDevice: String? {

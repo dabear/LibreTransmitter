@@ -14,7 +14,7 @@ import LoopKit
 import LoopKitUI
 
 
-private struct SettingsItem: View {
+public struct SettingsItem: View {
     @State var title: String = "" // we don't want this to change after it is set
     @Binding var detail: String
 
@@ -33,7 +33,7 @@ private struct SettingsItem: View {
         })
     }
 
-    var body: some View {
+    public var body: some View {
         HStack {
             Text(title)
             Spacer()
@@ -260,7 +260,9 @@ struct SettingsView: View {
     var transmitterInfoSection: some View {
 
         Section(header: Text("Transmitter Info")) {
-            SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+            if !transmitterInfo.battery.isEmpty {
+                SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+            }
             SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
             SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
             SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
@@ -375,7 +377,9 @@ struct SettingsView: View {
 
             snoozeSection
             measurementSection
-            predictionSection
+            if !glucoseMeasurement.predictionDate.isEmpty{
+                predictionSection
+            }
             sensorInfoSection
             transmitterInfoSection
             factoryCalibrationSection

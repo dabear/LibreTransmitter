@@ -16,6 +16,8 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+
+
     public typealias GlucoseArrayWithPrediction = (glucose:[LibreGlucose], prediction:[LibreGlucose])
     public let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
 
@@ -62,9 +64,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         return nil
     }
 
-    public func noLibreTransmitterSelected() {
-        NotificationHelper.sendNoTransmitterSelectedNotification()
-    }
+
 
     public var cgmManagerDelegate: CGMManagerDelegate? {
         get {
@@ -86,14 +86,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public let delegate = WeakSynchronizedDelegate<CGMManagerDelegate>()
 
-
-
     public var managedDataInterval: TimeInterval?
 
-    public var device: HKDevice? {
-         //proxy?.OnQueue_device
-        proxy?.device
-    }
 
     private func getPersistedSensorDataForDebug() -> String {
         guard let data = UserDefaults.standard.queuedSensorData else {
@@ -218,7 +212,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         UserDefaults.standard.mmSyncToNs
     }
 
-    public private(set) var lastValidSensorData: SensorData?
+
 
     public init() {
         lastConnected = nil
@@ -230,9 +224,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         proxy?.delegate = self
     }
 
-    public var calibrationData: SensorData.CalibrationInfo? {
-        KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
-    }
+
 
     public func disconnect() {
         logger.debug("dabear:: LibreTransmitterManager disconnect called")
@@ -247,8 +239,443 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         disconnect()
     }
 
+    //lazy because we don't want to scan immediately
     private lazy var proxy: LibreTransmitterProxyManager? = LibreTransmitterProxyManager()
 
+    /*
+     These properties are mostly useful for swiftui
+     */
+    public var transmitterInfoObservable = TransmitterInfo()
+    public var sensorInfoObservable = SensorInfo()
+    public var glucoseInfoObservable = GlucoseInfo()
+
+
+
+    var longDateFormatter : DateFormatter = ({
+        let df = DateFormatter()
+        df.dateStyle = .long
+        df.timeStyle = .long
+        df.doesRelativeDateFormatting = true
+        return df
+    })()
+
+    var dateFormatter : DateFormatter = ({
+        let df = DateFormatter()
+        df.dateStyle = .long
+        df.timeStyle = .full
+        df.locale = Locale.current
+        return df
+    })()
+
+
+    //when was the libre2 direct ble update last received?
+    var lastDirectUpdate : Date? = nil
+
+    private var countTimesWithoutData: Int = 0
+
+
+}
+
+
+// MARK: - Convenience functions
+extension LibreTransmitterManager {
+    func setObservables(sensorData: SensorData?, bleData: Libre2.LibreBLEResponse?, metaData: LibreTransmitterMetadata?) {
+        logger.debug("dabear:: setObservables called")
+        DispatchQueue.main.async {
+
+
+            if let metaData=metaData {
+                self.logger.debug("dabear::will set transmitterInfoObservable")
+                self.transmitterInfoObservable.battery = metaData.batteryString
+                self.transmitterInfoObservable.hardware = metaData.hardware
+                self.transmitterInfoObservable.firmware = metaData.firmware
+                self.transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
+                self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
+
+
+            }
+
+            self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
+            self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
+
+            if let sensorData = sensorData {
+                self.logger.debug("dabear::will set sensorInfoObservable")
+                self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
+                self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
+
+                self.sensorInfoObservable.sensorState = sensorData.state.description
+                self.sensorInfoObservable.sensorSerial = sensorData.serialNumber
+
+                self.glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
+
+
+
+                if let sensorEndTime = sensorData.sensorEndTime {
+                    self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
+
+                } else {
+                    self.sensorInfoObservable.sensorEndTime = "Unknown or ended"
+
+                }
+
+            } else if let bleData = bleData, let sensor = UserDefaults.standard.preSelectedSensor {
+                let aday = 86_400.0 //in seconds
+                var humanReadableSensorAge: String {
+                    let days = TimeInterval(bleData.age * 60) / aday
+                    return String(format: "%.2f", days) + " day(s)"
+                }
+
+
+                var maxMinutesWearTime : Int{
+                    sensor.maxAge
+                }
+
+                var minutesLeft: Int {
+                    maxMinutesWearTime - bleData.age
+                }
+
+
+                var humanReadableTimeLeft: String {
+                    let days = TimeInterval(minutesLeft * 60) / aday
+                    return String(format: "%.2f", days) + " day(s)"
+                }
+
+                //once the sensor has ended we don't know the exact date anymore
+                var sensorEndTime: Date? {
+                    if minutesLeft <= 0 {
+                        return nil
+                    }
+
+                    // we can assume that the libre2 direct bluetooth packet is received immediately
+                    // after the sensor has been done a new measurement, so using Date() should be fine here
+                    return Date().addingTimeInterval(TimeInterval(minutes: Double(minutesLeft)))
+                }
+
+                self.sensorInfoObservable.sensorAge = humanReadableSensorAge
+                self.sensorInfoObservable.sensorAgeLeft = humanReadableTimeLeft
+                self.sensorInfoObservable.sensorState = "Operational"
+                self.sensorInfoObservable.sensorState = "Operational"
+                self.sensorInfoObservable.sensorSerial = SensorSerialNumber(withUID: sensor.uuid)?.serialNumber ?? "-"
+
+                if let mapping = UserDefaults.standard.calibrationMapping,
+                   let calibration = self.calibrationData ,
+                   mapping.uuid == sensor.uuid && calibration.isValidForFooterWithReverseCRCs ==  mapping.reverseFooterCRC {
+                    self.glucoseInfoObservable.checksum = "\(mapping.reverseFooterCRC)"
+                }
+
+                if let sensorEndTime = sensorEndTime {
+                    self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
+
+                } else {
+                    self.sensorInfoObservable.sensorEndTime = "Unknown or ended"
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+            let formatter = QuantityFormatter()
+            let preferredUnit = UserDefaults.standard.mmGlucoseUnit ?? .millimolesPerLiter
+
+
+            if let d = self.latestBackfill {
+                self.logger.debug("dabear::will set glucoseInfoObservable")
+
+                formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
+                self.glucoseInfoObservable.glucoseMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
+
+
+                formatter.setPreferredNumberFormatter(for: .milligramsPerDeciliter)
+                self.glucoseInfoObservable.glucoseMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
+
+                //backward compat
+                if preferredUnit == .millimolesPerLiter {
+                    self.glucoseInfoObservable.glucose = self.glucoseInfoObservable.glucoseMMOL
+                } else if preferredUnit == .milligramsPerDeciliter {
+                    self.glucoseInfoObservable.glucose = self.glucoseInfoObservable.glucoseMGDL
+                }
+
+
+
+                self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
+            }
+
+            if let d = self.latestPrediction {
+                formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
+                self.glucoseInfoObservable.predictionMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
+
+
+                formatter.setPreferredNumberFormatter(for: .milligramsPerDeciliter)
+                self.glucoseInfoObservable.predictionMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
+                self.glucoseInfoObservable.predictionDate = self.longDateFormatter.string(from: d.timestamp)
+
+
+            }
+
+
+
+
+
+        }
+
+
+    }
+
+    func getStartDateForFilter() -> Date?{
+        //We prefer to use local cached glucose value for the date to filter
+        //todo: fix this for ble packets
+        var startDate = self.latestBackfill?.startDate
+
+        //
+        // but that might not be available when loop is restarted for example
+        //
+        if startDate == nil {
+            self.delegateQueue.sync {
+                startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)
+            }
+        }
+
+        // add one second to startdate to make this an exclusive (non overlapping) match
+        return startDate?.addingTimeInterval(1)
+    }
+
+    func glucosesToSamplesFilter(_ array: [LibreGlucose], startDate: Date?) -> [NewGlucoseSample] {
+        
+        array
+        .filterDateRange(startDate, nil)
+        .filter { $0.isStateValid }
+        .compactMap {
+            return NewGlucoseSample(date: $0.startDate,
+                         quantity: $0.quantity,
+                         isDisplayOnly: false,
+                         wasUserEntered: false,
+                         syncIdentifier: $0.syncId,
+                         device: device)
+        }
+
+    }
+
+    public var calibrationData: SensorData.CalibrationInfo? {
+        KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
+    }
+}
+
+
+// MARK: - Direct bluetooth updates
+extension LibreTransmitterManager {
+
+    public func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata) {
+        self.logger.debug("dabear:: got sensordata: \(String(describing: bleData))")
+        let typeDesc = Device.sensorType().debugDescription
+
+        let now = Date()
+        //only once per mins minute
+        let mins =  4.5
+        if let earlierplus = lastDirectUpdate?.addingTimeInterval(mins * 60), earlierplus >= now  {
+            logger.debug("last ble update was less than \(mins) minutes ago, aborting loop update")
+            return
+        }
+
+        logger.debug("Directly connected to libresensor of type \(typeDesc). Details:  \(Device.description)")
+
+        guard let mapping = UserDefaults.standard.calibrationMapping,
+              let calibrationData = calibrationData,
+              let sensor = UserDefaults.standard.preSelectedSensor else {
+            logger.error("calibrationdata, sensor uid or mapping missing, could not continue")
+            return
+        }
+
+        guard mapping.reverseFooterCRC == calibrationData.isValidForFooterWithReverseCRCs &&
+                mapping.uuid == sensor.uuid else {
+            logger.error("Calibrationdata was not correct for these bluetooth packets. This is a fatal error, we cannot calibrate without re-pairing")
+            return
+        }
+
+        //todo:: crc check
+
+
+
+
+        let device = self.proxy?.device
+
+
+
+        let sortedTrends = bleData.trend.sorted{ $0.date > $1.date}
+
+        var glucose = LibreGlucose.fromTrendMeasurements(sortedTrends, nativeCalibrationData: calibrationData, returnAll: UserDefaults.standard.mmBackfillFromTrend)
+        //glucose += LibreGlucose.fromHistoryMeasurements(bleData.history, nativeCalibrationData: calibrationData)
+
+        if UserDefaults.standard.mmBackfillFromHistory {
+            let sortedHistory = bleData.history.sorted{ $0.date > $1.date}
+            glucose += LibreGlucose.fromHistoryMeasurements(sortedHistory, nativeCalibrationData: calibrationData)
+        }
+
+        let newGlucose = glucosesToSamplesFilter(glucose, startDate: getStartDateForFilter())
+
+
+
+        if newGlucose.isEmpty {
+            self.countTimesWithoutData &+= 1
+        } else {
+            self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
+            self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
+            self.countTimesWithoutData = 0
+        }
+
+        //todo: predictions also for libre2 bluetooth data
+        //self.latestPrediction = prediction?.first
+
+        self.setObservables(sensorData: nil, bleData: bleData, metaData: Device)
+
+        self.logger.debug("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
+        self.delegateQueue.async {
+            var result: CGMReadingResult
+            // If several readings from a valid and running sensor come out empty,
+            // we have (with a large degree of confidence) a sensor that has been
+            // ripped off the body
+            if self.countTimesWithoutData > 1 {
+                result = .error(LibreError.noValidSensorData)
+            } else {
+                result = newGlucose.isEmpty ? .noData : .newData(newGlucose)
+            }
+            self.cgmManagerDelegate?.cgmManager(self, hasNew: result)
+        }
+
+        lastDirectUpdate = Date()
+
+
+    }
+}
+
+// MARK: - Bluetooth transmitter data
+extension LibreTransmitterManager {
+
+    public func noLibreTransmitterSelected() {
+        NotificationHelper.sendNoTransmitterSelectedNotification()
+    }
+
+    public func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
+
+        self.logger.debug("dabear:: got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
+        var sensorData = sensorData
+
+        NotificationHelper.sendLowBatteryNotificationIfNeeded(device: Device)
+        self.setObservables(sensorData: nil, bleData: nil, metaData: Device)
+
+         if !sensorData.isLikelyLibre1FRAM {
+            if let patchInfo = Device.patchInfo, let sensorType = SensorType(patchInfo: patchInfo) {
+                let needsDecryption = [SensorType.libre2, .libreUS14day].contains(sensorType)
+                if needsDecryption, let uid = Device.uid {
+                    sensorData.decrypt(patchInfo: patchInfo, uid: uid)
+                }
+            } else {
+                logger.debug("Sensor type was incorrect, and no decryption of sensor was possible")
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.encryptedSensor))
+                return
+            }
+        }
+
+        let typeDesc = Device.sensorType().debugDescription
+
+        logger.debug("Transmitter connected to libresensor of type \(typeDesc). Details:  \(Device.description)")
+
+        tryPersistSensorData(with: sensorData)
+
+        NotificationHelper.sendInvalidSensorNotificationIfNeeded(sensorData: sensorData)
+        NotificationHelper.sendInvalidChecksumIfDeveloper(sensorData)
+
+
+
+        guard sensorData.hasValidCRCs else {
+            self.delegateQueue.async {
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
+            }
+
+            logger.debug("did not get sensordata with valid crcs")
+            return
+        }
+
+        NotificationHelper.sendSensorExpireAlertIfNeeded(sensorData: sensorData)
+
+        guard sensorData.state == .ready || sensorData.state == .starting else {
+            logger.debug("dabear:: got sensordata with valid crcs, but sensor is either expired or failed")
+            self.delegateQueue.async {
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.expiredSensor))
+            }
+            return
+        }
+
+        logger.debug("dabear:: got sensordata with valid crcs, sensor was ready")
+        //self.lastValidSensorData = sensorData
+
+
+
+        self.handleGoodReading(data: sensorData) { [weak self] error, glucoseArrayWithPrediction in
+            guard let self = self else {
+                print("dabear:: handleGoodReading could not lock on self, aborting")
+                return
+            }
+            if let error = error {
+                self.logger.error("dabear:: handleGoodReading returned with error: \(error.errorDescription)")
+                self.delegateQueue.async {
+                    self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
+                }
+                return
+            }
+
+
+            guard let glucose = glucoseArrayWithPrediction?.glucose else {
+                self.logger.debug("dabear:: handleGoodReading returned with no data")
+                self.delegateQueue.async {
+                    self.cgmManagerDelegate?.cgmManager(self, hasNew: .noData)
+                }
+                return
+            }
+
+            let prediction = glucoseArrayWithPrediction?.prediction
+
+        
+
+            let device = self.proxy?.device
+            let newGlucose = self.glucosesToSamplesFilter(glucose, startDate: self.getStartDateForFilter())
+
+
+
+            if newGlucose.isEmpty {
+                self.countTimesWithoutData &+= 1
+            } else {
+                self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
+                self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
+                self.countTimesWithoutData = 0
+            }
+
+            self.latestPrediction = prediction?.first
+
+            //must be inside this handler as setobservables "depend" on latestbackfill
+            self.setObservables(sensorData: sensorData, bleData: nil, metaData: nil)
+
+            self.logger.debug("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
+            self.delegateQueue.async {
+                var result: CGMReadingResult
+                // If several readings from a valid and running sensor come out empty,
+                // we have (with a large degree of confidence) a sensor that has been
+                // ripped off the body
+                if self.countTimesWithoutData > 1 {
+                    result = .error(LibreError.noValidSensorData)
+                } else {
+                    result = newGlucose.isEmpty ? .noData : .newData(newGlucose)
+                }
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: result)
+            }
+        }
+
+    }
     private func readingToGlucose(_ data: SensorData, calibration: SensorData.CalibrationInfo) -> GlucoseArrayWithPrediction {
 
         var entries: [LibreGlucose] = []
@@ -298,9 +725,8 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             return
         }
 
-        let calibrationdata = KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
 
-        if let calibrationdata = calibrationdata {
+        if let calibrationdata = calibrationData {
             logger.debug("dabear:: calibrationdata loaded")
 
             if calibrationdata.isValidForFooterWithReverseCRCs == data.footerCrc.byteSwapped {
@@ -384,280 +810,17 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         data.enqueue(sensorData)
         UserDefaults.standard.queuedSensorData = data
     }
-
-
-    /*
-     These properties are mostly useful for swiftui
-     */
-    public var transmitterInfoObservable = TransmitterInfo()
-    public var sensorInfoObservable = SensorInfo()
-    public var glucoseInfoObservable = GlucoseInfo()
-
-    func setObservables(sensorData: SensorData?, metaData: LibreTransmitterMetadata?) {
-        logger.debug("dabear:: setObservables called")
-        DispatchQueue.main.async {
-
-
-            if let metaData=metaData {
-                self.logger.debug("dabear::will set transmitterInfoObservable")
-                self.transmitterInfoObservable.battery = metaData.batteryString
-                self.transmitterInfoObservable.hardware = metaData.hardware
-                self.transmitterInfoObservable.firmware = metaData.firmware
-                self.transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
-                self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
-
-
-            }
-
-            self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
-            self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
-
-            if let sensorData = sensorData {
-                self.logger.debug("dabear::will set sensorInfoObservable")
-                self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
-                self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
-
-                self.sensorInfoObservable.sensorState = sensorData.state.description 
-                self.sensorInfoObservable.sensorSerial = sensorData.serialNumber
-
-                self.glucoseInfoObservable.checksum = String(sensorData.footerCrc.byteSwapped)
-
-
-
-
-            }
-
-
-            if let sensorEndTime = sensorData?.sensorEndTime {
-                self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
-
-            } else {
-                self.sensorInfoObservable.sensorEndTime = "Unknown or ended"
-
-            }
-
-
-
-
-
-            let formatter = QuantityFormatter()
-            let preferredUnit = UserDefaults.standard.mmGlucoseUnit ?? .millimolesPerLiter
-
-
-            if let d = self.latestBackfill {
-                self.logger.debug("dabear::will set glucoseInfoObservable")
-
-                formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
-                self.glucoseInfoObservable.glucoseMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
-
-
-                formatter.setPreferredNumberFormatter(for: .milligramsPerDeciliter)
-                self.glucoseInfoObservable.glucoseMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
-
-                //backward compat
-                if preferredUnit == .millimolesPerLiter {
-                    self.glucoseInfoObservable.glucose = self.glucoseInfoObservable.glucoseMMOL
-                } else if preferredUnit == .milligramsPerDeciliter {
-                    self.glucoseInfoObservable.glucose = self.glucoseInfoObservable.glucoseMGDL
-                }
-
-
-
-                self.glucoseInfoObservable.date = self.longDateFormatter.string(from: d.timestamp)
-            }
-
-            if let d = self.latestPrediction {
-                formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
-                self.glucoseInfoObservable.predictionMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
-
-
-                formatter.setPreferredNumberFormatter(for: .milligramsPerDeciliter)
-                self.glucoseInfoObservable.predictionMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
-                self.glucoseInfoObservable.predictionDate = self.longDateFormatter.string(from: d.timestamp)
-
-
-            }
-
-
-
-
-
-        }
-
-
-    }
-
-    var longDateFormatter : DateFormatter = ({
-        let df = DateFormatter()
-        df.dateStyle = .long
-        df.timeStyle = .long
-        df.doesRelativeDateFormatting = true
-        return df
-    })()
-
-    var dateFormatter : DateFormatter = ({
-        let df = DateFormatter()
-        df.dateStyle = .long
-        df.timeStyle = .full
-        df.locale = Locale.current
-        return df
-    })()
-
-    private var countTimesWithoutData: Int = 0
-    //will be called on utility queue
-    public func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
-
-        self.logger.debug("dabear:: got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
-        var sensorData = sensorData
-
-        NotificationHelper.sendLowBatteryNotificationIfNeeded(device: Device)
-        self.setObservables(sensorData: nil, metaData: Device)
-
-         if !sensorData.isLikelyLibre1FRAM {
-            if let patchInfo = Device.patchInfo, let sensorType = SensorType(patchInfo: patchInfo) {
-                let needsDecryption = [SensorType.libre2, .libreUS14day].contains(sensorType)
-                if needsDecryption, let uid = Device.uid {
-                    sensorData.decrypt(patchInfo: patchInfo, uid: uid)
-                }
-            } else {
-                logger.debug("Sensor type was incorrect, and no decryption of sensor was possible")
-                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.encryptedSensor))
-                return
-            }
-        }
-
-        let typeDesc = Device.sensorType().debugDescription
-
-        logger.debug("Transmitter connected to libresensor of type \(typeDesc). Details:  \(Device.description)")
-
-        tryPersistSensorData(with: sensorData)
-
-        NotificationHelper.sendInvalidSensorNotificationIfNeeded(sensorData: sensorData)
-        NotificationHelper.sendInvalidChecksumIfDeveloper(sensorData)
-
-
-
-        guard sensorData.hasValidCRCs else {
-            self.delegateQueue.async {
-                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
-            }
-
-            logger.debug("did not get sensordata with valid crcs")
-            return
-        }
-
-        NotificationHelper.sendSensorExpireAlertIfNeeded(sensorData: sensorData)
-
-        guard sensorData.state == .ready || sensorData.state == .starting else {
-            logger.debug("dabear:: got sensordata with valid crcs, but sensor is either expired or failed")
-            self.delegateQueue.async {
-                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.expiredSensor))
-            }
-            return
-        }
-
-        logger.debug("dabear:: got sensordata with valid crcs, sensor was ready")
-        self.lastValidSensorData = sensorData
-
-
-
-        self.handleGoodReading(data: sensorData) { [weak self] error, glucoseArrayWithPrediction in
-            guard let self = self else {
-                print("dabear:: handleGoodReading could not lock on self, aborting")
-                return
-            }
-            if let error = error {
-                self.logger.error("dabear:: handleGoodReading returned with error: \(error.errorDescription)")
-                self.delegateQueue.async {
-                    self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
-                }
-                return
-            }
-
-
-            guard let glucose = glucoseArrayWithPrediction?.glucose else {
-                self.logger.debug("dabear:: handleGoodReading returned with no data")
-                self.delegateQueue.async {
-                    self.cgmManagerDelegate?.cgmManager(self, hasNew: .noData)
-                }
-                return
-            }
-
-            let prediction = glucoseArrayWithPrediction?.prediction
-
-            //through investigation, we have discovered that some error bit fields
-
-
-            //We prefer to use local cached glucose value for the date to filter
-            var startDate = self.latestBackfill?.startDate
-
-            //
-            // but that might not be available when loop is restarted for example
-            //
-            if startDate == nil {
-                self.delegateQueue.sync {
-                    startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)
-                }
-            }
-
-            // add one second to startdate to make this an exclusive (non overlapping) match
-            startDate = startDate?.addingTimeInterval(1)
-
-            let device = self.proxy?.device
-
-            //through investigation, low signal often means sensor is off-body
-            var gotLowSignal = false
-            let newGlucose : [NewGlucoseSample] = glucose
-                .filterDateRange(startDate, nil)
-                .filter { $0.isStateValid }
-                .compactMap {
-                    self.logger.debug("glucose errors: \($0.error)")
-
-                    return NewGlucoseSample(date: $0.startDate,
-                                 quantity: $0.quantity,
-                                 isDisplayOnly: false,
-                                 wasUserEntered: false,
-                                 syncIdentifier: $0.syncId,
-                                 device: device)
-                }
-
-            
-            if newGlucose.isEmpty {
-                self.countTimesWithoutData &+= 1
-            } else {
-                self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
-                self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
-                self.countTimesWithoutData = 0
-            }
-
-            self.latestPrediction = prediction?.first
-
-            //must be inside this handler as setobservables "depend" on latestbackfill
-            self.setObservables(sensorData: sensorData, metaData: nil)
-
-            self.logger.debug("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
-            self.delegateQueue.async {
-                var result: CGMReadingResult
-                // If several readings from a valid and running sensor come out empty,
-                // we have (with a large degree of confidence) a sensor that has been
-                // ripped off the body
-                if self.countTimesWithoutData > 1 {
-                    result = .error(LibreError.noValidSensorData)
-                } else {
-                    result = newGlucose.isEmpty ? .noData : .newData(newGlucose)
-                }
-                self.cgmManagerDelegate?.cgmManager(self, hasNew: result)
-            }
-        }
-
-    }
 }
 
-
+// MARK: - conventience properties to access the enclosed proxy's properties
 
 extension LibreTransmitterManager {
+    public var device: HKDevice? {
+         //proxy?.OnQueue_device
+        proxy?.device
+    }
 
-     static var className: String {
+    static var className: String {
         String(describing: Self.self)
     }
     //cannot be called from managerQueue

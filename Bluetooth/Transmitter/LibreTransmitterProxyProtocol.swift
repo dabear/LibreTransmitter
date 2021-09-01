@@ -9,10 +9,12 @@
 import CoreBluetooth
 import Foundation
 import UIKit
-public protocol LibreTransmitterProxyProtocol: class {
+public protocol LibreTransmitterProxyProtocol: AnyObject {
     static var shortTransmitterName: String { get }
     static var smallImage: UIImage? { get }
     static var manufacturerer: String { get }
+    static var requiresPhoneNFC: Bool { get }
+    static var requiresSetup : Bool { get }
     static func canSupportPeripheral(_ peripheral: CBPeripheral) -> Bool
 
     static var writeCharacteristic: UUIDContainer? { get set }
@@ -23,11 +25,17 @@ public protocol LibreTransmitterProxyProtocol: class {
     init(delegate: LibreTransmitterDelegate, advertisementData: [String: Any]? )
     func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral)
     func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?)
-    func didDiscoverWriteCharacteristics()
+    func didDiscoverWriteCharacteristics(_ peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic)
+    func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic)
+    func didWrite(_ peripheral: CBPeripheral, characteristics: CBCharacteristic) 
 
     func reset()
 
+
+    
+
     static func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String?
+
 }
 
 extension LibreTransmitterProxyProtocol {
@@ -38,9 +46,21 @@ extension LibreTransmitterProxyProtocol {
         Self.self
     }
 
-    func didDiscoverWriteCharacteristics() {
+    func didDiscoverWriteCharacteristics(_ peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic) {
         
     }
+
+    func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic) {
+        print("Setting notify notifyCharacteristic")
+        peripheral.setNotifyValue(true, for: notifyCharacteristic)
+    }
+
+    func didWrite(_ peripheral: CBPeripheral, characteristics: CBCharacteristic) {
+
+    }
+
+    static var requiresSetup : Bool { return false}
+    static var requiresPhoneNFC: Bool { return false }
 }
 
 extension Array where Array.Element == LibreTransmitterProxyProtocol.Type {
@@ -53,7 +73,7 @@ extension Array where Array.Element == LibreTransmitterProxyProtocol.Type {
 
 public enum LibreTransmitters {
     public static var all: [LibreTransmitterProxyProtocol.Type] {
-        [MiaoMiaoTransmitter.self, BubbleTransmitter.self]
+        [MiaoMiaoTransmitter.self, BubbleTransmitter.self, Libre2DirectTransmitter.self]
     }
     public static func isSupported(_ peripheral: CBPeripheral) -> Bool {
         getSupportedPlugins(peripheral)?.isEmpty == false

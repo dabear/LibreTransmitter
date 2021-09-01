@@ -372,9 +372,10 @@ public enum NotificationHelper {
             return
         }
 
-        guard device.battery <= 20 else {
-            logger.debug("device battery is \(device.batteryString), not sending low notification")
+        if let battery = device.battery, battery > 20 {
+            logger.debug("device battery is \(battery), not sending low notification")
             return
+
         }
 
         let now = Date()

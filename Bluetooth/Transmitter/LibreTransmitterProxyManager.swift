@@ -25,12 +25,13 @@ public enum BluetoothmanagerState: String {
     case UnknownDevice = "UnknownDevice"
 }
 
-public protocol LibreTransmitterDelegate: class {
+public protocol LibreTransmitterDelegate: AnyObject {
     // Can happen on any queue
     func libreTransmitterStateChanged(_ state: BluetoothmanagerState)
     func libreTransmitterReceivedMessage(_ messageIdentifier: UInt16, txFlags: UInt8, payloadData: Data)
     // Will always happen on managerQueue
     func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata)
+    func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata)
 
     func noLibreTransmitterSelected()
     func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?)
@@ -42,6 +43,14 @@ extension LibreTransmitterDelegate {
 }
 
 final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, LibreTransmitterDelegate {
+    func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata) {
+        dispatchToDelegate { manager in
+            manager.delegate?.libreSensorDidUpdate(with: bleData, and: Device)
+        }
+    }
+
+
+
     func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {
         dispatchToDelegate { manager in
             manager.delegate?.libreManagerDidRestoreState(found: peripherals, connected: to)
@@ -179,7 +188,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         logger.debug("Before scan for libre bluetooth device while central manager state was  \(String(describing: self.centralManager.state.rawValue)))")
 
-        let scanForAllServices = true
+        let scanForAllServices = false
 
         //this will search for all peripherals. Guaranteed to work
         if scanForAllServices {
@@ -191,7 +200,8 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             // Here we optimize by scanning only for relevant services
             // However, this doesn't work correctly with both miaomiao and bubble
             let services = LibreTransmitters.all.getServicesForDiscovery()
-            logger.debug("Scanning for specifiv services: \(String(describing: services.map { $0.uuidString }))")
+            logger.debug("Scanning for specific services: \(String(describing: services.map { $0.uuidString }))")
+            centralManager.scanForPeripherals(withServices: services, options: nil)
 
         }
 
@@ -366,6 +376,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         guard let peripherals = dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral] else {
             logger.debug("Central Manager tried to restore state but no peripheral found")
+            self.scanForDevices()
             return
         }
 
@@ -408,6 +419,46 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         logger.debug("Did discover peripheral while state \(String(describing: self.state.rawValue)) with name: \(String(describing: peripheral.name)), wantstoterminate?: \(self.wantsToTerminate)")
 
+
+        // Libre2:
+        // during setup, we find the uid by scanning via nfc
+        // first time connecting to a libre2 sensor via bluetooth we don't know its peripheral identifier
+        // but since the uid is also part of the libre 2bluetooth advertismentdata we trade uid for
+        
+         if let selectedUid = UserDefaults.standard.preSelectedUid {
+            logger.debug("Was asked to connect preselected libre2 by uid: \(selectedUid.hex), discovered devicename is: \(String(describing: peripheral.name))")
+
+            guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
+                return
+            }
+
+            guard manufacturerData.count == 8 else {
+                return
+            }
+
+            var foundUUID = manufacturerData.subdata(in: 2..<8)
+            foundUUID.append(contentsOf: [0x07, 0xe0])
+
+            guard foundUUID == selectedUid && Libre2DirectTransmitter.canSupportPeripheral(peripheral) else {
+                return
+            }
+
+            //next time we search via bluetooth, let's identify the sensor with its bluetooth identifier
+            UserDefaults.standard.preSelectedUid = nil
+            UserDefaults.standard.preSelectedDevice = peripheral.identifier.uuidString
+
+            logger.debug("ManufacturerData: \(manufacturerData), found uid: \(foundUUID)")
+
+            logger.debug("Did connect to preselected \(String(describing: peripheral.name)) with identifier \(String(describing: peripheral.identifier.uuidString)) and uid \(selectedUid.hex)")
+            self.peripheral = peripheral
+
+            self.connect(force: true, advertisementData: advertisementData)
+
+
+            return
+
+        }
+
         if let preselected = UserDefaults.standard.preSelectedDevice {
             if peripheral.identifier.uuidString == preselected {
                 logger.debug("Did connect to preselected \(String(describing: peripheral.name)) with identifier \(String(describing: peripheral.identifier.uuidString))")
@@ -415,7 +466,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
                 self.connect(force: true, advertisementData: advertisementData)
             } else {
-                logger.info("Did not connect to \(String(describing: peripheral.name)) with identifier \(String(describing: peripheral.identifier.uuidString)), because another device with identifier \(preselected)")
+                logger.info("Did not connect to \(String(describing: peripheral.name)) with identifier \(String(describing: peripheral.identifier.uuidString)), because another device with identifier \(preselected) was selected")
             }
 
             return
@@ -508,6 +559,26 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
+    func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic characteristic: CBCharacteristic){
+
+
+        logger.debug("Did discover characteristic: \(String(describing: characteristic.debugDescription)) and asking activeplugin to handle it as a notification Characteristic")
+
+        self.activePlugin?.didDiscoverNotificationCharacteristic(peripheral, notifyCharacteristic: characteristic)
+
+
+
+
+    }
+
+    func didDiscoverWriteCharacteristic(_ peripheral: CBPeripheral, writeCharacteristic characteristic: CBCharacteristic){
+        writeCharacteristic = characteristic
+        logger.debug("Did discover characteristic: \(String(describing: characteristic.debugDescription)) and asking activeplugin to handle it as a write Characteristic")
+        self.activePlugin?.didDiscoverWriteCharacteristics(peripheral, writeCharacteristics: characteristic)
+
+
+    }
+
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
@@ -519,15 +590,13 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
+
                 logger.debug("Did discover characteristic: \(String(describing: characteristic.debugDescription))")
-             
                 if characteristic.properties.intersection(.notify) == .notify && characteristic.uuid == notifyCharacteristicUUID {
-                    peripheral.setNotifyValue(true, for: characteristic)
-                    logger.debug("Set notify value for this characteristic")
+                    didDiscoverNotificationCharacteristic(peripheral, notifyCharacteristic: characteristic)
                 }
                 if characteristic.uuid == writeCharachteristicUUID {
-                    writeCharacteristic = characteristic
-                    self.activePlugin?.didDiscoverWriteCharacteristics()
+                    didDiscoverWriteCharacteristic(peripheral, writeCharacteristic: characteristic)
                 }
             }
         } else {
@@ -584,7 +653,9 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
-        logger.debug("Did Write value \(String(characteristic.value.debugDescription)) for characteristic \(String(characteristic.debugDescription))")
+        logger.debug("Did Write value \(String(describing: characteristic.value?.hexEncodedString())) for characteristic \(String(characteristic.debugDescription))")
+        self.activePlugin?.didWrite(peripheral, characteristics: characteristic)
+
     }
 
     func requestData() {

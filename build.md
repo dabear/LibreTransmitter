@@ -38,6 +38,14 @@ mv GlucoseFromRaw.swift ~/Code/LoopWorkspace/LibreTransmitter/LibreSensor/Glucos
 * In Xcode, Open the Loop Project (not the LibreTransmitter project) in the navigator, go to "Signing & Capabilities", then under "background modes", select "Audio, AirPlay, and Picture in picture". This will allow Libretransmitter to use vibration when the phone is locked.
 * It should look like this: ![Loop_xcodeproj](https://user-images.githubusercontent.com/442324/111884302-14777a80-89c1-11eb-9171-76ffcef2f345.jpg "Audio/Vibrate capability added into Loop For libretransmitter to work in background")
 
+## Give Loop NFC permissions for libre2 direct bluetooth support
+This plugin now supports libre2 direct bluetooth connections.
+To utilize libre2direct you need to pair your sensor via NFC first, and therefore Loop needs NFC permissions
+* In Xcode, Open the Loop Project (not the LibreTransmitter project) in the navigator, go to "Signing & Capabilities",  then "+ Capability" and add the "NFC" or "Near field communication Tag Reading" capability.
+* In Loop's Info.plist, add the tag NFCReaderUsageDescription and set description to something similar to: "Loop will use NFC on the phone to pair libre2 sensors"
+
+
+
 
 ## Build the LoopWorkspace with LibreTransmitter Plugin
 * In xcode, go to Product->"Clean Build Folder"

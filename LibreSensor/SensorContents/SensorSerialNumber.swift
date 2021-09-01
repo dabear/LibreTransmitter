@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SensorSerialNumber: CustomStringConvertible {
+public struct SensorSerialNumber: CustomStringConvertible {
     let uid: Data
 
     fileprivate let lookupTable = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "T", "U", "V", "W", "X", "Y", "Z"]
@@ -101,7 +101,7 @@ struct SensorSerialNumber: CustomStringConvertible {
     }
 
     // MARK: - CustomStringConvertible Protocoll
-    var description: String {
+    public var description: String {
         "Uid is \(prettyUidString) and derived serial number is \(serialNumber)"
     }
 }

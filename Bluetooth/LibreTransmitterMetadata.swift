@@ -14,7 +14,7 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
     // software number
     public let firmware: String
     // battery level, percentage between 0 % and 100 %
-    public let battery: Int
+    public let battery: Int?
     // battery level String
     public let batteryString: String
 
@@ -25,11 +25,12 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
     public let patchInfo: String?
     public let uid: [UInt8]?
 
-    init(hardware: String, firmware: String, battery: Int, name: String, macAddress: String?, patchInfo: String?, uid: [UInt8]?) {
+    init(hardware: String, firmware: String, battery: Int?, name: String, macAddress: String?, patchInfo: String?, uid: [UInt8]?) {
         self.hardware = hardware
         self.firmware = firmware
         self.battery = battery
-        self.batteryString = "\(battery) %"
+        let batteryString = battery == nil ? "-" : "\(battery!)"
+        self.batteryString = batteryString
         self.macAddress = macAddress
         self.name = name
         self.patchInfo = patchInfo
@@ -102,7 +103,7 @@ public extension SensorType {
     init?(patchInfo: String) {
         guard patchInfo.count > 1 else { return nil }
 
-        let start = patchInfo[0..<2]
+        let start = patchInfo[0..<2].uppercased()
 
         let choices: [String: SensorType] = ["DF": .libre1, "A2": .libre1A2, "9D": .libre2, "E5": .libreUS14day, "70": .libreProH]
 

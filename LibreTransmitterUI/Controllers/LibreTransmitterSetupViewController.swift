@@ -22,17 +22,33 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
 
     lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
 
-    var deviceSelect: UIHostingController<BluetoothSelection>!
+    var modeSelection: UIHostingController<ModeSelectionView>!
+
+
+
 
     init() {
         SelectionState.shared.selectedStringIdentifier = UserDefaults.standard.preSelectedDevice
 
-        deviceSelect = BluetoothSelection.asHostedViewController()
+        let cancelNotifier = GenericObservableObject()
+        let saveNotifier = GenericObservableObject()
 
-        super.init(rootViewController: deviceSelect)
+        modeSelection = UIHostingController(rootView: ModeSelectionView(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier))
 
-        deviceSelect.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
-        deviceSelect.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(save))
+
+        super.init(rootViewController: modeSelection)
+
+
+        cancelNotifier.listenOnce { [weak self] in
+            self?.cancel()
+        }
+
+        saveNotifier.listenOnce { [weak self] in
+            self?.save()
+        }
+
+
+
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -40,7 +56,7 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
     }
 
     deinit {
-        logger.debug("dabear MiaomiaoClientSetupViewController() deinit was called")
+        logger.debug("dabear LibreTransmitterSetupViewController() deinit was called")
         //cgmManager = nil
     }
 
@@ -49,32 +65,49 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func stopScan() {
-        var v = deviceSelect.rootView
-        v.stopScan(true)
-        deviceSelect = nil
-    }
-
     @objc
     private func cancel() {
         completionDelegate?.completionNotifyingDidComplete(self)
 
-        stopScan()
     }
 
     @objc
     private func save() {
+
+
+        let hasNewDevice = SelectionState.shared.selectedStringIdentifier != UserDefaults.standard.preSelectedDevice
+        if hasNewDevice, let newDevice = SelectionState.shared.selectedStringIdentifier {
+            logger.debug("dabear: Setupcontroller will set new device to \(newDevice)")
+            UserDefaults.standard.preSelectedDevice = newDevice
+            SelectionState.shared.selectedUID = nil
+            UserDefaults.standard.preSelectedUid = nil
+
+        } else if let newUID = SelectionState.shared.selectedUID {
+            // this one is only temporary,
+            // as we don't know the bluetooth identifier during nfc setup
+            logger.debug("dabear: Setupcontroller will set new libre2 device  to \(newUID)")
+
+            UserDefaults.standard.preSelectedUid = newUID
+            SelectionState.shared.selectedUID = nil
+            UserDefaults.standard.preSelectedDevice = nil
+
+
+        } else {
+
+            //this cannot really happen unless you are a developer and have previously
+            // stored both preSelectedDevice and selectedUID !
+        }
+
         if let cgmManager = cgmManager {
+            logger.debug("dabear: Setupcontroller Saving from setup")
             cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
             cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
 
-            if let newDevice = deviceSelect.rootView.getNewDeviceId() {
-                logger.debug("dabear: Setupcontroller will set new device to \(newDevice)")
-                UserDefaults.standard.preSelectedDevice = newDevice
-            }
-
-            stopScan()
+        } else {
+            logger.debug("dabear: Setupcontroller not Saving from setup")
         }
+
+
         completionDelegate?.completionNotifyingDidComplete(self)
     }
 }
