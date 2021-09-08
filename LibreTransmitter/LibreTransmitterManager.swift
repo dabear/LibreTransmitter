@@ -446,7 +446,7 @@ extension LibreTransmitterManager {
     }
 
     func glucosesToSamplesFilter(_ array: [LibreGlucose], startDate: Date?) -> [NewGlucoseSample] {
-        
+
         array
         .filterDateRange(startDate, nil)
         .filter { $0.isStateValid }
@@ -497,7 +497,14 @@ extension LibreTransmitterManager {
             return
         }
 
-        //todo:: crc check
+        guard bleData.crcVerified else {
+            self.delegateQueue.async {
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
+            }
+
+            logger.debug("did not get bledata with valid crcs")
+            return
+        }
 
 
 
@@ -640,7 +647,7 @@ extension LibreTransmitterManager {
 
             let prediction = glucoseArrayWithPrediction?.prediction
 
-        
+
 
             let device = self.proxy?.device
             let newGlucose = self.glucosesToSamplesFilter(glucose, startDate: self.getStartDateForFilter())

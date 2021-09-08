@@ -218,13 +218,19 @@ public extension Libre2 {
         ]
     }
 
-    typealias LibreBLEResponse = (age: Int, trend: [Measurement], history: [Measurement])
+    typealias LibreBLEResponse = (age: Int, trend: [Measurement], history: [Measurement], crcVerified: Bool)
 
     static func parseBLEData(_ data: Data) -> LibreBLEResponse {
         var measurementTrend: [Measurement] = []
         var measurementHistory: [Measurement] = []
         let age = Int(word(data[41], data[40]))
-        //let crc = word(data[43], data[42])
+        let crc = Int(word(data[43], data[42]))
+
+        let bytes = [UInt8](data)
+        let calculatedCrc = Crc.crc16(Array(bytes.dropLast(2)), seed: 0xffff)
+        let enclosedCrc = (UInt16(bytes[42]) << 8) | UInt16(bytes[43])
+
+
 
         let delay = 2
         let ints = [0, 2, 4, 6, 7, 12, 15]
@@ -244,6 +250,7 @@ public extension Libre2 {
             }
 
             var idValue = age
+
             if i < 7 {
                 idValue -= ints[i]
             } else {
@@ -264,7 +271,7 @@ public extension Libre2 {
         let trend = measurementTrend.sorted(by: { $0.idValue < $1.idValue })
         let history = measurementHistory.sorted(by: { $0.idValue < $1.idValue })
 
-        return (age, trend, history)
+        return (age, trend, history, calculatedCrc == enclosedCrc)
     }
 }
 
