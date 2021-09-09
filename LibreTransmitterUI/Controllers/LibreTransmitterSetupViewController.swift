@@ -13,7 +13,7 @@ import SwiftUI
 import UIKit
 import os.log
 
-
+/*
 class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnboarding, CompletionNotifying {
     weak var cgmManagerOnboardingDelegate: CGMManagerOnboardingDelegate?
     weak var completionDelegate: CompletionDelegate?
@@ -21,10 +21,24 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
     fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterSetupViewController")
 
     lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
+ */
+class LibreTransmitterSetupViewController: UINavigationController,
+                                           //CGMManagerCreateNotifying,
+                                           //CGMManagerOnboardNotifying,
+                                           CGMManagerSetupViewController,
+
+
+                                           CompletionNotifying {
+
+    var setupDelegate: CGMManagerSetupViewControllerDelegate?
+    //weak var cgmManagerCreateDelegate: CGMManagerCreateDelegate?
+    //weak var cgmManagerOnboardDelegate: CGMManagerOnboardDelegate?
+    weak var completionDelegate: CompletionDelegate?
 
     var modeSelection: UIHostingController<ModeSelectionView>!
 
-
+    fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterSetupViewController")
+    lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
 
 
     init() {
@@ -100,8 +114,9 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
 
         if let cgmManager = cgmManager {
             logger.debug("dabear: Setupcontroller Saving from setup")
-            cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
-            cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
+            //cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
+            //cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)
+            setupDelegate?.cgmManagerSetupViewController(self, didSetUpCGMManager: cgmManager)
 
         } else {
             logger.debug("dabear: Setupcontroller not Saving from setup")

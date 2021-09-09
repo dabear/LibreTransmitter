@@ -104,7 +104,7 @@ class SettingsModel : ObservableObject {
 
 struct SettingsView: View {
 
-    @ObservedObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
+    //@ObservedObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
     @ObservedObject private var transmitterInfo: LibreTransmitter.TransmitterInfo
     @ObservedObject private var sensorInfo: LibreTransmitter.SensorInfo
 
@@ -125,7 +125,8 @@ struct SettingsView: View {
     
 
     static func asHostedViewController(
-        displayGlucoseUnitObservable: DisplayGlucoseUnitObservable,
+        glucoseUnit: HKUnit,
+        //displayGlucoseUnitObservable: DisplayGlucoseUnitObservable,
         notifyComplete: GenericObservableObject,
         notifyDelete: GenericObservableObject,
         transmitterInfoObservable:LibreTransmitter.TransmitterInfo,
@@ -133,7 +134,8 @@ struct SettingsView: View {
         glucoseInfoObservable: LibreTransmitter.GlucoseInfo,
         alarmStatus: LibreTransmitter.AlarmStatus) -> UIHostingController<SettingsView> {
         UIHostingController(rootView: self.init(
-            displayGlucoseUnitObservable: displayGlucoseUnitObservable, transmitterInfo: transmitterInfoObservable, sensorInfo: sensorInfoObervable, glucoseMeasurement: glucoseInfoObservable, notifyComplete: notifyComplete, notifyDelete: notifyDelete, alarmStatus: alarmStatus
+            //displayGlucoseUnitObservable: displayGlucoseUnitObservable,
+            transmitterInfo: transmitterInfoObservable, sensorInfo: sensorInfoObervable, glucoseMeasurement: glucoseInfoObservable, notifyComplete: notifyComplete, notifyDelete: notifyDelete, alarmStatus: alarmStatus, glucoseUnit: glucoseUnit
 
         ))
     }
@@ -141,8 +143,14 @@ struct SettingsView: View {
 
     @State private var showingDestructQuestion = false
 
-    private var glucoseUnit: HKUnit {
+    /*private var glucoseUnit: HKUnit {
         displayGlucoseUnitObservable.displayGlucoseUnit
+    }*/
+    private var glucoseUnit: HKUnit {
+            didSet {
+
+                UserDefaults.standard.mmGlucoseUnit = glucoseUnit
+            }
     }
 
 

@@ -17,27 +17,37 @@ extension LibreTransmitterManager: CGMManagerUI {
 
 
     // TODO Placeholder.
-    public var cgmStatusBadge: DeviceStatusBadge? {
+    /*public var cgmStatusBadge: DeviceStatusBadge? {
         nil
-    }
+    }*/
 
+    public static func setupViewController(glucoseTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CGMManagerSetupViewController & CompletionNotifying)? {
+        return LibreTransmitterSetupViewController()
+
+    }
+/*
     public static func setupViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> SetupUIResult<CGMManagerViewController, CGMManagerUI> {
 
             return .userInteractionRequired(LibreTransmitterSetupViewController())
-    }
+    }*/
 
-    public func settingsViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) ->CGMManagerViewController {
+    public func settingsViewController(for glucoseUnit: HKUnit, glucoseTintColor: Color, guidanceColors: GuidanceColors) -> (UIViewController & CompletionNotifying) {
+
+    //public func settingsViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) ->CGMManagerViewController {
 
 
         let doneNotifier = GenericObservableObject()
         let wantToTerminateNotifier = GenericObservableObject()
 
 
-        let settings = SettingsView.asHostedViewController(displayGlucoseUnitObservable: displayGlucoseUnitObservable, notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier, transmitterInfoObservable: self.transmitterInfoObservable, sensorInfoObervable: self.sensorInfoObservable, glucoseInfoObservable: self.glucoseInfoObservable, alarmStatus: self.alarmStatus)
+        let settings = SettingsView.asHostedViewController(
+            glucoseUnit: glucoseUnit,
+            //displayGlucoseUnitObservable: displayGlucoseUnitObservable,
+            notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier, transmitterInfoObservable: self.transmitterInfoObservable, sensorInfoObervable: self.sensorInfoObservable, glucoseInfoObservable: self.glucoseInfoObservable, alarmStatus: self.alarmStatus)
 
 
 
-        let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
+        let nav = SettingsNavigationViewController(rootViewController: settings)
 
         doneNotifier.listenOnce { [weak nav] in
             nav?.notifyComplete()

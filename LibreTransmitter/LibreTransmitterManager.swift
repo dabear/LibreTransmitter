@@ -16,6 +16,11 @@ import HealthKit
 import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+    public var cgmStatus: CGMManagerStatus {
+        CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
+    }
+
+
 
 
     public typealias GlucoseArrayWithPrediction = (glucose:[LibreGlucose], prediction:[LibreGlucose])
@@ -28,9 +33,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         lastConnected != nil 
     }
 
-    public var cgmManagerStatus: CGMManagerStatus {
+    /*public var cgmManagerStatus: CGMManagerStatus {
         CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
-    }
+    }*/
 
     public var glucoseDisplay: GlucoseDisplayable?
 
@@ -188,7 +193,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     }
 
-    public var managerIdentifier : String {
+    static public var managerIdentifier : String {
         Self.className
     }
 
@@ -203,7 +208,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
 
-    public let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
+    static public let localizedTitle = LocalizedString("Libre Bluetooth", comment: "Title for the CGMManager option")
 
     public let appURL: URL? = nil //URL(string: "spikeapp://")
 
