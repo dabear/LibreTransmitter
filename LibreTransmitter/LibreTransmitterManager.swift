@@ -506,7 +506,11 @@ extension LibreTransmitterManager {
             return
         }
 
+        if sensor.maxAge > 0 {
+            let minutesLeft = Double(sensor.maxAge - bleData.age)
+            NotificationHelper.sendSensorExpireAlertIfNeeded(minutesLeft: minutesLeft)
 
+        }
 
 
         let device = self.proxy?.device

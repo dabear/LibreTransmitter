@@ -409,14 +409,14 @@ public enum NotificationHelper {
 
     private static var lastSensorExpireAlert: Date?
 
-    public static func sendSensorExpireAlertIfNeeded(sensorData: SensorData) {
+    public static func sendSensorExpireAlertIfNeeded(minutesLeft: Double) {
         guard UserDefaults.standard.mmAlertWillSoonExpire else {
             logger.debug("mmAlertWillSoonExpire toggle was not enabled, not sending expiresoon alarm")
             return
         }
 
-        guard TimeInterval(minutes: Double(sensorData.minutesLeft)) < TimeInterval(hours: 24) else {
-            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(sensorData.minutesLeft) minutes / \(sensorData.humanReadableTimeLeft)")
+        guard TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) else {
+            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(minutesLeft) minutes")
             return
         }
 
@@ -426,24 +426,35 @@ public enum NotificationHelper {
 
         if let earlier = lastSensorExpireAlert {
             if earlier.addingTimeInterval(min45) < now {
-                sendSensorExpireAlert(sensorData: sensorData)
+                sendSensorExpireAlert(minutesLeft: minutesLeft)
                 lastSensorExpireAlert = now
             } else {
                 logger.debug("Sensor is soon expiring, but lastSensorExpireAlert was sent less than 6 hours ago, so aborting")
             }
         } else {
-            sendSensorExpireAlert(sensorData: sensorData)
+            sendSensorExpireAlert(minutesLeft: minutesLeft)
             lastSensorExpireAlert = now
         }
     }
 
-    private static func sendSensorExpireAlert(sensorData: SensorData) {
+    public static func sendSensorExpireAlertIfNeeded(sensorData: SensorData) {
+        sendSensorExpireAlertIfNeeded(minutesLeft: Double(sensorData.minutesLeft))
+    }
+
+    private static func sendSensorExpireAlert(minutesLeft: Double) {
         ensureCanSendNotification {
+
+            let hours = minutesLeft == 0 ? 0 : round(minutesLeft/60)
+
+            let dynamicText =  hours <= 1 ?  "minutes: \(minutesLeft.twoDecimals)" : "hours: \(hours.twoDecimals)"
+
             let content = UNMutableNotificationContent()
             content.title = "Sensor Ending Soon"
-            content.body = "Current Sensor is Ending soon! Sensor Age: \(sensorData.humanReadableSensorAge)"
+            content.body = "Current Sensor is Ending soon! Sensor Life left in \(dynamicText)"
 
             addRequest(identifier: .sensorExpire, content: content, deleteOld: true)
         }
     }
+
+
 }
