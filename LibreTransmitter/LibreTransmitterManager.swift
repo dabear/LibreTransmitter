@@ -775,6 +775,10 @@ extension LibreTransmitterManager {
 
     //will be called on utility queue
     public func libreTransmitterStateChanged(_ state: BluetoothmanagerState) {
+        /*DispatchQueue.main.async {
+            self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
+            self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
+        }*/
         switch state {
         case .Connected:
             lastConnected = Date()
