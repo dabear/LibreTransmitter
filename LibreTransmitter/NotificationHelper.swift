@@ -416,7 +416,7 @@ public enum NotificationHelper {
         }
 
         guard TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) else {
-            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(minutesLeft) minutes")
+            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(minutesLeft.twoDecimals) minutes")
             return
         }
 

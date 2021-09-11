@@ -98,6 +98,12 @@ struct Libre2DirectSetup: View {
         }
     }
 
+    var pairingDescriptionSection: some View {
+        Section(header: Text("About the Process")){
+            Text("Please make sure that your Libre 2 sensor is already activated and finished warming up. If you have other apps connecting to the sensor via bluetooth, these need to be shut down or uninstalled. \n\n You can only have one app communicating with the sensor via bluetooth. Then press the \"pariring and connection\" button below to start the process. Please note that the bluetooth connection might take up to a couple of minutes before it starts working.")
+                .padding()
+        }
+    }
     var pairingInfoSection: some View {
         Section(header: Text("Pairinginfo")){
             if showPairingInfo {
@@ -136,8 +142,10 @@ struct Libre2DirectSetup: View {
 
     var body: some View {
         List {
+            pairingDescriptionSection
             pairButtonSection
-            pairingInfoSection
+
+            //pairingInfoSection
 
         }
         .listStyle(InsetGroupedListStyle())
