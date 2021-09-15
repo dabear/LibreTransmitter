@@ -199,6 +199,8 @@ struct BluetoothSelection: View {
         selection.selectedStringIdentifier
     }
 
+
+
     private var searcher: BluetoothSearchManager!
 
     /*static func asHostedViewController() -> UIHostingController<Self> {

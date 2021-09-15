@@ -497,7 +497,22 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
         state = .Disconnected
 
-        self.delayedReconnect()
+        self.reconnect()
+    }
+
+    private func reconnect() {
+        let withDelay = self.activePluginType?.requiresDelayedReconnect == true
+        if withDelay {
+            delayedReconnect()
+        } else {
+            reconnectImmediately()
+        }
+    }
+
+    private func reconnectImmediately() {
+        self.managerQueue.sync {
+            self.connect(advertisementData: nil)
+        }
     }
 
     private func delayedReconnect(_ seconds: Double = 7) {
@@ -530,7 +545,8 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         default:
             state = .Disconnected
-            self.delayedReconnect()
+            self.reconnect()
+
             //    scanForMiaoMiao()
         }
     }

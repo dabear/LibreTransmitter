@@ -66,6 +66,10 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
         rxBuffer.resetAllBytes()
     }
 
+    override class var requiresDelayedReconnect : Bool {
+        true
+    }
+
     private var hardware: String? = ""
     private var firmware: String? = ""
     private var mac: String? = ""
