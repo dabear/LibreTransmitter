@@ -31,6 +31,10 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
         "libre2"
     }
 
+    class var requiresDelayedReconnect : Bool {
+        false
+    }
+
     private let expectedBufferSize = 46
     static var requiresSetup = true
     static var requiresPhoneNFC: Bool = true
@@ -91,27 +95,16 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
 
     }
 
-    private var notifyCharacteristic: CBCharacteristic?
+
 
     func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic) {
 
         logger.debug("libre2: saving notifyCharacteristic")
-
-        self.notifyCharacteristic =  notifyCharacteristic
-
         //peripheral.setNotifyValue(true, for: notifyCharacteristic)
+        logger.debug("libre2 setting notify while discovering : \(String(describing: notifyCharacteristic.debugDescription))")
+        peripheral.setNotifyValue(true, for: notifyCharacteristic)
     }
 
-    // libre2 sensors are sensitive to timing. You must only ask to be notified after you've unlocked the sensor...
-    func didWrite(_ peripheral: CBPeripheral, characteristics: CBCharacteristic) {
-        logger.debug("libre2 write characteristics was written to: \(String(describing: characteristics.debugDescription))")
-
-        if characteristics.uuid == Self.writeCharacteristic?.value, let notifyCharacteristic=notifyCharacteristic{
-
-            logger.debug("libre2 setting notify for : \(String(describing: notifyCharacteristic.debugDescription))")
-            peripheral.setNotifyValue(true, for: notifyCharacteristic)
-        }
-    }
 
     private func unlock() -> Data? {
 

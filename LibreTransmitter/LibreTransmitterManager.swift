@@ -522,13 +522,24 @@ extension LibreTransmitterManager {
         var glucose = LibreGlucose.fromTrendMeasurements(sortedTrends, nativeCalibrationData: calibrationData, returnAll: UserDefaults.standard.mmBackfillFromTrend)
         //glucose += LibreGlucose.fromHistoryMeasurements(bleData.history, nativeCalibrationData: calibrationData)
 
-        if UserDefaults.standard.mmBackfillFromHistory {
+        // while libre2 fram scans contains historymeasurements for the last 8 hours,
+        // history from bledata contains just a couple of data points, so we don't bother
+        /*if UserDefaults.standard.mmBackfillFromHistory {
             let sortedHistory = bleData.history.sorted{ $0.date > $1.date}
             glucose += LibreGlucose.fromHistoryMeasurements(sortedHistory, nativeCalibrationData: calibrationData)
-        }
+        }*/
 
         let newGlucose = glucosesToSamplesFilter(glucose, startDate: getStartDateForFilter())
-
+        glucose
+            .filter { $0.isStateValid }
+            .compactMap {
+                return NewGlucoseSample(date: $0.startDate,
+                             quantity: $0.quantity,
+                             isDisplayOnly: false,
+                             wasUserEntered: false,
+                             syncIdentifier: $0.syncId,
+                             device: device)
+            }
 
 
         if newGlucose.isEmpty {
@@ -770,10 +781,10 @@ extension LibreTransmitterManager {
 
     //will be called on utility queue
     public func libreTransmitterStateChanged(_ state: BluetoothmanagerState) {
-        /*DispatchQueue.main.async {
+        DispatchQueue.main.async {
             self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
             self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
-        }*/
+        }
         switch state {
         case .Connected:
             lastConnected = Date()

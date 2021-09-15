@@ -51,7 +51,7 @@ extension LibreTransmitterProxyProtocol {
     }
 
     func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic) {
-        print("Setting notify notifyCharacteristic")
+        print("Setting setNotifyValue on notifyCharacteristic")
         peripheral.setNotifyValue(true, for: notifyCharacteristic)
     }
 
@@ -61,6 +61,8 @@ extension LibreTransmitterProxyProtocol {
 
     static var requiresSetup : Bool { return false}
     static var requiresPhoneNFC: Bool { return false }
+
+    static var requiresDelayedReconnect: Bool { return false}
 }
 
 extension Array where Array.Element == LibreTransmitterProxyProtocol.Type {
