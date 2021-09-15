@@ -493,12 +493,18 @@ extension LibreTransmitterManager {
               let calibrationData = calibrationData,
               let sensor = UserDefaults.standard.preSelectedSensor else {
             logger.error("calibrationdata, sensor uid or mapping missing, could not continue")
+            self.delegateQueue.async {
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.noCalibrationData))
+            }
             return
         }
 
         guard mapping.reverseFooterCRC == calibrationData.isValidForFooterWithReverseCRCs &&
                 mapping.uuid == sensor.uuid else {
             logger.error("Calibrationdata was not correct for these bluetooth packets. This is a fatal error, we cannot calibrate without re-pairing")
+            self.delegateQueue.async {
+                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.noCalibrationData))
+            }
             return
         }
 
@@ -535,7 +541,7 @@ extension LibreTransmitterManager {
         }*/
 
         let newGlucose = glucosesToSamplesFilter(glucose, startDate: getStartDateForFilter())
-        glucose
+        /*glucose
             .filter { $0.isStateValid }
             .compactMap {
                 return NewGlucoseSample(date: $0.startDate,
@@ -544,7 +550,7 @@ extension LibreTransmitterManager {
                              wasUserEntered: false,
                              syncIdentifier: $0.syncId,
                              device: device)
-            }
+            }*/
 
 
         if newGlucose.isEmpty {
