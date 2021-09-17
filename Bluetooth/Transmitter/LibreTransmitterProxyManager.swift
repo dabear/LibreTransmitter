@@ -510,9 +510,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     }
 
     private func reconnectImmediately() {
-        self.managerQueue.sync {
-            self.connect(advertisementData: nil)
-        }
+        self.connect(advertisementData: nil)
     }
 
     private func delayedReconnect(_ seconds: Double = 7) {
