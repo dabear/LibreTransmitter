@@ -349,9 +349,31 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                     logger.debug("Central Manager already connected")
                 }
             } else {
-                logger.debug("Central Manager was powered on, scanningfordevice: \(String(describing: self.state))")
 
-                scanForDevices() // power was switched on, while app is running -> reconnect.
+
+                if let preselected = UserDefaults.standard.preSelectedDevice,
+                   let uuid = UUID(uuidString: preselected),
+                   let newPeripheral = centralManager.retrievePeripherals(withIdentifiers: [uuid]).first,
+                   let plugin = LibreTransmitters.getSupportedPlugins(newPeripheral)?.first {
+                    logger.debug("Central Manager was powered on, directly connecting to already known peripheral \(newPeripheral): \(String(describing: self.state))")
+                    self.peripheral = newPeripheral
+                    self.peripheral?.delegate = self
+
+                    self.activePlugin = plugin.init(delegate: self, advertisementData: nil)
+
+                    managerQueue.async {
+                        self.state = .Connecting
+                        self.centralManager.connect(newPeripheral, options: nil)
+
+                    }
+
+                } else {
+                    //state should be nassigned here
+                    logger.debug("Central Manager was powered on, scanningfordevice: \(String(describing: self.state))")
+                    scanForDevices() // power was switched on, while app is running -> reconnect.
+
+                }
+
 
             }
         @unknown default:
