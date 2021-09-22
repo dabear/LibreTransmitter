@@ -18,6 +18,7 @@ import os.log
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
 
 
+
     public typealias GlucoseArrayWithPrediction = (glucose:[LibreGlucose], prediction:[LibreGlucose])
     public let logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterManager")
 
@@ -44,6 +45,10 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public func getSounds() -> [Alert.Sound] {
         []
+    }
+
+    public func acknowledgeAlert(alertIdentifier: Alert.AlertIdentifier, completion: @escaping (Error?) -> Void) -> Void {
+        completion(nil)
     }
 
     public func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {
@@ -452,7 +457,8 @@ extension LibreTransmitterManager {
         .filter { $0.isStateValid }
         .compactMap {
             return NewGlucoseSample(date: $0.startDate,
-                         quantity: $0.quantity,
+                                    quantity: $0.quantity,
+                                    trend: nil, //loop only, not for freeapsx
                          isDisplayOnly: false,
                          wasUserEntered: false,
                          syncIdentifier: $0.syncId,
