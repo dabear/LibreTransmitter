@@ -51,3 +51,10 @@ func getLogs() throws -> Data {
 
 }
 
+
+public extension Logger {
+    init(forType atype: Any, forSubSystem subsystem: String=Features.logSubsystem) {
+        self.init(subsystem: subsystem, category: String(describing: atype)  )
+    }
+
+}

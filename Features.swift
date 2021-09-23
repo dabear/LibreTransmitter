@@ -12,9 +12,9 @@ import Foundation
 import CoreNFC
 #endif
 
-final class Features{
+public final class Features{
 
-    static var logSubsystem = "no.bjorninge.libre"
+    static public var logSubsystem = "no.bjorninge.libre"
 
     static var phoneNFCAvailable: Bool {
         #if canImport(CoreNFC)
