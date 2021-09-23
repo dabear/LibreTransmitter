@@ -9,7 +9,7 @@ import LoopKit
 import os.log
 
 
-fileprivate var logger = Logger.init(subsystem: Features.logSubsystem, category: "LibreGlucose")
+fileprivate var logger = Logger(subsystem: Features.logSubsystem, category: "LibreGlucose")
 
 
 public struct LibreGlucose {

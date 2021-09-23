@@ -393,7 +393,7 @@ struct SettingsView: View {
             advancedSection
 
             //disable for now due to null byte document issues
-            if false {
+            if true {
                 logExportSection
             }
 

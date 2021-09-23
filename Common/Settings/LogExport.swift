@@ -25,7 +25,7 @@ fileprivate func getLogEntries() throws -> [OSLogEntryLog] {
     // and remove other elements (signposts, etc).
     return allEntries
         .compactMap { $0 as? OSLogEntryLog }
-        .filter { $0.subsystem == Features.logSubsystem }
+        //.filter { $0.subsystem == Features.logSubsystem }
 }
 
 @available(iOS 15, *)
