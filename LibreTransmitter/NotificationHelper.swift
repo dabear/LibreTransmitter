@@ -13,7 +13,7 @@ import LoopKit
 import UserNotifications
 import os.log
 
-fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "NotificationHelper")
+fileprivate var logger = Logger.init(subsystem: Features.logSubsystem, category: "NotificationHelper")
 
 public enum NotificationHelper {
 
