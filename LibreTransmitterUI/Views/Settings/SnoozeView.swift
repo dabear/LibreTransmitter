@@ -112,6 +112,7 @@ struct SnoozeView: View {
             }
 
             .scaledToFill()
+            .pickerStyle(.wheel)
         }
 
     }

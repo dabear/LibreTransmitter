@@ -110,7 +110,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     }
 
 
-    private var logger = Logger.init(subsystem: Features.logSubsystem, category: "LibreTransmitterProxyManager")
+    private var logger = Logger(subsystem: Features.logSubsystem, category: "LibreTransmitterProxyManager")
     var metadata: LibreTransmitterMetadata?
 
     var centralManager: CBCentralManager!

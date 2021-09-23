@@ -42,7 +42,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     var centralManager: CBCentralManager!
 
-    fileprivate var logger = Logger.init(subsystem: Features.logSubsystem, category: "BluetoothSearchManager")
+    fileprivate var logger = Logger(subsystem: Features.logSubsystem, category: "BluetoothSearchManager")
 
     //fileprivate let deviceNames = SupportedDevices.allNames
     //fileprivate let serviceUUIDs:[CBUUID]? = [CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")]
