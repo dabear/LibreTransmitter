@@ -24,7 +24,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 
     public typealias GlucoseArrayWithPrediction = (glucose:[LibreGlucose], prediction:[LibreGlucose])
-    public let logger = Logger(subsystem: Features.logSubsystem, category: "LibreTransmitterManager")
+    public lazy var logger = Logger(forType: Self.self)
 
 
     public let isOnboarded = true   // No distinction between created and onboarded

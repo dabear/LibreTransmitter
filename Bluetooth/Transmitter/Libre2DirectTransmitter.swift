@@ -13,7 +13,7 @@ import UIKit
 class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
     
 
-    fileprivate let logger = Logger(subsystem: Features.logSubsystem, category: "Libre2DirectTransmitter")
+    fileprivate lazy var logger = Logger(forType: Self.self)
 
     func reset() {
         rxBuffer.resetAllBytes()
