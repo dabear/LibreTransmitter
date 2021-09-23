@@ -12,6 +12,7 @@ import LibreTransmitter
 import HealthKit
 import LoopKit
 import LoopKitUI
+import UniformTypeIdentifiers
 
 
 public struct SettingsItem: View {
@@ -78,8 +79,6 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
             return newState
         }
 
-
-
         newState.i1 = String(c.i1)
         newState.i2 = String(c.i2)
         newState.i3 = String(c.i3)
@@ -91,16 +90,12 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
         return newState
     }
 
-
 }
-
-
 
 class SettingsModel : ObservableObject {
     @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
 
 }
-
 
 struct SettingsView: View {
 
@@ -119,10 +114,10 @@ struct SettingsView: View {
     @State private var presentableStatus: StatusMessage?
     @ObservedObject var alarmStatus: LibreTransmitter.AlarmStatus
 
+    @State private var showingDestructQuestion = false
+    @State private var showingExporter = false
+    //@Environment(\.presentationMode) var presentationMode
 
-
-
-    
 
     static func asHostedViewController(
         glucoseUnit: HKUnit,
@@ -141,6 +136,7 @@ struct SettingsView: View {
     }
 
 
+<<<<<<< HEAD
     @State private var showingDestructQuestion = false
 
     /*private var glucoseUnit: HKUnit {
@@ -172,7 +168,6 @@ struct SettingsView: View {
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
     var body: some View {
-
         overview
             //.navigationViewStyle(StackNavigationViewStyle())
             .navigationBarTitle(Text("Libre Bluetooth"), displayMode: .inline)
@@ -203,14 +198,9 @@ struct SettingsView: View {
 
                 }
 
-
-
             }
 
-
     }
-
-
 
     var snoozeSection: some View {
         Section {
@@ -225,7 +215,6 @@ struct SettingsView: View {
             }
         }
     }
-
 
 
     var measurementSection : some View {
@@ -257,16 +246,15 @@ struct SettingsView: View {
     var sensorInfoSection : some View {
         Section(header: Text("Sensor Info")) {
             SettingsItem(title: "Sensor Age", detail: $sensorInfo.sensorAge )
-                SettingsItem(title: "Sensor Age Left", detail: $sensorInfo.sensorAgeLeft )
-                SettingsItem(title: "Sensor Endtime", detail: $sensorInfo.sensorEndTime )
-                SettingsItem(title: "Sensor State", detail: $sensorInfo.sensorState )
-                SettingsItem(title: "Sensor Serial", detail: $sensorInfo.sensorSerial )
+            SettingsItem(title: "Sensor Age Left", detail: $sensorInfo.sensorAgeLeft )
+            SettingsItem(title: "Sensor Endtime", detail: $sensorInfo.sensorEndTime )
+            SettingsItem(title: "Sensor State", detail: $sensorInfo.sensorState )
+            SettingsItem(title: "Sensor Serial", detail: $sensorInfo.sensorSerial )
         }
     }
 
 
     var transmitterInfoSection: some View {
-
         Section(header: Text("Transmitter Info")) {
             if !transmitterInfo.battery.isEmpty {
                 SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
@@ -306,8 +294,6 @@ struct SettingsView: View {
         }
     }
 
-    @Environment(\.presentationMode) var presentationMode
-
 
 
     private var dismissButton: some View {
@@ -327,7 +313,7 @@ struct SettingsView: View {
     var destructSection: some View {
         Section {
             Button("Delete CGM") {
-                        showingDestructQuestion = true
+                showingDestructQuestion = true
             }.foregroundColor(.red)
             .alert(isPresented: $showingDestructQuestion) {
                 Alert(
@@ -380,6 +366,19 @@ struct SettingsView: View {
         }
     }
 
+    var logExportSection : some View {
+        Section {
+            Button("Export logs") {
+                if Features.supportsLogExport {
+                    showingExporter = true
+                } else {
+                    presentableStatus = StatusMessage(title: "Export not available", message: "Log export requires ios 15")
+                }
+            }.foregroundColor(.blue)
+
+        }
+    }
+
     var overview: some View {
         List {
 
@@ -392,8 +391,22 @@ struct SettingsView: View {
             transmitterInfoSection
             factoryCalibrationSection
             advancedSection
+
+            //disable for now due to null byte document issues
+            if false {
+                logExportSection
+            }
+
             destructSection
 
+        }
+        .fileExporter(isPresented: $showingExporter, document: LogsAsTextFile(), contentType: .plainText) { result in
+            switch result {
+            case .success(let url):
+                print("Saved to \(url)")
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
@@ -406,6 +419,35 @@ struct SettingsView: View {
 
 
 
+}
+
+struct LogsAsTextFile: FileDocument {
+    // tell the system we support only plain text
+    static var readableContentTypes = [UTType.plainText]
+
+    // a simple initializer that creates new, empty documents
+    init() {
+    }
+
+    // this initializer loads data that has been saved previously
+    init(configuration: ReadConfiguration) throws {
+    }
+
+    // this will be called when the system wants to write our data to disk
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        var data = Data()
+        do {
+            data = try getLogs()
+        } catch {
+            data.append("No logs available".data(using: .utf8, allowLossyConversion: false)!)
+        }
+
+        let wrapper = FileWrapper(regularFileWithContents: data)
+        let today = Date().getFormattedDate(format: "yyyy-MM-dd")
+        wrapper.preferredFilename = "libretransmitterlogs-\(today).txt"
+        return wrapper
+
+    }
 }
 
 

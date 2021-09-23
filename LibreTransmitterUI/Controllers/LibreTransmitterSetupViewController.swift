@@ -18,7 +18,7 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
     weak var cgmManagerOnboardingDelegate: CGMManagerOnboardingDelegate?
     weak var completionDelegate: CompletionDelegate?
 
-    fileprivate var logger = Logger.init(subsystem: "no.bjorninge.libre", category: "LibreTransmitterSetupViewController")
+    fileprivate var logger = Logger.init(subsystem: Features.logSubsystem, category: "LibreTransmitterSetupViewController")
 
     lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
  */

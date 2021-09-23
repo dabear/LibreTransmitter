@@ -14,6 +14,7 @@ import CoreNFC
 
 final class Features{
 
+    static var logSubsystem = "no.bjorninge.libre"
 
     static var phoneNFCAvailable: Bool {
         #if canImport(CoreNFC)
@@ -26,6 +27,13 @@ final class Features{
         #else
         return false
         #endif
+    }
+
+    static var supportsLogExport: Bool {
+        if #available(iOS 15, *) {
+            return true
+        }
+        return false
     }
 
 

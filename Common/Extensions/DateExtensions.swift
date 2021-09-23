@@ -44,6 +44,12 @@ public extension Date {
     static var LocaleWantsAMPM: Bool {
         DateFormatter.dateFormat(fromTemplate: "j", options: 0, locale: NSLocale.current)!.contains("a")
     }
+
+    func getFormattedDate(format: String) -> String {
+        let dateformat = DateFormatter()
+        dateformat.dateFormat = format
+        return dateformat.string(from: self)
+    }
 }
 
 extension DateComponents {

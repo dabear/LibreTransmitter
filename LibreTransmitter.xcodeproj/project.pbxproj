@@ -22,6 +22,9 @@
 		275EC993265AEE970043210E /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC992265AEE970043210E /* NumericTextField.swift */; };
 		275EC998265AF64E0043210E /* StatusMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC997265AF64E0043210E /* StatusMessage.swift */; };
 		275EC9AB265EDC280043210E /* GlucoseSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC9AA265EDC280043210E /* GlucoseSettingsView.swift */; };
+		2764E85F26FBB7DA0016A585 /* LogExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764E85E26FBB7DA0016A585 /* LogExport.swift */; };
+		2764E86026FC5BED0016A585 /* LogExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2764E85E26FBB7DA0016A585 /* LogExport.swift */; };
+		2764E86126FC6DC10016A585 /* Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73D26DCF83400E31BD9 /* Features.swift */; };
 		276EF5E7264B1FCE00571021 /* AlarmSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5E6264B1FCE00571021 /* AlarmSettingsView.swift */; };
 		276EF5ED2652F4BB00571021 /* EnumeratedForEach.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5EC2652F4BB00571021 /* EnumeratedForEach.swift */; };
 		276EF5F22652F84F00571021 /* HashableClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276EF5F12652F84F00571021 /* HashableClass.swift */; };
@@ -147,6 +150,7 @@
 		275EC992265AEE970043210E /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		275EC997265AF64E0043210E /* StatusMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMessage.swift; sourceTree = "<group>"; };
 		275EC9AA265EDC280043210E /* GlucoseSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlucoseSettingsView.swift; sourceTree = "<group>"; };
+		2764E85E26FBB7DA0016A585 /* LogExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExport.swift; sourceTree = "<group>"; };
 		276EF5E6264B1FCE00571021 /* AlarmSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSettingsView.swift; sourceTree = "<group>"; };
 		276EF5EC2652F4BB00571021 /* EnumeratedForEach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumeratedForEach.swift; sourceTree = "<group>"; };
 		276EF5F12652F84F00571021 /* HashableClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableClass.swift; sourceTree = "<group>"; };
@@ -440,6 +444,7 @@
 				27850CE325672C0C0020D109 /* UIApplication+metadata.swift */,
 				27850CE425672C0C0020D109 /* GlucoseSchedules.swift */,
 				27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */,
+				2764E85E26FBB7DA0016A585 /* LogExport.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -817,6 +822,7 @@
 				27850D1025672CA60020D109 /* LibreGlucose.swift in Sources */,
 				27850D9E25672F170020D109 /* UUIDContainer.swift in Sources */,
 				27850DCE25672F780020D109 /* SensorData.swift in Sources */,
+				2764E85F26FBB7DA0016A585 /* LogExport.swift in Sources */,
 				2746C73C26D91FC900E31BD9 /* Libre2DirectTransmitter.swift in Sources */,
 				27850CFB25672C0C0020D109 /* GlucoseSchedules.swift in Sources */,
 				27850D9125672F020020D109 /* CBPeripheralExtensions.swift in Sources */,
@@ -854,6 +860,7 @@
 				27DD8F26268FA75A00649010 /* SensorInfo.swift in Sources */,
 				27850DC425672F640020D109 /* GlucoseSmoothing.swift in Sources */,
 				27850DCF25672F780020D109 /* CRC.swift in Sources */,
+				2764E86126FC6DC10016A585 /* Features.swift in Sources */,
 				27ED67B82698EF38003E5DAB /* AlarmStatus.swift in Sources */,
 				27850CFD25672C0C0020D109 /* HKUnit.swift in Sources */,
 				27850CF925672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
@@ -894,6 +901,7 @@
 				277773AC2639EFB800431547 /* ErrorTextFieldStyle.swift in Sources */,
 				277773B62639F51300431547 /* CustomDataPickerView.swift in Sources */,
 				43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */,
+				2764E86026FC5BED0016A585 /* LogExport.swift in Sources */,
 				27850CFA25672C0C0020D109 /* UIApplication+metadata.swift in Sources */,
 				27850CF025672C0C0020D109 /* CollectionExtensions.swift in Sources */,
 				2746C74526DF636900E31BD9 /* SensorPairingService.swift in Sources */,
