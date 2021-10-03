@@ -17,6 +17,7 @@ struct BlueButtonStyle: ButtonStyle {
         .contentShape(Rectangle())
         .padding()
         .foregroundColor(configuration.isPressed ? Color.white.opacity(0.5) : Color.white)
+        .background(Color.blue)
         .listRowBackground(configuration.isPressed ? Color.blue.opacity(0.5) : Color.blue)
   }
 }

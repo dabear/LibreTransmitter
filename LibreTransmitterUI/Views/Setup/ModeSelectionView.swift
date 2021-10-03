@@ -46,10 +46,10 @@ struct ModeSelectionView: View {
     
     var body: some View {
         //no navview needed when embedded into a hostingcontroller
-        //NavigationView{
+        NavigationView{
         List {
             modeSelectSection
-        }
+        }}
         .listStyle(InsetGroupedListStyle())
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: cancelButton)

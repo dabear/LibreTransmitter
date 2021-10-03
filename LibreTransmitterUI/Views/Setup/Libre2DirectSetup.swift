@@ -150,7 +150,7 @@ struct Libre2DirectSetup: View {
         }
         .listStyle(InsetGroupedListStyle())
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: cancelButton)  // the pair button does the save process for us! //, trailing: saveButton)
+ //       .navigationBarItems(leading: cancelButton)  // the pair button does the save process for us! //, trailing: saveButton)
         .onReceive(service.publisher, perform: receivePairingInfo)
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))

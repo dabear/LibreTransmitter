@@ -325,7 +325,7 @@ struct BluetoothSelection: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: cancelButton, trailing: saveButton)
+ //       .navigationBarItems(leading: cancelButton, trailing: saveButton)
     }
 
     func receiveRSSI(_ rssi: RSSIInfo) {
