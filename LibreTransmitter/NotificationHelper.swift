@@ -257,6 +257,10 @@ public enum NotificationHelper {
 
             content.title = titles.joined(separator: " ")
             content.body = body.joined(separator: ", ") + body2s
+            
+            // add badge
+            content.badge = NSNumber(value: glucose.glucose)
+            
             addRequest(identifier: .glucocoseNotifications,
                        content: content,
                        deleteOld: true)
