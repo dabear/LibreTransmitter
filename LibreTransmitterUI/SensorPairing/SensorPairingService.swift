@@ -103,53 +103,49 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                                         return
                                     }
 
-                                    self.readRaw(0xF860, 43 * 8, tag: tag) { _, _, _ in
-                                        self.readRaw(0x1A00, 64, tag: tag) { _, _, _ in
-                                            self.readRaw(0xFFAC, 36, tag: tag) { _, _, _ in
-                                                let subCmd: Subcommand = .enableStreaming
-                                                let cmd = self.nfcCommand(subCmd, unlockCode: self.unlockCode, patchInfo: patchInfo, sensorUID: sensorUID)
 
-                                                tag.customCommand(requestFlags: .highDataRate, customCommandCode: Int(cmd.code), customRequestParameters: cmd.parameters) { response, error in
-                                                    var streamingEnabled = false
+                                    let subCmd: Subcommand = .enableStreaming
+                                    let cmd = self.nfcCommand(subCmd, unlockCode: self.unlockCode, patchInfo: patchInfo, sensorUID: sensorUID)
 
-                                                    if subCmd == .enableStreaming && response.count == 6 {
-                                                        streamingEnabled = true
-                                                    }
+                                    tag.customCommand(requestFlags: .highDataRate, customCommandCode: Int(cmd.code), customRequestParameters: cmd.parameters) { response, error in
+                                        var streamingEnabled = false
 
-                                                    session.invalidate()
+                                        if subCmd == .enableStreaming && response.count == 6 {
+                                            streamingEnabled = true
+                                        }
+
+                                        session.invalidate()
 
 
-                                                    let patchHex = patchInfo.hexEncodedString()
-                                                    let sensorType = SensorType(patchInfo: patchHex)
+                                        let patchHex = patchInfo.hexEncodedString()
+                                        let sensorType = SensorType(patchInfo: patchHex)
 
-                                                    print("got patchhex: \(patchHex) and sensorType: \(sensorType)")
-
-
-                                                    guard sensorUID.count == 8 && patchInfo.count == 6 && fram.count == 344 else {
-                                                        //self.readingsSubject.send(completion: .failure(LibreError.noSensorData))
-                                                        return
-                                                    }
+                                        print("got patchhex: \(patchHex) and sensorType: \(sensorType)")
 
 
-                                                    if let sensorType = sensorType {
-                                                        do {
-                                                            let decryptedBytes = try Libre2.decryptFRAM(type: sensorType, id: [UInt8](sensorUID), info: [UInt8](patchInfo), data: [UInt8](fram))
+                                        guard sensorUID.count == 8 && patchInfo.count == 6 && fram.count == 344 else {
+                                            //self.readingsSubject.send(completion: .failure(LibreError.noSensorData))
+                                            return
+                                        }
 
-                                                            self.sendUpdate(SensorPairingInfo(uuid: sensorUID, patchInfo: patchInfo, fram: Data(decryptedBytes), streamingEnabled: streamingEnabled))
 
-                                                            return
-                                                        } catch {
-                                                            print("problem decrypting")
-                                                        }
+                                        if let sensorType = sensorType {
+                                            do {
+                                                let decryptedBytes = try Libre2.decryptFRAM(type: sensorType, id: [UInt8](sensorUID), info: [UInt8](patchInfo), data: [UInt8](fram))
 
-                                                        self.sendUpdate(SensorPairingInfo(uuid: sensorUID, patchInfo: patchInfo, fram: fram, streamingEnabled: streamingEnabled))
+                                                self.sendUpdate(SensorPairingInfo(uuid: sensorUID, patchInfo: patchInfo, fram: Data(decryptedBytes), streamingEnabled: streamingEnabled))
 
-                                                    }
-                                                }
-
+                                                return
+                                            } catch {
+                                                print("problem decrypting")
                                             }
+
+                                            self.sendUpdate(SensorPairingInfo(uuid: sensorUID, patchInfo: patchInfo, fram: fram, streamingEnabled: streamingEnabled))
+
                                         }
                                     }
+
+
                                 }
                             }
                         }
