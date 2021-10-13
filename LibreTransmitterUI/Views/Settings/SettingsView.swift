@@ -136,8 +136,8 @@ struct SettingsView: View {
     }
 
 
-<<<<<<< HEAD
-    @State private var showingDestructQuestion = false
+
+    
 
     /*private var glucoseUnit: HKUnit {
         displayGlucoseUnitObservable.displayGlucoseUnit
