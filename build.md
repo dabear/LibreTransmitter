@@ -31,6 +31,7 @@ mv GlucoseFromRaw.swift ~/Code/LoopWorkspace/LibreTransmitter/LibreSensor/Glucos
 
 * Select the "Loop (Workspace)" scheme and then "Edit scheme.."
 * In the Build Dialog, make sure to add LibreTransmitterPlugin as a build target, and place it just before "ShareClientPlugin"
+* In Xcode 13 this can be accessed from the top menu `Product -> Scheme -> Edit Scheme`
 * it should look like this: ![CGMManager_swift](https://user-images.githubusercontent.com/442324/111884191-41775d80-89c0-11eb-8f8a-51290e85d9a5.jpg)
 
 ## Give Loop Extra background permissions
