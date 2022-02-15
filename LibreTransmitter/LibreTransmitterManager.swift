@@ -30,7 +30,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public var cgmManagerStatus: CGMManagerStatus {
-        CGMManagerStatus(hasValidSensorSession: hasValidSensorSession)
+        CGMManagerStatus(hasValidSensorSession: hasValidSensorSession, device: nil)
     }
 
     public var glucoseDisplay: GlucoseDisplayable?
@@ -456,13 +456,16 @@ extension LibreTransmitterManager {
         .filterDateRange(startDate, nil)
         .filter { $0.isStateValid }
         .compactMap {
-            return NewGlucoseSample(date: $0.startDate,
-                                    quantity: $0.quantity,
-                                    trend: nil, //loop only, not for freeapsx
-                         isDisplayOnly: false,
-                         wasUserEntered: false,
-                         syncIdentifier: $0.syncId,
-                         device: device)
+            return NewGlucoseSample(
+                date: $0.startDate,
+                quantity: $0.quantity,
+                condition: nil,
+                trend: nil,
+                trendRate: nil,
+                isDisplayOnly: false,
+                wasUserEntered: false,
+                syncIdentifier: $0.syncId,
+                device: device)
         }
 
     }

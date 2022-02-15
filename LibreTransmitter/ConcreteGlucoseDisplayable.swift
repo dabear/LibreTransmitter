@@ -20,4 +20,6 @@ public struct ConcreteGlucoseDisplayable: GlucoseDisplayable {
     public var isLocal: Bool
 
     public var batteries : [(name: String, percentage: Int)]?
+
+    public var trendRate: HKQuantity? { nil }
 }
