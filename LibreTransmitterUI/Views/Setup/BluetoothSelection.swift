@@ -233,9 +233,19 @@ struct BluetoothSelection: View {
             saveNotifier.notify()
             
 
-        }.disabled(selection.selectedStringIdentifier?.isEmpty ?? true)
+        }.disabled(shouldDisableSaveButton)
     }
 
+    var shouldDisableSaveButton : Bool {
+        #if targetEnvironment(simulator)
+            //simulator cannot use bluetooth and therefore cannot connect
+            //to a device. So to debug the ui we allow simulator to continue
+            return false
+        #else
+          // your real device code
+            return selection.selectedStringIdentifier?.isEmpty ?? true
+        #endif
+    }
 
     init(debugMode: Bool = false, cancelNotifier: GenericObservableObject, saveNotifier: GenericObservableObject) {
         self.debugMode = debugMode

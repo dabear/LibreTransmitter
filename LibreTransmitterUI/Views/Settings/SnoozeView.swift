@@ -125,10 +125,11 @@ struct SnoozeView: View {
 
     var body: some View {
         Form {
-            snoozeDesc
-
-            snoozePicker
-            snoozeButton
+            Section {
+                Text(snoozeDescription).lineLimit(nil)
+                snoozePicker
+                snoozeButton
+            }
         }
         .onAppear {
             snoozeDescription = getSnoozeDescription()
