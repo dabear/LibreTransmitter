@@ -124,16 +124,11 @@ struct SnoozeView: View {
     }
 
     var body: some View {
-        VStack {
-
-            snoozeButton
-            .frame( minHeight: 100, alignment: .top)
+        Form {
+            snoozeDesc
 
             snoozePicker
-            .frame(minHeight: 150, maxHeight: 500, alignment: .center)
-
-            snoozeDesc
-            .frame( minHeight: 100, alignment: .bottom)
+            snoozeButton
         }
         .onAppear {
             snoozeDescription = getSnoozeDescription()

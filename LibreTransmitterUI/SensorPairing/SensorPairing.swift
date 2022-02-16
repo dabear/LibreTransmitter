@@ -6,7 +6,6 @@
 //
 import Foundation
 import Combine
-import CoreNFC
 import LibreTransmitter
 
 class SensorPairingInfo : ObservableObject {

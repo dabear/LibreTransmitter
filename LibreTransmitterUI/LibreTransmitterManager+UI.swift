@@ -48,6 +48,7 @@ extension LibreTransmitterManager: CGMManagerUI {
             self?.logger.debug("CGM wants to terminate")
             self?.disconnect()
 
+            UserDefaults.standard.preSelectedDevice = nil
             self?.notifyDelegateOfDeletion {
                 DispatchQueue.main.async {
                     nav?.notifyComplete()

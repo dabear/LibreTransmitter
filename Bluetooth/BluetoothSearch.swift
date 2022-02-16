@@ -116,14 +116,9 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         if centralManager.state == .poweredOn && !centralManager.isScanning {
             logger.debug("Before scan for transmitter while central manager state \(String(describing: self.centralManager.state.rawValue))")
 
-            let allServices : [CBUUID] = LibreTransmitters.all.compactMap { atype in
-                atype.serviceUUID.first?.value
-            }
 
-
-            logger.debug("Will scan for the following services: \(String(describing: allServices))")
-
-            centralManager.scanForPeripherals(withServices: allServices, options: nil)
+            // nil because mioamiao1 not advertising its services
+            centralManager.scanForPeripherals(withServices: nil, options:nil)
 
 
             // Ugly hack to be able to update rssi continously without connecting to peripheral

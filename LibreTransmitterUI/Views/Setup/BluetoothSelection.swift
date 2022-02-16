@@ -233,7 +233,7 @@ struct BluetoothSelection: View {
             saveNotifier.notify()
             
 
-        }//.accentColor(.red)
+        }.disabled(selection.selectedStringIdentifier?.isEmpty ?? true)
     }
 
 
