@@ -51,9 +51,15 @@ struct GlucoseSettingsView: View {
             }
             Section(header: Text("Remote data storage")) {
                 Toggle("Upload to nightscout", isOn:$mmSyncToNS)
+
             }
             Section(header: Text("Debug options"), footer: Text("Adds a lot of data to the Issue Report ")) {
                 Toggle("Persist sensordata", isOn:$shouldPersistSensorData)
+                    .onChange(of: shouldPersistSensorData) {newValue in
+                        if !newValue {
+                            UserDefaults.standard.queuedSensorData = nil
+                        }
+                    }
             }
 
         }
