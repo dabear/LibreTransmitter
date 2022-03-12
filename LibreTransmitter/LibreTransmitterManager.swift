@@ -117,6 +117,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             "Sensor state: \(sensorStateDescription)",
             "transmitterbattery: \(batteryString)",
             "SensorData: \(getPersistedSensorDataForDebug())",
+            "providesBLEHeartbeat: \(providesBLEHeartbeat)",
             "Metainfo::\n\(AppMetaData.allProperties)",
             ""
         ].joined(separator: "\n")
