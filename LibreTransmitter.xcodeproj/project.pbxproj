@@ -647,9 +647,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43A8EC87210E664300A81379 /* Build configuration list for PBXNativeTarget "LibreTransmitterUI" */;
 			buildPhases = (
+				43A8EC7F210E664300A81379 /* Headers */,
 				43A8EC7D210E664300A81379 /* Sources */,
 				43A8EC7E210E664300A81379 /* Frameworks */,
-				43A8EC7F210E664300A81379 /* Headers */,
 				43A8EC80210E664300A81379 /* Resources */,
 			);
 			buildRules = (
