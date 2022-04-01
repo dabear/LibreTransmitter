@@ -185,6 +185,9 @@ public enum NotificationHelper {
     private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false) {
         let center = UNUserNotificationCenter.current()
         //content.sound = UNNotificationSound.
+        if #available(iOSApplicationExtension 15.0, *) {
+            content.interruptionLevel = .timeSensitive
+        }
         let request = UNNotificationRequest(identifier: identifier.rawValue, content: content, trigger: nil)
 
         if deleteOld {
