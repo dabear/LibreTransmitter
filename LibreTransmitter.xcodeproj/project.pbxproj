@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		270C1429266047490063405B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C1428266047490063405B /* NotificationSettingsView.swift */; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
+		273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
 		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
@@ -293,6 +294,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -629,9 +631,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 432B0E9C1CDFC3C50045347B /* Build configuration list for PBXNativeTarget "LibreTransmitter" */;
 			buildPhases = (
-				432B0E851CDFC3C50045347B /* Headers */,
 				432B0E831CDFC3C50045347B /* Sources */,
 				432B0E841CDFC3C50045347B /* Frameworks */,
+				432B0E851CDFC3C50045347B /* Headers */,
 				432B0E861CDFC3C50045347B /* Resources */,
 			);
 			buildRules = (
@@ -669,6 +671,7 @@
 				B40BF25A23ABD47400A43CEE /* Sources */,
 				B40BF25B23ABD47400A43CEE /* Frameworks */,
 				B40BF25C23ABD47400A43CEE /* Resources */,
+				273BFDCC25ACA9D00042E1EC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -687,7 +690,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Mark Wilson";
 				TargetAttributes = {
 					432B0E871CDFC3C50045347B = {
@@ -784,6 +787,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		273BFDCC25ACA9D00042E1EC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/LibreTransmitter.framework/LibreTransmitter",
+				"$(BUILT_PRODUCTS_DIR)/LibreTransmitterUI.framework/LibreTransmitterUI",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		432B0E831CDFC3C50045347B /* Sources */ = {
@@ -983,7 +1008,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1053,7 +1077,6 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
