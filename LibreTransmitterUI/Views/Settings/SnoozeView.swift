@@ -16,7 +16,7 @@ struct SnoozeView: View {
 
     })()
 
-    var formatter : DateComponentsFormatter = ({
+    var formatter: DateComponentsFormatter = ({
         var f = DateComponentsFormatter()
         f.allowsFractionalUnits = false
         f.unitsStyle = .full
@@ -28,11 +28,8 @@ struct SnoozeView: View {
         formatter.string(from: interval)!
     }
 
-
-
-    @Binding var isAlarming : Bool
+    @Binding var isAlarming: Bool
     @Binding var activeAlarms: LibreTransmitter.GlucoseScheduleAlarmResult
-
 
     static func pickerTimesArray() -> [TimeInterval] {
         var arr  = [TimeInterval]()
@@ -40,7 +37,7 @@ struct SnoozeView: View {
         let mins10 = 0.166_67
         let mins20 = mins10 * 2
         let mins30 = mins10 * 3
-        //let mins40 = mins10 * 4
+        // let mins40 = mins10 * 4
 
         for hr in 0..<2 {
             for min in [0.0, mins20, mins20 * 2] {

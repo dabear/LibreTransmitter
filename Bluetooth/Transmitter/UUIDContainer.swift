@@ -18,4 +18,3 @@ public struct UUIDContainer: ExpressibleByStringLiteral {
         self.value = CBUUID(string: value)
     }
 }
-

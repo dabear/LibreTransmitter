@@ -12,7 +12,7 @@ import Foundation
 /// To be initialized with the bytes as read via nfc. Provides all derived data.
 public struct SensorData: Codable {
     /// Parameters for the temperature compensation algorithm
-    //let temperatureAlgorithmParameterSet: TemperatureAlgorithmParameters?
+    // let temperatureAlgorithmParameterSet: TemperatureAlgorithmParameters?
 
     private let headerRange = 0..<24   //  24 bytes, i.e.  3 blocks a 8 bytes
     private let bodyRange = 24..<320  // 296 bytes, i.e. 37 blocks a 8 bytes
@@ -82,7 +82,7 @@ public struct SensorData: Codable {
        maxMinutesWearTime - minutesSinceStart
     }
 
-    //once the sensor has ended we don't know the exact date anymore
+    // once the sensor has ended we don't know the exact date anymore
     var sensorEndTime: Date? {
         if minutesLeft <= 0 {
             return nil
@@ -96,7 +96,7 @@ public struct SensorData: Codable {
         SensorState(stateByte: header[4])
     }
 
-    //all libre1 and 2 sensors will pass this, once decrypted
+    // all libre1 and 2 sensors will pass this, once decrypted
     var isLikelyLibre1FRAM: Bool {
         if bytes.count > 23 {
             let subset = bytes[9...23]
@@ -116,7 +116,7 @@ public struct SensorData: Codable {
             return
         }
 
-        //var decrypted2 = Libre2.decryptFRAM(sensorId: uid, sensorInfo: [UInt8](info), FRAMData: self.bytes)
+        // var decrypted2 = Libre2.decryptFRAM(sensorId: uid, sensorInfo: [UInt8](info), FRAMData: self.bytes)
 
         do {
             self.bytes = try Libre2.decryptFRAM(type: sensorType, id: uid, info: [UInt8](info), data: self.bytes)
@@ -135,7 +135,7 @@ public struct SensorData: Codable {
         case isValidForFooterWithReverseCRCs
 
     }
-    
+
     public class CalibrationInfo: Codable, CustomStringConvertible, ObservableObject {
         public required init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CalibrationInfoCodingKeys.self)
@@ -182,7 +182,7 @@ public struct SensorData: Codable {
       }
     }
 
-    //static func readBits(_ buffer: [UInt8], _ byteOffset: Int, _ bitOffset: Int, _ bitCount: Int) -> Int {
+    // static func readBits(_ buffer: [UInt8], _ byteOffset: Int, _ bitOffset: Int, _ bitCount: Int) -> Int {
 
     public var calibrationData: CalibrationInfo {
         let data = self.bytes
@@ -197,7 +197,7 @@ public struct SensorData: Codable {
         return CalibrationInfo(i1: i1, i2: i2, i3: negativei3 ? -i3 : i3, i4: i4, i5: i5, i6: i6, isValidForFooterWithReverseCRCs: Int(self.footerCrc.byteSwapped))
     }
 
-    fileprivate let aday = 86_400.0 //in seconds
+    fileprivate let aday = 86_400.0 // in seconds
 
     var humanReadableSensorAge: String {
         let days = TimeInterval(minutesSinceStart * 60) / aday
@@ -339,7 +339,9 @@ public struct SensorData: Codable {
 //            let measurementDate = dateOfMostRecentHistoryValue().addingTimeInterval(Double(-900 * blockIndex)) // 900 = 60 * 15
 //            let measurement = Measurement(bytes: measurementBytes, slope: slope, offset: offset, date: measurementDate)
             let (date, counter) = dateOfMostRecentHistoryValue()
-            let measurement = Measurement(bytes: measurementBytes, slope: slope, offset: offset, counter: counter - blockIndex * 15, date: date.addingTimeInterval(Double(-900 * blockIndex))) // 900 = 60 * 15
+            let measurement = Measurement(bytes: measurementBytes, slope: slope,
+                                          offset: offset, counter: counter - blockIndex * 15,
+                                          date: date.addingTimeInterval(Double(-900 * blockIndex))) // 900 = 60 * 15
 
             measurements.append(measurement)
         }
@@ -358,12 +360,7 @@ public struct SensorData: Codable {
         Crc.bytesWithCorrectCRC(header) + Crc.bytesWithCorrectCRC(body) + Crc.bytesWithCorrectCRC(footer)
     }
 
-
-
-
 }
-
-
 
 extension SensorData {
     /// Reads Libredata in bits converts and the result to int
@@ -428,8 +425,7 @@ public extension SensorData {
 
     internal func predictBloodSugar(_ minutes: Double = 10) -> Measurement? {
 
-        let trends = self.trendMeasurements()//.filter { !$0.error.contains(.SENSOR_SIGNAL_LOW)}
-
+        let trends = self.trendMeasurements()// .filter { !$0.error.contains(.SENSOR_SIGNAL_LOW)}
 
         guard trends.count > 15 else {
             return trends.first
@@ -439,14 +435,13 @@ public extension SensorData {
             return nil
         }
 
-        let sorted = trends.sorted{ $0.date < $1.date}
+        let sorted = trends.sorted { $0.date < $1.date}
 
-        //keep the recent raw temperatures, we don't want to apply linear regression to them
+        // keep the recent raw temperatures, we don't want to apply linear regression to them
         let mostRecentTemperature = mostRecent.rawTemperature
         let mostRecentAdjustment = mostRecent.rawTemperatureAdjustment
         let mostRecentDate = mostRecent.date
         let futureDate = mostRecentDate.addingTimeInterval(60*minutes)
-
 
         var glucoseAge = sorted.compactMap { measurement in
             Double(measurement.date.timeIntervalSince1970)
@@ -463,7 +458,6 @@ public extension SensorData {
                                    rawTemperature: mostRecentTemperature,
                                    rawTemperatureAdjustment: mostRecentAdjustment)
         return predicted
-
 
     }
 }

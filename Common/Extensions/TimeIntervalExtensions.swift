@@ -22,7 +22,7 @@ extension TimeInterval {
     }
 
     init(minutes: Double) {
-        //self.init(minutes * 60)
+        // self.init(minutes * 60)
         let m = minutes * 60
         self.init(m)
     }

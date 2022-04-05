@@ -9,15 +9,14 @@
 import Foundation
 import Combine
 
-class GenericObservableObject : ObservableObject {
+class GenericObservableObject: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
-
-    func notify(){
+    func notify() {
         objectWillChange.send()
     }
 
-    @discardableResult func listenOnce(listener: @escaping () -> Void) -> Self{
+    @discardableResult func listenOnce(listener: @escaping () -> Void) -> Self {
         objectWillChange
         .sink {  [weak self]_ in
             listener()

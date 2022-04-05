@@ -50,10 +50,10 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
 
 extension String {
     //https://stackoverflow.com/questions/39677330/how-does-string-substring-work-in-swift
-    //usage
-    //let s = "hello"
-    //s[0..<3] // "hel"
-    //s[3..<s.count] // "lo"
+    // usage
+    // let s = "hello"
+    // s[0..<3] // "hel"
+    // s[3..<s.count] // "lo"
     subscript(_ range: CountableRange<Int>) -> String {
         let idx1 = index(startIndex, offsetBy: max(0, range.lowerBound))
         let idx2 = index(startIndex, offsetBy: min(self.count, range.upperBound))
@@ -62,7 +62,7 @@ extension String {
 
     func hexadecimal() -> Data? {
         var data = Data(capacity: count / 2)
-
+        // swiftlint:disable:next force_try
         let regex = try! NSRegularExpression(pattern: "[0-9a-f]{1,2}", options: .caseInsensitive)
         regex.enumerateMatches(in: self, range: NSRange(startIndex..., in: self)) { match, _, _ in
             let byteString = (self as NSString).substring(with: match!.range)

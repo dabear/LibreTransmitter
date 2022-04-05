@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-private struct ErrorTextFieldStyle : TextFieldStyle {
+private struct ErrorTextFieldStyle: TextFieldStyle {
     public func _body(configuration: TextField<Self._Label>) -> some View {
         configuration
             .background(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .stroke(Color.red,  lineWidth: 3))
+                                .stroke(Color.red, lineWidth: 3))
     }
 }

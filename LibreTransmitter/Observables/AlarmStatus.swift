@@ -7,7 +7,7 @@
 //
 
 import Foundation
-public class AlarmStatus : ObservableObject , Equatable, Hashable{
+public class AlarmStatus: ObservableObject, Equatable, Hashable {
     @Published public var isAlarming = false
     @Published public var glucoseScheduleAlarmResult = GlucoseScheduleAlarmResult.none
 
@@ -15,7 +15,7 @@ public class AlarmStatus : ObservableObject , Equatable, Hashable{
          lhs.isAlarming == rhs.isAlarming && lhs.glucoseScheduleAlarmResult == rhs.glucoseScheduleAlarmResult
     }
 
-    static public func createNew() -> AlarmStatus{
+    static public func createNew() -> AlarmStatus {
         AlarmStatus()
     }
 }

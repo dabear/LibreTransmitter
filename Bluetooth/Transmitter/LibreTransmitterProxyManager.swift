@@ -49,8 +49,6 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-
-
     func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {
         dispatchToDelegate { manager in
             manager.delegate?.libreManagerDidRestoreState(found: peripherals, connected: to)
@@ -91,13 +89,13 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     // MARK: - Properties
     private var wantsToTerminate = false
-    //private var lastConnectedIdentifier : String?
+    // private var lastConnectedIdentifier : String?
 
-    var activePlugin: LibreTransmitterProxyProtocol? = nil {
+    var activePlugin: LibreTransmitterProxyProtocol? {
         didSet {
 
             logger.debug("dabear:: activePlugin changed from \(oldValue.debugDescription) to \(self.activePlugin.debugDescription)")
-            
+
         }
     }
 
@@ -108,7 +106,6 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     var shortTransmitterName: String? {
         activePluginType?.shortTransmitterName
     }
-
 
     fileprivate lazy var logger = Logger(forType: Self.self)
     var metadata: LibreTransmitterMetadata?
@@ -190,7 +187,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         let scanForAllServices = false
 
-        //this will search for all peripherals. Guaranteed to work
+        // this will search for all peripherals. Guaranteed to work
         if scanForAllServices {
 
             logger.debug("Scanning for all services:")
@@ -230,8 +227,8 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             peripheral.delegate = self
 
             if activePlugin?.canSupportPeripheral(peripheral) == true {
-                //when reaching this part,
-                //we are sure the peripheral is reconnecting and therefore needs reset
+                // when reaching this part,
+                // we are sure the peripheral is reconnecting and therefore needs reset
 
                 logger.debug("Connecting to known device with known plugin")
 
@@ -244,7 +241,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
                 logger.debug("Connecting to new device with known plugin")
 
-                //only connect to devices we can support (i.e. devices that has a suitable plugin)
+                // only connect to devices we can support (i.e. devices that has a suitable plugin)
                 centralManager.connect(peripheral, options: nil)
                 state = .Connecting
             } else {
@@ -309,8 +306,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
             logger.debug("Central Manager was powered on")
 
-
-            //not sure if needed, but can be helpful when state is restored
+            // not sure if needed, but can be helpful when state is restored
             if let peripheral = peripheral, delegate != nil {
                 // do not scan if already connected
                 switch peripheral.state {
@@ -326,7 +322,6 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                     if self.activePlugin == nil || self.activePlugin?.canSupportPeripheral(peripheral) == false {
                         let plugin = LibreTransmitters.getSupportedPlugins(peripheral)?.first
                         self.activePlugin = plugin?.init(delegate: self, advertisementData: nil)
-
 
                         logger.debug("Central Manager was powered on, peripheral state is connected/connecting, stopping scan")
                         if central.isScanning && peripheral.state == .connected {
@@ -350,7 +345,6 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                 }
             } else {
 
-
                 if let preselected = UserDefaults.standard.preSelectedDevice,
                    let uuid = UUID(uuidString: preselected),
                    let newPeripheral = centralManager.retrievePeripherals(withIdentifiers: [uuid]).first,
@@ -368,12 +362,11 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                     }
 
                 } else {
-                    //state should be nassigned here
+                    // state should be nassigned here
                     logger.debug("Central Manager was powered on, scanningfordevice: \(String(describing: self.state))")
                     scanForDevices() // power was switched on, while app is running -> reconnect.
 
                 }
-
 
             }
         @unknown default:
@@ -384,7 +377,6 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     func centralManager(_ central: CBCentralManager, willRestoreState dict: [String: Any]) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Central Manager will restore state to \(String(describing: dict.debugDescription))")
-
 
         guard self.peripheral == nil else {
             logger.debug("Central Manager tried to restore state while already connected")
@@ -425,12 +417,12 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             state = .Connecting
         case .connected:
             logger.debug("Central Manager tried to restore state from connected peripheral, letting centralManagerDidUpdateState() do the rest of the job")
-            //the idea here is to let centralManagerDidUpdateState() do the heavy lifting
+            // the idea here is to let centralManagerDidUpdateState() do the heavy lifting
             // after all, we did assign the periheral.delegate to self earlier
 
-            //that means the following is not necessary:
-            //state = .Connected
-            //peripheral.discoverServices(serviceUUIDs) // good practice to just discover the services, needed
+            // that means the following is not necessary:
+            // state = .Connected
+            // peripheral.discoverServices(serviceUUIDs) // good practice to just discover the services, needed
         @unknown default:
             fatalError("Failed due to unkown default, Uwe!")
         }
@@ -441,12 +433,11 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         logger.debug("Did discover peripheral while state \(String(describing: self.state.rawValue)) with name: \(String(describing: peripheral.name)), wantstoterminate?: \(self.wantsToTerminate)")
 
-
         // Libre2:
         // during setup, we find the uid by scanning via nfc
         // first time connecting to a libre2 sensor via bluetooth we don't know its peripheral identifier
         // but since the uid is also part of the libre 2bluetooth advertismentdata we trade uid for
-        
+
          if let selectedUid = UserDefaults.standard.preSelectedUid {
             logger.debug("Was asked to connect preselected libre2 by uid: \(selectedUid.hex), discovered devicename is: \(String(describing: peripheral.name))")
 
@@ -465,7 +456,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                 return
             }
 
-            //next time we search via bluetooth, let's identify the sensor with its bluetooth identifier
+            // next time we search via bluetooth, let's identify the sensor with its bluetooth identifier
             UserDefaults.standard.preSelectedUid = nil
             UserDefaults.standard.preSelectedDevice = peripheral.identifier.uuidString
 
@@ -475,7 +466,6 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             self.peripheral = peripheral
 
             self.connect(force: true, advertisementData: advertisementData)
-
 
             return
 
@@ -488,7 +478,12 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
                 self.connect(force: true, advertisementData: advertisementData)
             } else {
-                logger.info("Did not connect to \(String(describing: peripheral.name)) with identifier \(String(describing: peripheral.identifier.uuidString)), because another device with identifier \(preselected) was selected")
+                logger.info(
+                """
+                Did not connect to \(String(describing: peripheral.name)),
+                with identifier \(String(describing: peripheral.identifier.uuidString)),
+                because another device with identifier \(preselected) was selected
+                """)
             }
 
             return
@@ -505,7 +500,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             central.stopScan()
         }
         state = .Connected
-        //self.lastConnectedIdentifier = peripheral.identifier.uuidString
+        // self.lastConnectedIdentifier = peripheral.identifier.uuidString
         // Discover all Services. This might be helpful if writing is needed some time
         peripheral.discoverServices(serviceUUIDs)
     }
@@ -595,23 +590,18 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic characteristic: CBCharacteristic){
-
+    func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic characteristic: CBCharacteristic) {
 
         logger.debug("Did discover characteristic: \(String(describing: characteristic.debugDescription)) and asking activeplugin to handle it as a notification Characteristic")
 
         self.activePlugin?.didDiscoverNotificationCharacteristic(peripheral, notifyCharacteristic: characteristic)
 
-
-
-
     }
 
-    func didDiscoverWriteCharacteristic(_ peripheral: CBPeripheral, writeCharacteristic characteristic: CBCharacteristic){
+    func didDiscoverWriteCharacteristic(_ peripheral: CBPeripheral, writeCharacteristic characteristic: CBCharacteristic) {
         writeCharacteristic = characteristic
         logger.debug("Did discover characteristic: \(String(describing: characteristic.debugDescription)) and asking activeplugin to handle it as a write Characteristic")
         self.activePlugin?.didDiscoverWriteCharacteristics(peripheral, writeCharacteristics: characteristic)
-
 
     }
 
@@ -718,7 +708,7 @@ extension LibreTransmitterProxyManager {
         HKDevice(
             name: "MiaomiaoClient",
             manufacturer: manufacturer,
-            model: nil, //latestSpikeCollector,
+            model: nil, // latestSpikeCollector,
             hardwareVersion: self.metadata?.hardware ,
             firmwareVersion: self.metadata?.firmware,
             softwareVersion: nil,

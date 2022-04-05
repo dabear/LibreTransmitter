@@ -21,6 +21,5 @@ struct BlueButtonStyle: ButtonStyle {
           .background(configuration.isPressed ? Color.blue.opacity(0.5) : Color.blue)
           .cornerRadius(10)
 
-
   }
 }

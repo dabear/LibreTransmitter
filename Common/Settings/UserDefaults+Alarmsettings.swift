@@ -18,7 +18,7 @@ extension UserDefaults {
         case mmGlucoseAlarmsVibrate = "no.bjorninge.mmGlucoseAlarmsVibrate"
         case mmAlertLowBatteryWarning = "no.bjorninge.mmLowBatteryWarning"
         case mmAlertInvalidSensorDetected = "no.bjorninge.mmInvalidSensorDetected"
-        //case mmAlertalarmNotifications
+        // case mmAlertalarmNotifications
         case mmAlertNewSensorDetected = "no.bjorninge.mmNewSensorDetected"
         case mmAlertNoSensorDetected = "no.bjorninge.mmNoSensorDetected"
         case mmGlucoseUnit = "no.bjorninge.mmGlucoseUnit"
@@ -133,7 +133,10 @@ extension UserDefaults {
     }
 
     var allNotificationToggles: [Bool] {
-        [mmAlwaysDisplayGlucose, mmAlertLowBatteryWarning, mmAlertInvalidSensorDetected, mmAlertNewSensorDetected, mmAlertNoSensorDetected, mmAlertWillSoonExpire, mmGlucoseAlarmsVibrate, mmShowPhoneBattery, mmShowTransmitterBattery]
+        [mmAlwaysDisplayGlucose, mmAlertLowBatteryWarning,
+         mmAlertInvalidSensorDetected, mmAlertNewSensorDetected,
+         mmAlertNoSensorDetected, mmAlertWillSoonExpire,
+         mmGlucoseAlarmsVibrate, mmShowPhoneBattery, mmShowTransmitterBattery]
     }
 
     var dangerModeActivated: Bool {
@@ -145,7 +148,7 @@ extension UserDefaults {
         }
     }
 
-    //intentionally only supports mgdl and mmol
+    // intentionally only supports mgdl and mmol
     var mmGlucoseUnit: HKUnit? {
         get {
             if let textUnit = string(forKey: Key.mmGlucoseUnit.rawValue) {

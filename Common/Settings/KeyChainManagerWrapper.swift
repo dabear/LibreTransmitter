@@ -9,7 +9,6 @@
 import Foundation
 import Security
 
-
 public enum KeychainManagerError: Error {
     case add(OSStatus)
     case copy(OSStatus)
@@ -17,11 +16,11 @@ public enum KeychainManagerError: Error {
     case unknownResult
 }
 
-
 /**
 
  Influenced by https://github.com/marketplacer/keychain-swift
  */
+// swiftlint:disable force_cast
 public struct KeychainManagerWrapper {
     typealias Query = [String: NSObject]
 
@@ -56,9 +55,6 @@ public struct KeychainManagerWrapper {
 
         return query
     }
-
-
-
 
     private func queryForInternetPassword(account: String? = nil, url: URL? = nil, label: String? = nil) -> Query {
         var query = self.query(by: kSecClassInternetPassword)
@@ -105,9 +101,7 @@ public struct KeychainManagerWrapper {
         }
     }
 
-
-
-    // MARK – Internet Passwords
+    // MARK: – Internet Passwords
 
     public func setInternetPassword(_ password: String, account: String, atURL url: URL, label: String? = nil) throws {
         var query = try updatedQuery(queryForInternetPassword(account: account, url: url, label: label), withPassword: password)
@@ -130,7 +124,6 @@ public struct KeychainManagerWrapper {
             throw KeychainManagerError.add(statusCode)
         }
     }
-
 
     public func replaceInternetCredentials(_ credentials: InternetCredentials?, forLabel label: String) throws {
         let query = queryForInternetPassword(label: label)
@@ -160,15 +153,13 @@ public struct KeychainManagerWrapper {
         if  let result = result as? [AnyHashable: Any], let passwordData = result[kSecValueData as String] as? Data,
             let password = String(data: passwordData, encoding: String.Encoding.utf8),
             let url = URLComponents(keychainAttributes: result)?.url,
-            let username = result[kSecAttrAccount as String] as? String
-        {
+            let username = result[kSecAttrAccount as String] as? String {
             return InternetCredentials(username: username, password: password, url: url)
         }
 
         throw KeychainManagerError.unknownResult
     }
 }
-
 
 private enum SecurityProtocol {
     case http
@@ -213,7 +204,6 @@ private enum SecurityProtocol {
         }
     }
 }
-
 
 private extension URLComponents {
     init?(keychainAttributes: [AnyHashable: Any]) {

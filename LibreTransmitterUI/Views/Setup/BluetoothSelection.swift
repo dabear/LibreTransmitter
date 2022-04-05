@@ -19,7 +19,7 @@ private struct Defaults {
 
 //https://www.objc.io/blog/2020/02/18/a-signal-strength-indicator/
 struct SignalStrengthIndicator: View {
-    @Binding var bars : Int
+    @Binding var bars: Int
     var totalBars: Int = 5
     var body: some View {
         HStack {
@@ -46,8 +46,6 @@ struct Divided<S: Shape>: Shape {
     }
 }
 
-
-
 private struct ListFooter: View {
     var devicesCount = 0
     var body: some View {
@@ -62,7 +60,7 @@ private struct DeviceItem: View {
     var details2: String?
     var details3: String?
 
-    var requiresPhoneNFC : Bool
+    var requiresPhoneNFC: Bool
     var requiresSetup: Bool
 
     @State private var presentableStatus: StatusMessage?
@@ -106,10 +104,8 @@ private struct DeviceItem: View {
 
     @State var isShowingSetup = false
 
-
-
     var body : some View {
-        //todo: make a generic setup protocol and views, but we don't plan to support other
+        // todo: make a generic setup protocol and views, but we don't plan to support other
         // sensors than the libre2 directly via bluetooth.
         /*if requiresSetup {
             NavigationLink(destination: Libre2DirectSetup(device: device), isActive: $isShowingSetup) {
@@ -119,7 +115,7 @@ private struct DeviceItem: View {
         } else {
             list
         } */
-        //we hide libre2 devices from this view, because we have a new parentview (modeselection) that calls Libre2DirectSetup() directly
+        // we hide libre2 devices from this view, because we have a new parentview (modeselection) that calls Libre2DirectSetup() directly
         if !requiresSetup {
             list
         }
@@ -140,7 +136,6 @@ private struct DeviceItem: View {
                     Text("\(details3)")
                 }
 
-
             }
             Spacer()
             VStack(alignment: .center, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, content: {
@@ -150,17 +145,16 @@ private struct DeviceItem: View {
                 }
             })
 
-
         }
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
         .listRowBackground(getRowBackground(device: device))
         .onTapGesture {
             print("dabear:: tapped \(device.asStringIdentifier)")
 
             if requiresPhoneNFC && !Features.phoneNFCAvailable {
-                //cannot select, show gui somehow
+                // cannot select, show gui somehow
                 presentableStatus = StatusMessage(title: "Not availble", message: "The device selected is not available due to lack of NFC support on your phone")
                 isShowingSetup = false
                 print("dabear:: tapped  \(device.asStringIdentifier) but it requires nfc, not available")
@@ -184,8 +178,7 @@ private struct DeviceItem: View {
 class SelectionState: ObservableObject {
     @Published var selectedStringIdentifier: String? = ""
 
-    @Published var selectedUID: Data? = nil
-
+    @Published var selectedUID: Data?
 
     static var shared = SelectionState()
 }
@@ -198,8 +191,6 @@ struct BluetoothSelection: View {
     public func getNewDeviceId () -> String? {
         selection.selectedStringIdentifier
     }
-
-
 
     private var searcher: BluetoothSearchManager!
 
@@ -218,28 +209,26 @@ struct BluetoothSelection: View {
     var nullPubliser: Empty<CBPeripheral, Never>!
     var debugMode = false
 
-
     var cancelButton: some View {
-        Button("Cancel"){
+        Button("Cancel") {
             print("cancel button pressed")
             cancelNotifier.notify()
 
-        }//.accentColor(.red)
+        }// .accentColor(.red)
     }
 
     var saveButton: some View {
-        Button("Save"){
+        Button("Save") {
             print("Save button pressed")
             saveNotifier.notify()
-            
 
         }.disabled(shouldDisableSaveButton)
     }
 
-    var shouldDisableSaveButton : Bool {
+    var shouldDisableSaveButton: Bool {
         #if targetEnvironment(simulator)
-            //simulator cannot use bluetooth and therefore cannot connect
-            //to a device. So to debug the ui we allow simulator to continue
+            // simulator cannot use bluetooth and therefore cannot connect
+            // to a device. So to debug the ui we allow simulator to continue
             return false
         #else
           // your real device code
@@ -260,11 +249,8 @@ struct BluetoothSelection: View {
             self.searcher = BluetoothSearchManager()
         }
 
-
-
         LibreTransmitter.NotificationHelper.requestNotificationPermissionsIfNeeded()
 
-       
     }
 
     public mutating func stopScan(_ removeSearcher: Bool = false) {
@@ -294,21 +280,19 @@ struct BluetoothSelection: View {
                     if debugMode {
                         let randomRSSI = RSSIInfo(bledeviceID: device.asStringIdentifier, signalStrength: -90 + (1...70).randomElement()!)
                         let requiresPhoneNFC = Bool.random()
-                        DeviceItem(device: device, requiresSetup: false, requiresPhoneNFC: requiresPhoneNFC,  details: "mockdatamockdata mockdata mockdata\nmockdata2 nmockdata2", rssi: .constant(randomRSSI))
+                        DeviceItem(device: device, requiresSetup: false, requiresPhoneNFC: requiresPhoneNFC, details: "mockdatamockdata mockdata mockdata\nmockdata2 nmockdata2", rssi: .constant(randomRSSI))
                     } else {
                         let requiresPhoneNFC = deviceRequiresPhoneNFC[device.asStringIdentifier, default: false]
 
                         let requiresSetup = deviceRequiresSetup[device.asStringIdentifier, default: false]
                         let rssigetter = Binding<RSSIInfo?>(get: {
                             rssi[device.asStringIdentifier]
-                        }, set: { newVal in
-                        //not ever needed
+                        }, set: { _ in
+                        // not ever needed
                         })
 
-                        DeviceItem(device: device, requiresSetup: requiresSetup, requiresPhoneNFC: requiresPhoneNFC , details: deviceDetails[device.asStringIdentifier]!, rssi: rssigetter)
+                        DeviceItem(device: device, requiresSetup: requiresSetup, requiresPhoneNFC: requiresPhoneNFC, details: deviceDetails[device.asStringIdentifier]!, rssi: rssigetter)
                     }
-
-
 
                 }
             }
@@ -317,7 +301,7 @@ struct BluetoothSelection: View {
             }
         }
         .onAppear {
-            //devices = Self.getMockData()
+            // devices = Self.getMockData()
             if debugMode {
                 allDevices = Self.getMockData()
             } else {
@@ -331,7 +315,6 @@ struct BluetoothSelection: View {
                 self.searcher?.stopTimer()
                 self.searcher?.disconnectManually()
 
-                
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -345,14 +328,12 @@ struct BluetoothSelection: View {
 
     }
 
-    
-
     var body: some View {
         if debugMode {
             list
                 .onReceive(nullPubliser) { _ in
                     print("nullpublisher received element!?")
-                    //allDevices.append(SomePeripheral.Left(device))
+                    // allDevices.append(SomePeripheral.Left(device))
                 }
         } else {
             list
@@ -375,19 +356,15 @@ struct BluetoothSelection: View {
                                 deviceDetails[newDevice.asStringIdentifier] = ""
                             }
 
-
                         } else {
                             deviceDetails[newDevice.asStringIdentifier] = newDevice.asStringIdentifier
                         }
-
-
 
                         allDevices.append(SomePeripheral.Left(newDevice))
                     }
                 }
                 .onReceive(searcher.throttledRSSI.throttledPublisher, perform: receiveRSSI)
         }
-
 
     }
 }

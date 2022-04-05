@@ -184,7 +184,7 @@ extension MiaoMiaoResponseState: CustomStringConvertible {
 class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
     fileprivate lazy var logger = Logger(forType: Self.self)
-    
+
     func reset() {
         rxBuffer.resetAllBytes()
     }
@@ -201,7 +201,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
         "miaomiao"
     }
 
-    class var requiresDelayedReconnect : Bool {
+    class var requiresDelayedReconnect: Bool {
         true
     }
 
@@ -215,8 +215,6 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
     private var sensorData: SensorData?
     private var metadata: LibreTransmitterMetadata?
 
-
-
     class func canSupportPeripheral(_ peripheral: CBPeripheral) -> Bool {
         peripheral.name?.lowercased().starts(with: "miaomiao") ?? false
     }
@@ -226,7 +224,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
     }
 
     required init(delegate: LibreTransmitterDelegate, advertisementData: [String: Any]?) {
-        //advertisementData is unknown for the miaomiao
+        // advertisementData is unknown for the miaomiao
         self.delegate = delegate
     }
 
@@ -242,8 +240,6 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
         rxBuffer.append(value)
 
         logger.debug("miaomiao Appended value with length  \(String(describing: value.count)), buffer length is: \(String(describing: self.rxBuffer.count))")
-
-
 
         // When spreading a message over multiple telegrams, the miaomiao protocol
         // does not repeat that initial byte
@@ -261,7 +257,6 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
         case .dataPacketReceived: // 0x28: // data received, append to buffer and inform delegate if end reached
 
             if rxBuffer.count >= 363 {
-
 
                 delegate?.libreTransmitterReceivedMessage(0x0000, txFlags: 0x28, payloadData: rxBuffer)
 
@@ -285,11 +280,11 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
             if value.count >= 2 {
                 if value[2] == 0x01 {
-                    //success setting time interval
+                    // success setting time interval
                 } else if value[2] == 0x00 {
                     // faioure
                 } else {
-                    //"Unkown response for setting time interval."
+                    // "Unkown response for setting time interval."
                 }
             }
             reset()

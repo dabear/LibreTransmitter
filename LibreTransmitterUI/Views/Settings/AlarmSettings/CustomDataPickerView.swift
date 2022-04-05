@@ -13,31 +13,29 @@ protocol CustomDataPickerDelegate: class {
 
 }
 
-class AlarmTimeCellExternalState :ObservableObject, Identifiable, Hashable {
+class AlarmTimeCellExternalState: ObservableObject, Identifiable, Hashable {
 
     var id = UUID()
 
-    @Published var start : Int = 0
-    @Published var end : Int = 0
+    @Published var start: Int = 0
+    @Published var end: Int = 0
 
     // These will be auto populøated
     // when the start and end properties above change
-    @Published var startComponents : DateComponents? = nil
-    @Published var endComponents : DateComponents? = nil
+    @Published var startComponents: DateComponents?
+    @Published var endComponents: DateComponents?
 
-    @Published var componentsAsText : String = ""
+    @Published var componentsAsText: String = ""
 
 }
 
-//handle parts of alarmsettingsview's state (=externalstate)
+// handle parts of alarmsettingsview's state (=externalstate)
 struct CustomDataPickerView: View {
-    private var startComponentTimes : [DateComponents]
-    private var endComponentTimes : [DateComponents]
+    private var startComponentTimes: [DateComponents]
+    private var endComponentTimes: [DateComponents]
 
     private var startTimes = [String]()
     private var endTimes = [String]()
-
-
 
     @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var externalState: AlarmTimeCellExternalState
@@ -69,18 +67,16 @@ struct CustomDataPickerView: View {
         return arr
     }
 
-
-
     private func callDelegate() {
         delegate?.pickerDidPickValidRange()
     }
 
-    private func verifyRange(){
+    private func verifyRange() {
 
         // This can be simplified but decided not to do so
         // because the intention becomes more clear
 
-        var isok : Bool
+        var isok: Bool
 
         if externalState.start == 0 || externalState.end == 0 {
             isok = true
@@ -104,10 +100,8 @@ struct CustomDataPickerView: View {
             presentableStatus = .init(title: "Interval error", message: "Selected time interval was incorrectly specified")
         }
 
-
     }
 
-    
     var pickers: some View {
         HStack {
             Picker("", selection: $externalState.start.animation(), content: {
@@ -115,7 +109,7 @@ struct CustomDataPickerView: View {
                     Text("\(startTimes[i])").tag(i)
                }
             })
-            //.border(Color.green)
+            // .border(Color.green)
 
             .zIndex(10)
             .frame(width: 100)
@@ -129,17 +123,17 @@ struct CustomDataPickerView: View {
                     Text("\(endTimes[i])").tag(i)
                }
             })
-            //.border(Color.red)
+            // .border(Color.red)
             .zIndex(11)
             .frame(width: 100)
             .clipped()
             .labelsHidden()
 
-        //}
+        // }
 
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading:
-            Button("Cancel"){
+            Button("Cancel") {
                 print("cancel button pressed, restoring state...")
                 restoreAlarmExternalState()
                 popView()
@@ -154,13 +148,11 @@ struct CustomDataPickerView: View {
         )
         }
 
-
     }
-
 
     @State private var presentableStatus: StatusMessage?
 
-    private func updateTextualState(_ shouldDelete: Bool = false){
+    private func updateTextualState(_ shouldDelete: Bool = false) {
         if shouldDelete {
             externalState.componentsAsText = ""
             return
@@ -170,7 +162,6 @@ struct CustomDataPickerView: View {
         }
     }
 
-
     var body: some View {
 
         pickers
@@ -179,34 +170,28 @@ struct CustomDataPickerView: View {
             print("selectedtart changed to \(value)")
             externalState.startComponents = startComponentTimes[value]
 
-
-
         })
         .onChange(of: externalState.end, perform: { value in
             print("selectedEnd changed to \(value)")
             externalState.endComponents = endComponentTimes[value]
 
-
-
         })
         .onAppear {
-            //this could potentially fail with out of bounds but we trust our parent view!
+            // this could potentially fail with out of bounds but we trust our parent view!
             externalState.startComponents = startComponentTimes[externalState.start]
             externalState.endComponents = endComponentTimes[externalState.end]
             updateTextualState()
-
 
             copyAlarmExternalState()
 
         }
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
-
 
     }
 
-    //decided against uding nscoding with copy() here
+    // decided against uding nscoding with copy() here
     private func copyAlarmExternalState() {
         externalStateCopy = AlarmTimeCellExternalState()
         /*
@@ -228,10 +213,9 @@ struct CustomDataPickerView: View {
         externalStateCopy.endComponents = externalStateCopy.endComponents
         externalStateCopy.componentsAsText = externalState.componentsAsText
 
-
     }
 
-    private func restoreAlarmExternalState(){
+    private func restoreAlarmExternalState() {
         externalState.id = externalStateCopy.id
         externalState.start = externalStateCopy.start
         externalState.end = externalStateCopy.end
@@ -239,26 +223,22 @@ struct CustomDataPickerView: View {
         externalStateCopy.endComponents =  externalStateCopy.endComponents
         externalState.componentsAsText = externalStateCopy.componentsAsText
 
-
     }
-
 
     init() {
         startComponentTimes = Self.defaultTimeArray()
         endComponentTimes = Self.defaultTimeArray()
 
-
-        //string representations of the datecomponents arrays   
+        // string representations of the datecomponents arrays   
 
         for component in startComponentTimes {
-            startTimes.append(component.ToTimeString(wantsAMPM:  Date.LocaleWantsAMPM))
+            startTimes.append(component.ToTimeString(wantsAMPM: Date.LocaleWantsAMPM))
         }
 
         for component in endComponentTimes {
-            endTimes.append(component.ToTimeString(wantsAMPM:  Date.LocaleWantsAMPM))
+            endTimes.append(component.ToTimeString(wantsAMPM: Date.LocaleWantsAMPM))
 
         }
-
 
     }
 }

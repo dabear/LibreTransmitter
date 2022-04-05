@@ -9,9 +9,8 @@
 import Foundation
 import OSLog
 
-
 @available(iOS 15, *)
-fileprivate func getLogEntries() throws -> [OSLogEntryLog] {
+private func getLogEntries() throws -> [OSLogEntryLog] {
     // Open the log store.
     let logStore = try OSLogStore(scope: .currentProcessIdentifier)
 
@@ -25,7 +24,7 @@ fileprivate func getLogEntries() throws -> [OSLogEntryLog] {
     // and remove other elements (signposts, etc).
     return allEntries
         .compactMap { $0 as? OSLogEntryLog }
-        //.filter { $0.subsystem == Features.logSubsystem }
+        // .filter { $0.subsystem == Features.logSubsystem }
 }
 
 @available(iOS 15, *)
@@ -50,7 +49,6 @@ func getLogs() throws -> Data {
     return logs
 
 }
-
 
 public extension Logger {
     init(forType atype: Any, forSubSystem subsystem: String=Features.logSubsystem) {

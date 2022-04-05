@@ -33,21 +33,20 @@ struct ModeSelectionView: View {
                 }
             }
 
-
         }
     }
 
     var cancelButton: some View {
-        Button("Cancel"){
+        Button("Cancel") {
             print("cancel button pressed")
             cancelNotifier.notify()
 
-        }//.accentColor(.red)
+        }// .accentColor(.red)
     }
-    
+
     var body: some View {
-        //no navview needed when embedded into a hostingcontroller
-        //NavigationView{
+        // no navview needed when embedded into a hostingcontroller
+        // NavigationView{
         List {
             modeSelectSection
         }
@@ -55,11 +54,8 @@ struct ModeSelectionView: View {
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: cancelButton)
 
-
     }
 }
-
-
 
 struct ModeSelectionView_Previews: PreviewProvider {
     static var previews: some View {

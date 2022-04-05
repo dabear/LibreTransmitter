@@ -10,7 +10,7 @@ import Foundation
 
 //https://github.com/NightscoutFoundation/xDrip/pull/828/files
 
-//private func trendToLibreGlucose(_ measurements: [Measurement]) -> [LibreGlucose]?{
+// private func trendToLibreGlucose(_ measurements: [Measurement]) -> [LibreGlucose]?{
 
 func CalculateSmothedData5Points(origtrends: [LibreGlucose]) -> [LibreGlucose] {
     // In all places in the code, there should be exactly 16 points.
@@ -18,7 +18,7 @@ func CalculateSmothedData5Points(origtrends: [LibreGlucose]) -> [LibreGlucose] {
     // I'll only copy the data as is (to make sure there are reasonable values when the function returns).
 
     var trends = origtrends
-    //this is an adoptation, doesn't follow the original directly
+    // this is an adoptation, doesn't follow the original directly
     if trends.count < 5 {
         for i in 0 ..< trends.count {
             trends[i].glucoseDouble = trends[i].unsmoothedGlucose
@@ -27,9 +27,16 @@ func CalculateSmothedData5Points(origtrends: [LibreGlucose]) -> [LibreGlucose] {
         return trends
     }
     for i in 0 ..< trends.count - 4 {
-        trends[i].glucoseDouble = (trends[i].unsmoothedGlucose + trends[i + 1].unsmoothedGlucose + trends[i + 2].unsmoothedGlucose + trends[i + 3].unsmoothedGlucose + trends[i + 4].unsmoothedGlucose) / 5
+        trends[i].glucoseDouble = (trends[i].unsmoothedGlucose + trends[i + 1].unsmoothedGlucose +
+                                   trends[i + 2].unsmoothedGlucose +
+                                   trends[i + 3].unsmoothedGlucose +
+                                   trends[i + 4].unsmoothedGlucose) / 5
     }
-    trends[trends.count - 4].glucoseDouble = (trends[trends.count - 4].unsmoothedGlucose + trends[trends.count - 3].unsmoothedGlucose + trends[trends.count - 2].unsmoothedGlucose + trends[trends.count - 1].unsmoothedGlucose) / 4
+    trends[trends.count - 4].glucoseDouble = (trends[trends.count - 4].unsmoothedGlucose +
+                                              trends[trends.count - 3].unsmoothedGlucose +
+                                              trends[trends.count - 2].unsmoothedGlucose +
+                                              trends[trends.count - 1].unsmoothedGlucose) / 4
+
     trends[trends.count - 3].glucoseDouble = (trends[trends.count - 3].unsmoothedGlucose + trends[trends.count - 2].unsmoothedGlucose + trends[trends.count - 1].unsmoothedGlucose ) / 3
 
     trends[trends.count - 2].glucoseDouble = (trends[trends.count - 2].unsmoothedGlucose + trends[trends.count - 1].unsmoothedGlucose ) / 2

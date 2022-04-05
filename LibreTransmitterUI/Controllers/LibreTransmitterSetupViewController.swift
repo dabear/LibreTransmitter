@@ -13,8 +13,7 @@ import SwiftUI
 import UIKit
 import os.log
 
-
-class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnboarding, CompletionNotifying {
+class LibreTransmitterSetupViewController: UINavigationController, CGMManagerOnboarding, CompletionNotifying {
     weak var cgmManagerOnboardingDelegate: CGMManagerOnboardingDelegate?
     weak var completionDelegate: CompletionDelegate?
 
@@ -24,9 +23,6 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
 
     var modeSelection: UIHostingController<ModeSelectionView>!
 
-
-
-
     init() {
         SelectionState.shared.selectedStringIdentifier = UserDefaults.standard.preSelectedDevice
 
@@ -35,9 +31,7 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
 
         modeSelection = UIHostingController(rootView: ModeSelectionView(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier))
 
-
         super.init(rootViewController: modeSelection)
-
 
         cancelNotifier.listenOnce { [weak self] in
             self?.cancel()
@@ -47,8 +41,6 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
             self?.save()
         }
 
-
-
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -57,7 +49,7 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
 
     deinit {
         logger.debug("dabear LibreTransmitterSetupViewController() deinit was called")
-        //cgmManager = nil
+        // cgmManager = nil
     }
 
     @available(*, unavailable)
@@ -73,7 +65,6 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
 
     @objc
     private func save() {
-
 
         let hasNewDevice = SelectionState.shared.selectedStringIdentifier != UserDefaults.standard.preSelectedDevice
         if hasNewDevice, let newDevice = SelectionState.shared.selectedStringIdentifier {
@@ -91,10 +82,9 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
             SelectionState.shared.selectedUID = nil
             UserDefaults.standard.preSelectedDevice = nil
 
-
         } else {
 
-            //this cannot really happen unless you are a developer and have previously
+            // this cannot really happen unless you are a developer and have previously
             // stored both preSelectedDevice and selectedUID !
         }
 
@@ -106,7 +96,6 @@ class LibreTransmitterSetupViewController:UINavigationController, CGMManagerOnbo
         } else {
             logger.debug("dabear: Setupcontroller not Saving from setup")
         }
-
 
         completionDelegate?.completionNotifyingDidComplete(self)
     }

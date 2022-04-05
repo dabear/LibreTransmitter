@@ -15,7 +15,7 @@ protocol MeasurementProtocol {
 
     var rawTemperatureAdjustment: Int { get }
 
-    var error : [MeasurementError] { get}
+    var error: [MeasurementError] { get}
 }
 
 public enum MeasurementError: Int, CaseIterable {
@@ -35,17 +35,12 @@ public enum MeasurementError: Int, CaseIterable {
     case TEMP_LOW                = 16384  // 0x4000
     case INVALID_DATA            = 32768  // 0x8000
 
-    static var allErrorCodes : [MeasurementError] {
+    static var allErrorCodes: [MeasurementError] {
         var allErrorCases = MeasurementError.allCases
         allErrorCases.removeAll { $0 == .OK}
         return allErrorCases
     }
 }
-
-
-
-
-
 
 struct SimplifiedMeasurement: MeasurementProtocol {
     var rawGlucose: Int
@@ -74,9 +69,9 @@ public struct Measurement: MeasurementProtocol {
 
     let rawTemperatureAdjustment: Int
 
-    let error : [MeasurementError]
+    let error: [MeasurementError]
 
-    let idValue : Int
+    let idValue: Int
 
     init(date: Date, rawGlucose: Int, rawTemperature: Int, rawTemperatureAdjustment: Int, idValue: Int = 0) {
         self.date = date
@@ -84,13 +79,13 @@ public struct Measurement: MeasurementProtocol {
         self.rawTemperature = rawTemperature
         self.rawTemperatureAdjustment = rawTemperatureAdjustment
 
-        //not really needed when setting the other properties above explicitly
+        // not really needed when setting the other properties above explicitly
         self.bytes = []
         self.byteString = ""
         self.error = [MeasurementError.OK]
         self.counter = 0
 
-        //only used for sorting purposes
+        // only used for sorting purposes
         self.idValue = idValue
 
     }
@@ -105,11 +100,11 @@ public struct Measurement: MeasurementProtocol {
     init(bytes: [UInt8], slope: Double = 0.1, offset: Double = 0.0, counter: Int = 0, date: Date, idValue: Int = 0) {
         self.bytes = bytes
         self.byteString = bytes.reduce("", { $0 + String(format: "%02X", arguments: [$1]) })
-        //self.rawGlucose = (Int(bytes[1] & 0x1F) << 8) + Int(bytes[0]) // switched to 13 bit mask on 2018-03-15
+        // self.rawGlucose = (Int(bytes[1] & 0x1F) << 8) + Int(bytes[0]) // switched to 13 bit mask on 2018-03-15
         self.rawGlucose = SensorData.readBits(bytes, 0, 0, 0xe)
 
-        //self.rawTemperature = (Int(bytes[4] & 0x3F) << 8) + Int(bytes[3]) // 14 bit-mask for raw temperature
-        //raw temperature in libre FRAM is always stored in multiples of four
+        // self.rawTemperature = (Int(bytes[4] & 0x3F) << 8) + Int(bytes[3]) // 14 bit-mask for raw temperature
+        // raw temperature in libre FRAM is always stored in multiples of four
         self.rawTemperature = SensorData.readBits(bytes, 0, 0x1a, 0xc) << 2
 
         let temperatureAdjustment = (SensorData.readBits(bytes, 0, 0x26, 0x9) << 2)
@@ -119,21 +114,20 @@ public struct Measurement: MeasurementProtocol {
         self.date = date
         self.counter = counter
 
-        let errorBitField = SensorData.readBits(bytes,0, 0xe, 0xc)
+        let errorBitField = SensorData.readBits(bytes, 0, 0xe, 0xc)
         self.error = Self.extractErrorBitField(errorBitField)
 
-        //only used for sorting purposes
+        // only used for sorting purposes
         self.idValue = idValue
 
     }
 
-    static func extractErrorBitField(_ errBitField: Int) -> [MeasurementError]{
+    static func extractErrorBitField(_ errBitField: Int) -> [MeasurementError] {
         errBitField == 0 ?
             [MeasurementError.OK] :
             MeasurementError.allErrorCodes.filter { (errBitField & $0.rawValue) != 0}
 
     }
-
 
     var description: String {
         String(" date:  \(date), rawGlucose: \(rawGlucose), rawTemperature: \(rawTemperature), bytes: \(bytes) \n")

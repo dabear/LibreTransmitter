@@ -12,9 +12,7 @@ import HealthKit
 import LibreTransmitter
 import Combine
 
-
 extension LibreTransmitterManager: CGMManagerUI {
-
 
     // TODO Placeholder.
     public var cgmStatusBadge: DeviceStatusBadge? {
@@ -26,16 +24,18 @@ extension LibreTransmitterManager: CGMManagerUI {
             return .userInteractionRequired(LibreTransmitterSetupViewController())
     }
 
-    public func settingsViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) ->CGMManagerViewController {
-
+    public func settingsViewController(bluetoothProvider: BluetoothProvider, displayGlucoseUnitObservable: DisplayGlucoseUnitObservable, colorPalette: LoopUIColorPalette, allowDebugFeatures: Bool) -> CGMManagerViewController {
 
         let doneNotifier = GenericObservableObject()
         let wantToTerminateNotifier = GenericObservableObject()
 
-
-        let settings = SettingsView.asHostedViewController(displayGlucoseUnitObservable: displayGlucoseUnitObservable, notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier, transmitterInfoObservable: self.transmitterInfoObservable, sensorInfoObervable: self.sensorInfoObservable, glucoseInfoObservable: self.glucoseInfoObservable, alarmStatus: self.alarmStatus)
-
-
+        let settings = SettingsView.asHostedViewController(
+            displayGlucoseUnitObservable: displayGlucoseUnitObservable,
+            notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier,
+            transmitterInfoObservable: self.transmitterInfoObservable,
+            sensorInfoObervable: self.sensorInfoObservable,
+            glucoseInfoObservable: self.glucoseInfoObservable,
+            alarmStatus: self.alarmStatus)
 
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
 
@@ -53,24 +53,19 @@ extension LibreTransmitterManager: CGMManagerUI {
                 DispatchQueue.main.async {
                     nav?.notifyComplete()
 
-
                 }
             }
 
-
         }
-
 
         return nav
     }
 
-
-    
     // TODO Placeholder. This functionality will come with LOOP-1311
     public var cgmStatusHighlight: DeviceStatusHighlight? {
         nil
     }
-    
+
     // TODO Placeholder. This functionality will come with LOOP-1311
     public var cgmLifecycleProgress: DeviceLifecycleProgress? {
         nil

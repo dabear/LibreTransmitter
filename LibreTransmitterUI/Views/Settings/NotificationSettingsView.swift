@@ -11,16 +11,9 @@ import Combine
 import LibreTransmitter
 import HealthKit
 
-
-
-
-
 struct NotificationSettingsView: View {
 
-
-    
     @State private var presentableStatus: StatusMessage?
-
 
     private var glucoseUnit: HKUnit
 
@@ -35,42 +28,33 @@ struct NotificationSettingsView: View {
             UserDefaults.standard.mmGlucoseUnit = glucoseUnit
         }
 
-
     }
 
-
     private enum Key: String {
-        //case glucoseSchedules = "no.bjorninge.glucoseschedules"
+        // case glucoseSchedules = "no.bjorninge.glucoseschedules"
 
         case mmAlwaysDisplayGlucose = "no.bjorninge.mmAlwaysDisplayGlucose"
         case mmNotifyEveryXTimes = "no.bjorninge.mmNotifyEveryXTimes"
         case mmGlucoseAlarmsVibrate = "no.bjorninge.mmGlucoseAlarmsVibrate"
         case mmAlertLowBatteryWarning = "no.bjorninge.mmLowBatteryWarning"
         case mmAlertInvalidSensorDetected = "no.bjorninge.mmInvalidSensorDetected"
-        //case mmAlertalarmNotifications
+        // case mmAlertalarmNotifications
         case mmAlertNewSensorDetected = "no.bjorninge.mmNewSensorDetected"
         case mmAlertNoSensorDetected = "no.bjorninge.mmNoSensorDetected"
 
         case mmAlertSensorSoonExpire = "no.bjorninge.mmAlertSensorSoonExpire"
 
-
         case mmShowPhoneBattery = "no.bjorninge.mmShowPhoneBattery"
         case mmShowTransmitterBattery = "no.bjorninge.mmShowTransmitterBattery"
 
-        //handle specially:
+        // handle specially:
         case mmGlucoseUnit = "no.bjorninge.mmGlucoseUnit"
     }
-
-
-
-
 
     @AppStorage(Key.mmAlwaysDisplayGlucose.rawValue) var mmAlwaysDisplayGlucose: Bool = true
     @AppStorage(Key.mmNotifyEveryXTimes.rawValue) var mmNotifyEveryXTimes: Int = 0
     @AppStorage(Key.mmShowPhoneBattery.rawValue) var mmShowPhoneBattery: Bool = false
     @AppStorage(Key.mmShowTransmitterBattery.rawValue) var mmShowTransmitterBattery: Bool = true
-
-
 
     @AppStorage(Key.mmAlertLowBatteryWarning.rawValue) var mmAlertLowBatteryWarning: Bool = true
     @AppStorage(Key.mmAlertInvalidSensorDetected.rawValue) var mmAlertInvalidSensorDetected: Bool = true
@@ -80,9 +64,8 @@ struct NotificationSettingsView: View {
 
     @AppStorage(Key.mmGlucoseAlarmsVibrate.rawValue) var mmGlucoseAlarmsVibrate: Bool = true
 
-    //especially handled mostly for backward compat
+    // especially handled mostly for backward compat
     @AppStorage(Key.mmGlucoseUnit.rawValue) var mmGlucoseUnit: String = ""
-
 
     @State var notifyErrorState = FormErrorState()
 
@@ -115,11 +98,11 @@ struct NotificationSettingsView: View {
 
     var additionalNotificationsSection : some View {
         Section(header: Text("Additional notification types")) {
-            Toggle("Low battery", isOn:$mmAlertLowBatteryWarning)
-            Toggle("Invalid sensor", isOn:$mmAlertInvalidSensorDetected)
-            Toggle("Sensor change", isOn:$mmAlertNewSensorDetected)
-            Toggle("Sensor not found", isOn:$mmAlertNoSensorDetected)
-            Toggle("Sensor expires soon", isOn:$mmAlertSensorSoonExpire)
+            Toggle("Low battery", isOn: $mmAlertLowBatteryWarning)
+            Toggle("Invalid sensor", isOn: $mmAlertInvalidSensorDetected)
+            Toggle("Sensor change", isOn: $mmAlertNewSensorDetected)
+            Toggle("Sensor not found", isOn: $mmAlertNoSensorDetected)
+            Toggle("Sensor expires soon", isOn: $mmAlertSensorSoonExpire)
 
         }
     }
@@ -140,7 +123,7 @@ struct NotificationSettingsView: View {
 
     var body: some View {
         List {
-            
+
             glucoseVisibilitySection
             additionalNotificationsSection
 
@@ -148,7 +131,7 @@ struct NotificationSettingsView: View {
             .onAppear {
                 favoriteGlucoseUnit = glucoseSegments.firstIndex(of: glucoseUnit) ?? 0
             }
-            .onChange(of: favoriteGlucoseUnit){ newValue in
+            .onChange(of: favoriteGlucoseUnit) { newValue in
                 let newUnit = glucoseSegments[newValue]
                 if newUnit == HKUnit.milligramsPerDeciliter {
                     mmGlucoseUnit = "mgdl"
@@ -160,18 +143,14 @@ struct NotificationSettingsView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
 
         .navigationBarTitle("Notification Settings")
 
     }
 
-
-
-
 }
-
 
 struct NotificationSettingsView_Previews: PreviewProvider {
     static var previews: some View {

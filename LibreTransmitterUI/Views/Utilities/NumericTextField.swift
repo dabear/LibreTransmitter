@@ -11,16 +11,16 @@ import Combine
 
 // Decided to use shared instance instead of .environmentObject()
 class FormErrorState: ObservableObject {
-    @Published var childrenErrorStatus: [String:Bool] = [:]
+    @Published var childrenErrorStatus: [String: Bool] = [:]
 
-    var hasAnyError : Bool {
+    var hasAnyError: Bool {
         !childrenErrorStatus.isEmpty && childrenErrorStatus.values.contains(true)
     }
 
     static var shared = FormErrorState()
 }
 
-fileprivate var valueNumberFormatter: NumberFormatter = {
+private var valueNumberFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .decimal
     formatter.locale = Locale.current
@@ -29,7 +29,7 @@ fileprivate var valueNumberFormatter: NumberFormatter = {
     return formatter
 }()
 
-fileprivate var intNumberFormatter: NumberFormatter = {
+private var intNumberFormatter: NumberFormatter = {
     let formatter = NumberFormatter()
     formatter.numberStyle = .none
     formatter.locale = Locale.current
@@ -39,15 +39,7 @@ fileprivate var intNumberFormatter: NumberFormatter = {
     return formatter
 }()
 
-
-
-
-
-
-
-public struct NumericTextField: View  {
-
-
+public struct NumericTextField: View {
 
     static func localeTextToDouble(_ text: String) -> Double? {
         valueNumberFormatter.number(from: text)?.doubleValue
@@ -71,8 +63,7 @@ public struct NumericTextField: View  {
         }
     }
 
-    @ObservedObject var formstate : FormErrorState = .shared
-
+    @ObservedObject var formstate: FormErrorState = .shared
 
     var textField: some View {
 
@@ -80,7 +71,6 @@ public struct NumericTextField: View  {
             .onReceive(Just(numericString)) { value in
 
                 print("onreceive called")
-
 
                 guard let newValue = Self.localeTextToDouble(value) else {
                     print("onreceive guard failed")
@@ -92,8 +82,8 @@ public struct NumericTextField: View  {
                 let isInteger = newValue.truncatingRemainder(dividingBy: 1.0) == 0.0
 
                 if requiresIntegerValue && !isInteger {
-                    //consider this or coloring view to indicate error
-                    //self.numericString = "\(numericValue)"
+                    // consider this or coloring view to indicate error
+                    // self.numericString = "\(numericValue)"
                     hasError = true
                     return
 
@@ -104,8 +94,6 @@ public struct NumericTextField: View  {
                 }
 
                 hasError = false
-
-
 
         }
        .onAppear {
@@ -121,11 +109,9 @@ public struct NumericTextField: View  {
         .border(Color(UIColor.separator))
         .disabled(isReadOnly)
 
-
-
     }
 
-    var textFieldWithError : some View{
+    var textFieldWithError : some View {
         textField
         .overlay(
             VStack {
@@ -151,7 +137,7 @@ public struct NumericTextField: View  {
 
     }
 
-    init(description: String, showDescription: Bool, numericValue:  Binding<Double>, isReadOnly:Bool=false, formErrorState:FormErrorState?=nil ) {
+    init(description: String, showDescription: Bool, numericValue: Binding<Double>, isReadOnly: Bool=false, formErrorState: FormErrorState?=nil ) {
         self.description = description
         self._numericValue = numericValue
         self.requiresIntegerValue = false
@@ -162,8 +148,7 @@ public struct NumericTextField: View  {
         }
     }
 
-
-    init(description: String, showDescription: Bool, numericValue wrapper:  Binding<Int>, isReadOnly:Bool=false , formErrorState:FormErrorState?=nil ) {
+    init(description: String, showDescription: Bool, numericValue wrapper: Binding<Int>, isReadOnly: Bool=false, formErrorState: FormErrorState?=nil ) {
         self.description = description
         self.requiresIntegerValue = true
         self.isReadOnly = isReadOnly
@@ -173,12 +158,10 @@ public struct NumericTextField: View  {
             self.formstate = formErrorState
         }
 
-
-        //allows an int to behave as a double, should be just fine in most cases (that we care about)
+        // allows an int to behave as a double, should be just fine in most cases (that we care about)
         let bd = Binding<Double>(get: { Double(wrapper.wrappedValue) },
                               set: { wrapper.wrappedValue = Int($0) })
         self._numericValue = bd
-
 
     }
 
@@ -187,9 +170,8 @@ public struct NumericTextField: View  {
     var isReadOnly: Bool = false
 
     var requiresIntegerValue = false
-    //numericvalue assumes that all ints can be encoded as doubles, which might not be true always though.
+    // numericvalue assumes that all ints can be encoded as doubles, which might not be true always though.
     @Binding var numericValue: Double
     @State private var numericString: String  = ""
-
 
 }

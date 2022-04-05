@@ -14,7 +14,7 @@ private let LibreCalibrationLabel =  "https://LibreCalibrationLabelNative.doesno
 private let LibreCalibrationUrl = URL(string: LibreCalibrationLabel)!
 private let LibreUsername = "LibreUsername"
 
-fileprivate var logger = Logger(forType: "KeychainManagerCalibration")
+private var logger = Logger(forType: "KeychainManagerCalibration")
 
 public extension KeychainManagerWrapper {
     func setLibreNativeCalibrationData(_ calibrationData: SensorData.CalibrationInfo) throws {
@@ -36,7 +36,7 @@ public extension KeychainManagerWrapper {
 }
 
 public func calibrateSensor(sensordata: SensorData, callback: @escaping (SensorData.CalibrationInfo) -> Void) {
-    
+
     let params = sensordata.calibrationData
     callback(params)
 }

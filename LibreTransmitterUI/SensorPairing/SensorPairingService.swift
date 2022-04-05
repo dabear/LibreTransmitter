@@ -11,8 +11,6 @@ import Combine
 import CoreNFC
 import LibreTransmitter
 
-
-
 class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairingProtocol {
     private var session: NFCTagReaderSession?
     private var readingsSubject = PassthroughSubject<SensorPairingInfo, Never>()
@@ -20,7 +18,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
     private let nfcQueue = DispatchQueue(label: "libre-direct.nfc-queue")
     private let accessQueue = DispatchQueue(label: "libre-direct.nfc-access-queue")
 
-    private let unlockCode: UInt32 = 42 //42
+    private let unlockCode: UInt32 = 42 // 42
 
     @discardableResult func pairSensor() -> AnyPublisher<SensorPairingInfo, Never> {
         if NFCTagReaderSession.readingAvailable {
@@ -34,7 +32,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
         return readingsSubject.eraseToAnyPublisher()
     }
 
-    public var publisher : AnyPublisher<SensorPairingInfo, Never> {
+    public var publisher: AnyPublisher<SensorPairingInfo, Never> {
         readingsSubject.eraseToAnyPublisher()
     }
 
@@ -68,15 +66,17 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
 
             tag.getSystemInfo(requestFlags: [.address, .highDataRate]) { result in
                 switch result {
-                case .failure(_):
+                case .failure:
                     return
-                case .success(_):
+                case .success:
                     tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA1, customRequestParameters: Data()) { response, error in
 
                         for i in 0 ..< requests {
                             tag.readMultipleBlocks(
                                 requestFlags: [.highDataRate, .address],
+                                // swiftlint:disable:next line_length
                                 blockRange: NSRange(UInt8(i * requestBlocks) ... UInt8(i * requestBlocks + (i == requests - 1 ? (remainder == 0 ? requestBlocks : remainder) : requestBlocks) - (requestBlocks > 1 ? 1 : 0)))
+                                
                             ) { blockArray, error in
                                 if error != nil {
                                     if i != requests - 1 { return }
@@ -104,11 +104,10 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                                         return
                                     }
 
-
                                     let subCmd: Subcommand = .enableStreaming
                                     let cmd = self.nfcCommand(subCmd, unlockCode: self.unlockCode, patchInfo: patchInfo, sensorUID: sensorUID)
 
-                                    tag.customCommand(requestFlags: .highDataRate, customCommandCode: Int(cmd.code), customRequestParameters: cmd.parameters) { response, error in
+                                    tag.customCommand(requestFlags: .highDataRate, customCommandCode: Int(cmd.code), customRequestParameters: cmd.parameters) { response, _ in
                                         var streamingEnabled = false
 
                                         if subCmd == .enableStreaming && response.count == 6 {
@@ -117,18 +116,15 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
 
                                         session.invalidate()
 
-
                                         let patchHex = patchInfo.hexEncodedString()
                                         let sensorType = SensorType(patchInfo: patchHex)
 
                                         print("got patchhex: \(patchHex) and sensorType: \(sensorType)")
 
-
                                         guard sensorUID.count == 8 && patchInfo.count == 6 && fram.count == 344 else {
-                                            //self.readingsSubject.send(completion: .failure(LibreError.noSensorData))
+                                            // self.readingsSubject.send(completion: .failure(LibreError.noSensorData))
                                             return
                                         }
-
 
                                         if let sensorType = sensorType {
                                             do {
@@ -145,7 +141,6 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
 
                                         }
                                     }
-
 
                                 }
                             }
@@ -195,14 +190,14 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
         let backdoor = "deadbeef".utf8
 
         tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA4, customRequestParameters: Data(backdoor)) {
-            response, error in
+            _, error in
 
             let addressToRead = (address / 8) * 8
             let startOffset = Int(address % 8)
             let endAddressToRead = ((Int(address) + data.count - 1) / 8) * 8 + 7
             let blocksToRead = (endAddressToRead - Int(addressToRead)) / 8 + 1
 
-            self.readRaw(addressToRead, blocksToRead * 8, tag: tag) { readAddress, readData, error in
+            self.readRaw(addressToRead, blocksToRead * 8, tag: tag) { _, readData, error in
                 if error != nil {
                     handler(address, data, error)
                     return
@@ -225,7 +220,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                             }
 
                             if i == blocks - 1 {
-                                tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA2, customRequestParameters: Data(backdoor)) { response, error in
+                                tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA2, customRequestParameters: Data(backdoor)) { _, error in
                                     handler(address, data, error)
                                 }
                             }
@@ -259,7 +254,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                             if i == requests - 1 {
                                 // Lock
                                 tag.customCommand(requestFlags: .highDataRate, customCommandCode: 0xA2, customRequestParameters: Data(backdoor)) {
-                                    response, error in
+                                    _, error in
 
                                     handler(address, data, error)
                                 }
@@ -309,12 +304,12 @@ extension UInt16 {
     }
 }
 
-fileprivate struct NFCCommand {
+private struct NFCCommand {
     let code: UInt8
     let parameters: Data
 }
 
-fileprivate enum Subcommand: UInt8, CustomStringConvertible {
+private enum Subcommand: UInt8, CustomStringConvertible {
     case activate = 0x1b
     case enableStreaming = 0x1e
     case unknown0x1a = 0x1a

@@ -8,14 +8,14 @@
 
 import Foundation
 
-public class GlucoseInfo : ObservableObject, Equatable, Hashable{
+public class GlucoseInfo: ObservableObject, Equatable, Hashable {
 
-    @Published public var glucose = "" //dynamic based users preference
+    @Published public var glucose = "" // dynamic based users preference
     @Published public var glucoseMMOL = ""
     @Published public var glucoseMGDL = ""
     @Published public var date = ""
     @Published public var checksum = ""
-    //@Published var entryErrors = ""
+    // @Published var entryErrors = ""
 
     @Published public var prediction = ""
     @Published public var predictionMMOL = ""

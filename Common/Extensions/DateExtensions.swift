@@ -10,7 +10,6 @@ import Foundation
 
 public extension Date {
 
-
     func rounded(on amount: Int, _ component: Calendar.Component) -> Date {
         let cal = Calendar.current
         let value = cal.component(component, from: self)
@@ -54,7 +53,7 @@ public extension Date {
 
 extension DateComponents {
     func ToTimeString(wantsAMPM: Bool = Date.LocaleWantsAMPM) -> String {
-        //print("hour: \(self.hour) minute: \(self.minute)")
+        // print("hour: \(self.hour) minute: \(self.minute)")
         let date = Calendar.current.date(bySettingHour: self.hour ?? 0, minute: self.minute ?? 0, second: 0, of: Date())!
 
         let formatter = DateFormatter()
@@ -65,7 +64,6 @@ extension DateComponents {
         return formatter.string(from: date)
     }
 }
-
 
 extension Array where Element == DateInterval {
     // Check for intersection among the intervals in the given array and return

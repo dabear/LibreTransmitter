@@ -16,12 +16,12 @@ public enum BubbleResponseType: UInt8 {
     case bubbleInfo = 128 // = wakeUp + device info
     case noSensor = 191
     case serialNumber = 192
-    case patchInfo = 193 //0xC1
+    case patchInfo = 193 // 0xC1
      /// bubble firmware 2.6 support decrypt libre2 344 to libre1 344
      /// if firmware >= 2.6, write [0x08, 0x01, 0x00, 0x00, 0x00, 0x2B]
      /// bubble will decrypt the libre2 data and return it
-    //we don't really support decrypteddatapacket as we like to decrypt our selves!
-    //case decryptedDataPacket = 136 // 0x88
+    // we don't really support decrypteddatapacket as we like to decrypt our selves!
+    // case decryptedDataPacket = 136 // 0x88
 }
 
 extension BubbleResponseType {
@@ -66,7 +66,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
         rxBuffer.resetAllBytes()
     }
 
-    override class var requiresDelayedReconnect : Bool {
+    override class var requiresDelayedReconnect: Bool {
         true
     }
 
@@ -92,8 +92,6 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     }
 
     private static func getDeviceDetailsFromAdvertisementInternal(advertisementData: [String: Any]?) -> (String?, String?, String?) {
-
-        
 
         guard let data = advertisementData?["kCBAdvDataManufacturerData"] as? Data else {
             return (nil, nil, nil)
@@ -122,11 +120,11 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     }
 
     required init(delegate: LibreTransmitterDelegate, advertisementData: [String: Any]?) {
-        //advertisementData is unknown for the miaomiao
+        // advertisementData is unknown for the miaomiao
 
         super.init(delegate: delegate, advertisementData: advertisementData)
-        //self.delegate = delegate
-        //deviceFromAdvertisementData(advertisementData: advertisementData)
+        // self.delegate = delegate
+        // deviceFromAdvertisementData(advertisementData: advertisementData)
         (self.mac, self.firmware, self.hardware) = Self.getDeviceDetailsFromAdvertisementInternal(advertisementData: advertisementData)
     }
 
@@ -145,17 +143,17 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
         bLogger.debug("dabear:: bubble value is: \(value.toDebugString())")
         switch bubbleResponseState {
         case .bubbleInfo:
-            //let hardware = value[value.count-2].description + "." + value[value.count-1].description
-            //let firmware = value[2].description + "." + value[3].description
-           //let patchInfo = Data(Double(firmware)! < 1.35 ? value[3...8] : value[5...10])
+            // let hardware = value[value.count-2].description + "." + value[value.count-1].description
+            // let firmware = value[2].description + "." + value[3].description
+           // let patchInfo = Data(Double(firmware)! < 1.35 ? value[3...8] : value[5...10])
             battery = Int(value[4])
 
             bLogger.debug("dabear:: Got bubbledevice: \(self.metadata.debugDescription)")
            if let writeCharacteristic = writeCharacteristic {
-               
+
                peripheral.writeValue(Data([0x02, 0x00, 0x00, 0x00, 0x00, 0x2B]), for: writeCharacteristic, type: .withResponse)
            }
-        case .dataPacket://, .decryptedDataPacket:
+        case .dataPacket:// , .decryptedDataPacket:
            rxBuffer.append(value.suffix(from: 4))
             bLogger.debug("dabear:: aggregated datapacket is now of length: \(self.rxBuffer.count)")
            if rxBuffer.count >= 352 {
@@ -171,7 +169,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
             reset()
             self.uid = [UInt8](value.subdata(in: 2..<10))
 
-            //for historical reasons
+            // for historical reasons
             rxBuffer.append(value.subdata(in: 2..<10))
 
         case .patchInfo:
@@ -194,7 +192,12 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
             return
         }
 
-        metadata = .init(hardware: hardware ?? "unknown", firmware: firmware ?? "unknown", battery: battery ?? 100, name: Self.shortTransmitterName, macAddress: self.mac, patchInfo: patchInfo, uid: self.uid)
+        metadata = .init(hardware: hardware ?? "unknown",
+                         firmware: firmware ?? "unknown",
+                         battery: battery ?? 100,
+                         name: Self.shortTransmitterName,
+                         macAddress: self.mac,
+                         patchInfo: patchInfo, uid: self.uid)
 
         let data = rxBuffer.subdata(in: 8..<352)
         bLogger.debug("dabear:: bubbleHandleCompleteMessage raw data: \([UInt8](self.rxBuffer))")

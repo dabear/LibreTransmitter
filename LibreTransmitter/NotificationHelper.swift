@@ -13,7 +13,7 @@ import LoopKit
 import UserNotifications
 import os.log
 
-fileprivate var logger = Logger(forType: "NotificationHelper")
+private var logger = Logger(forType: "NotificationHelper")
 
 public enum NotificationHelper {
 
@@ -96,10 +96,10 @@ public enum NotificationHelper {
         }
     }
 
-    public static func requestNotificationPermissionsIfNeeded(){
+    public static func requestNotificationPermissionsIfNeeded() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             logger.debug("settings.authorizationStatus: \(String(describing: settings.authorizationStatus.rawValue))")
-            if ![.authorized,.provisional].contains(settings.authorizationStatus) {
+            if ![.authorized, .provisional].contains(settings.authorizationStatus) {
                 requestNotificationPermissions()
             }
 
@@ -118,7 +118,6 @@ public enum NotificationHelper {
             }
 
         }
-
 
     }
 
@@ -160,7 +159,8 @@ public enum NotificationHelper {
 
         let shouldSendGlucoseAlternatingTimes = glucoseNotifyCalledCount != 0 && UserDefaults.standard.mmNotifyEveryXTimes != 0
 
-        let shouldSend = UserDefaults.standard.mmAlwaysDisplayGlucose || glucoseNotifyCalledCount == 1 || (shouldSendGlucoseAlternatingTimes && glucoseNotifyCalledCount % UserDefaults.standard.mmNotifyEveryXTimes == 0)
+        let shouldSend = UserDefaults.standard.mmAlwaysDisplayGlucose || glucoseNotifyCalledCount == 1 ||
+            (shouldSendGlucoseAlternatingTimes && glucoseNotifyCalledCount % UserDefaults.standard.mmNotifyEveryXTimes == 0)
 
         let schedules = UserDefaults.standard.glucoseSchedules
 
@@ -170,12 +170,15 @@ public enum NotificationHelper {
         let shouldShowPhoneBattery = UserDefaults.standard.mmShowPhoneBattery
         let transmitterBattery = UserDefaults.standard.mmShowTransmitterBattery && battery != nil ? battery : nil
 
-        logger.debug("dabear:: glucose alarmtype is \(String(describing:alarm))")
+        logger.debug("dabear:: glucose alarmtype is \(String(describing: alarm))")
         // We always send glucose notifications when alarm is active,
         // even if glucose notifications are disabled in the UI
 
         if shouldSend || alarm.isAlarming() {
-            sendGlucoseNotitifcation(glucose: glucose, oldValue: oldValue, alarm: alarm, isSnoozed: isSnoozed, trend: trend, showPhoneBattery: shouldShowPhoneBattery, transmitterBattery: transmitterBattery)
+            sendGlucoseNotitifcation(glucose: glucose, oldValue: oldValue,
+                                     alarm: alarm, isSnoozed: isSnoozed,
+                                     trend: trend, showPhoneBattery: shouldShowPhoneBattery,
+                                     transmitterBattery: transmitterBattery)
         } else {
             logger.debug("dabear:: not sending glucose, shouldSend and alarmIsActive was false")
             return
@@ -184,7 +187,7 @@ public enum NotificationHelper {
 
     private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false) {
         let center = UNUserNotificationCenter.current()
-        //content.sound = UNNotificationSound.
+        // content.sound = UNNotificationSound.
         if #available(iOSApplicationExtension 15.0, *) {
             content.interruptionLevel = .timeSensitive
         }
@@ -252,7 +255,7 @@ public enum NotificationHelper {
                 body2.append("Transmitter: \(transmitterBattery)")
             }
 
-            //these are texts that naturally fit on their own line in the body
+            // these are texts that naturally fit on their own line in the body
             var body2s = ""
             if !body2.isEmpty {
                 body2s = "\n" + body2.joined(separator: "\n")
@@ -320,7 +323,7 @@ public enum NotificationHelper {
             content.body = "Please wait up to 30 minutes before glucose readings are available!"
 
             addRequest(identifier: .sensorChange, content: content)
-            //content.sound = UNNotificationSound.
+            // content.sound = UNNotificationSound.
 
         }
     }
@@ -332,12 +335,10 @@ public enum NotificationHelper {
             content.body = "Sensor might have temporarily stopped, fallen off or is too cold or too warm"
 
             addRequest(identifier: .tryAgainLater, content: content)
-            //content.sound = UNNotificationSound.
+            // content.sound = UNNotificationSound.
 
         }
     }
-
-    
 
     public static func sendInvalidSensorNotificationIfNeeded(sensorData: SensorData) {
         let isValid = sensorData.isLikelyLibre1FRAM && (sensorData.state == .starting || sensorData.state == .ready)
@@ -382,7 +383,7 @@ public enum NotificationHelper {
         }
 
         let now = Date()
-        //only once per mins minute
+        // only once per mins minute
         let mins = 60.0 * 120
         if let earlierplus = lastBatteryWarning?.addingTimeInterval(mins) {
             if earlierplus < now {
@@ -424,7 +425,7 @@ public enum NotificationHelper {
         }
 
         let now = Date()
-        //only once per 6 hours
+        // only once per 6 hours
         let min45 = 60.0 * 60 * 6
 
         if let earlier = lastSensorExpireAlert {
@@ -458,6 +459,5 @@ public enum NotificationHelper {
             addRequest(identifier: .sensorExpire, content: content, deleteOld: true)
         }
     }
-
 
 }

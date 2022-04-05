@@ -1,17 +1,12 @@
 //
 //  Libre2DirectTransmitter.swift
 
-
 import CoreBluetooth
 import Foundation
 import os.log
 import UIKit
 
-
-
-
 class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
-    
 
     fileprivate lazy var logger = Logger(forType: Self.self)
 
@@ -31,7 +26,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
         "libre2"
     }
 
-    class var requiresDelayedReconnect : Bool {
+    class var requiresDelayedReconnect: Bool {
         false
     }
 
@@ -39,9 +34,9 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
     static var requiresSetup = true
     static var requiresPhoneNFC: Bool = true
 
-    static var writeCharacteristic: UUIDContainer? = "F001"//0000f001-0000-1000-8000-00805f9b34fb"
-    static var notifyCharacteristic: UUIDContainer? = "F002"//"0000f002-0000-1000-8000-00805f9b34fb"
-    //static var serviceUUID: [UUIDContainer] = ["0000fde3-0000-1000-8000-00805f9b34fb"]
+    static var writeCharacteristic: UUIDContainer? = "F001"// 0000f001-0000-1000-8000-00805f9b34fb"
+    static var notifyCharacteristic: UUIDContainer? = "F002"// "0000f002-0000-1000-8000-00805f9b34fb"
+    // static var serviceUUID: [UUIDContainer] = ["0000fde3-0000-1000-8000-00805f9b34fb"]
     static var serviceUUID: [UUIDContainer] = ["FDE3"]
 
     weak var delegate: LibreTransmitterDelegate?
@@ -59,12 +54,12 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
     }
 
     required init(delegate: LibreTransmitterDelegate, advertisementData: [String: Any]?) {
-        //advertisementData is unknown for the miaomiao
+        // advertisementData is unknown for the miaomiao
         self.delegate = delegate
     }
 
     func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral) {
-        //because of timing issues, we cannot use this method on libre2 eu sensors
+        // because of timing issues, we cannot use this method on libre2 eu sensors
     }
 
     func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?) {
@@ -72,19 +67,15 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
 
         logger.debug("libre2 direct Appended value with length  \(String(describing: value.count)), buffer length is: \(String(describing: self.rxBuffer.count))")
 
-
         if rxBuffer.count == expectedBufferSize {
             handleCompleteMessage()
         }
 
-
     }
-
-
 
     func didDiscoverWriteCharacteristics(_ peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic) {
 
-        guard let unlock = unlock() else{
+        guard let unlock = unlock() else {
             logger.debug("Cannot unlock sensor, aborting")
             return
         }
@@ -92,19 +83,15 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
         logger.debug("Writing streaming unlock code to peripheral: \(unlock.hexEncodedString())")
         peripheral.writeValue(unlock, for: writeCharacteristics, type: .withResponse)
 
-
     }
-
-
 
     func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic) {
 
         logger.debug("libre2: saving notifyCharacteristic")
-        //peripheral.setNotifyValue(true, for: notifyCharacteristic)
+        // peripheral.setNotifyValue(true, for: notifyCharacteristic)
         logger.debug("libre2 setting notify while discovering : \(String(describing: notifyCharacteristic.debugDescription))")
         peripheral.setNotifyValue(true, for: notifyCharacteristic)
     }
-
 
     private func unlock() -> Data? {
 
@@ -113,7 +100,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
             return nil
         }
 
-        sensor.unlockCount = sensor.unlockCount + 1
+        sensor.unlockCount +=  1
 
         UserDefaults.standard.preSelectedSensor = sensor
 
@@ -135,12 +122,15 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
             return
         }
 
-
         do {
             let decryptedBLE = Data(try Libre2.decryptBLE(id: [UInt8](sensor.uuid), data: [UInt8](rxBuffer)))
             let sensorUpdate = Libre2.parseBLEData(decryptedBLE)
 
-            metadata = LibreTransmitterMetadata(hardware: "-", firmware: "-", battery: 100, name:  Self.shortTransmitterName, macAddress: nil, patchInfo: sensor.patchInfo.hexEncodedString().uppercased(), uid: [UInt8](sensor.uuid))
+            metadata = LibreTransmitterMetadata(hardware: "-", firmware: "-", battery: 100,
+                                                name: Self.shortTransmitterName,
+                                                macAddress: nil,
+                                                patchInfo: sensor.patchInfo.hexEncodedString().uppercased(),
+                                                uid: [UInt8](sensor.uuid))
 
             delegate?.libreSensorDidUpdate(with: sensorUpdate, and: metadata!)
 
@@ -153,6 +143,5 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
         reset()
 
     }
-
 
 }

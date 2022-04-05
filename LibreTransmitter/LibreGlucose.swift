@@ -8,9 +8,7 @@ import HealthKit
 import LoopKit
 import os.log
 
-
-fileprivate var logger = Logger(forType: "LibreGlucose")
-
+private var logger = Logger(forType: "LibreGlucose")
 
 public struct LibreGlucose {
     public let unsmoothedGlucose: Double
@@ -19,10 +17,10 @@ public struct LibreGlucose {
     public var glucose: UInt16 {
         UInt16(glucoseDouble.rounded())
     }
-    //trend is deprecated here, it should only be calculated once in latestbackfill
-    //public var trend: UInt8
+    // trend is deprecated here, it should only be calculated once in latestbackfill
+    // public var trend: UInt8
     public var timestamp: Date
-    //public let collector: String?
+    // public let collector: String?
 
     public static func timeDifference(oldGlucose: LibreGlucose, newGlucose: LibreGlucose) -> TimeInterval {
         newGlucose.startDate.timeIntervalSince(oldGlucose.startDate)
@@ -136,7 +134,6 @@ extension LibreGlucose {
 
         let  s = calculateSlopeByMinute(current: current, last: last)
 
-
         switch s {
         case _ where s <= (-3.5):
             return .downDownDown
@@ -151,7 +148,7 @@ extension LibreGlucose {
         case _ where s <= (3.5):
             return .upUp
         case _ where s <= (40):
-            return .flat //flat is the new (tm) "unknown"!
+            return .flat // flat is the new (tm) "unknown"!
 
         default:
 
@@ -166,8 +163,8 @@ extension LibreGlucose {
 
         for historical in measurements {
             let glucose = LibreGlucose(
-                //unsmoothedGlucose: historical.temperatureAlgorithmGlucose,
-                //glucoseDouble: historical.temperatureAlgorithmGlucose,
+                // unsmoothedGlucose: historical.temperatureAlgorithmGlucose,
+                // glucoseDouble: historical.temperatureAlgorithmGlucose,
                 unsmoothedGlucose: historical.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
                 glucoseDouble: historical.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
                 error: historical.error,
@@ -190,14 +187,14 @@ extension LibreGlucose {
             // instead we calculate it once when latestbackfill is set, which in turn sets
             // the sensordisplayable property
             let glucose = LibreGlucose(
-                //unsmoothedGlucose: trend.temperatureAlgorithmGlucose,
+                // unsmoothedGlucose: trend.temperatureAlgorithmGlucose,
                 unsmoothedGlucose: trend.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
                 glucoseDouble: 0.0,
                 error: trend.error,
                 timestamp: trend.date)
             // if sensor is ripped off body while transmitter is attached, values below 1 might be created
 
-            if glucose.unsmoothedGlucose > 0 && glucose.unsmoothedGlucose <= 500{
+            if glucose.unsmoothedGlucose > 0 && glucose.unsmoothedGlucose <= 500 {
                 arr.append(glucose)
             }
 
@@ -207,7 +204,6 @@ extension LibreGlucose {
                 shouldSmoothGlucose = false
             }
         }
-        
 
         if shouldSmoothGlucose {
             arr = CalculateSmothedData5Points(origtrends: arr)

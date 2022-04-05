@@ -11,17 +11,14 @@ import Combine
 import LibreTransmitter
 import LoopKit
 
-
 struct CalibrationEditView: View {
     typealias Params = SensorData.CalibrationInfo
-
-
 
     @State private var isPressed = false
 
     @State private var presentableStatus: StatusMessage?
 
-    public var isReadOnly : Bool {
+    public var isReadOnly: Bool {
         if debugMode {
             return false
         }
@@ -29,27 +26,22 @@ struct CalibrationEditView: View {
         return !hasExistingParams
     }
 
-
     @ObservedObject fileprivate var formstate = FormErrorState.shared
 
-
-
-
-    var saveButtonSection: some View{
+    var saveButtonSection: some View {
         Section {
             Button(action: {
                 print("calibrationsaving in progress")
 
-
                 self.isPressed.toggle()
 
                 if formstate.hasAnyError {
-                    presentableStatus = StatusMessage(title: "Could not save", message:"Some of the fields was not correctly entered")
+                    presentableStatus = StatusMessage(title: "Could not save", message: "Some of the fields was not correctly entered")
                     return
                 }
 
                 if false && isReadOnly {
-                    presentableStatus = StatusMessage(title: "Could not save", message:"Calibration parameters are readonly and cannot be saved")
+                    presentableStatus = StatusMessage(title: "Could not save", message: "Calibration parameters are readonly and cannot be saved")
                     return
                 }
 
@@ -60,22 +52,21 @@ struct CalibrationEditView: View {
                     presentableStatus = StatusMessage(title: "OK", message: "Calibrations saved!")
                 } catch {
                     print("error: \(error.localizedDescription)")
-                    presentableStatus = StatusMessage(title: "Calibration error", message:"Calibrations could not be saved, Check that footer crc is non-zero and that all values have sane defaults")
+                    presentableStatus = StatusMessage(title: "Calibration error", message: "Calibrations could not be saved, Check that footer crc is non-zero and that all values have sane defaults")
                 }
-
 
             }, label: {
                 Text("Save")
 
             }).buttonStyle(BlueButtonStyle())
             .alert(item: $presentableStatus) { status in
-                Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+                Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
             }
 
         }
     }
 
-    var calibrationInputsSection : some View{
+    var calibrationInputsSection : some View {
         Section {
             NumericTextField(description: "i1", showDescription: true, numericValue: $newParams.i1, isReadOnly: isReadOnly)
             NumericTextField(description: "i2", showDescription: true, numericValue: $newParams.i2, isReadOnly: isReadOnly)
@@ -108,30 +99,25 @@ struct CalibrationEditView: View {
     private var debugMode = false
     private var hasExistingParams = false
 
-    public init(debugMode:Bool=false) {
+    public init(debugMode: Bool=false) {
         self.debugMode = debugMode
-
 
         if let params = KeychainManagerWrapper.standard.getLibreNativeCalibrationData() {
             hasExistingParams = true
             self.newParams = params
         } else {
             hasExistingParams = false
-            self.newParams = Params(i1: 1,i2: 2,i3: 3,i4: 4,i5: 5,i6: 5,isValidForFooterWithReverseCRCs: 1337)
+            self.newParams = Params(i1: 1, i2: 2, i3: 3, i4: 4, i5: 5, i6: 5, isValidForFooterWithReverseCRCs: 1337)
         }
 
     }
-
-    
-
-
 
 }
 
 struct CalibrationEditView_Previews: PreviewProvider {
     static var previews: some View {
-        //var testData = FormState.shared
-        //testData.childStates["i1"] = true
+        // var testData = FormState.shared
+        // testData.childStates["i1"] = true
         CalibrationEditView(debugMode: true)
 
     }

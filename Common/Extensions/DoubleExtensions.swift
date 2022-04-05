@@ -25,5 +25,4 @@ extension Double {
         static var formatter = NumberFormatter()
     }
 
-
 }

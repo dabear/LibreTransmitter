@@ -7,7 +7,7 @@
 //
 
 import Foundation
-public class SensorInfo : ObservableObject, Equatable, Hashable{
+public class SensorInfo: ObservableObject, Equatable, Hashable {
     @Published public var sensorAge = ""
     @Published public var sensorAgeLeft = ""
     @Published public var sensorEndTime = ""

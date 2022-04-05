@@ -8,7 +8,6 @@
 
 import os.log
 
-
 extension OSLog {
     convenience init(category: String) {
         self.init(subsystem: "com.loopkit.LibreTransmitter", category: category)

@@ -12,7 +12,7 @@ import Foundation
 import CoreNFC
 #endif
 
-public final class Features{
+public final class Features {
 
     static public var logSubsystem = "no.bjorninge.libre"
 
@@ -20,7 +20,7 @@ public final class Features{
         #if canImport(CoreNFC)
         if NSClassFromString("NFCNDEFReaderSession") == nil {
             return false
-            
+
         }
 
         return NFCNDEFReaderSession.readingAvailable
@@ -36,8 +36,4 @@ public final class Features{
         return false
     }
 
-
-
-
 }
-

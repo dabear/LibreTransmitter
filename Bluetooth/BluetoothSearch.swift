@@ -15,26 +15,24 @@ import UIKit
 import Combine
 
 struct RSSIInfo {
-    let bledeviceID:  String
+    let bledeviceID: String
     let signalStrength: Int
 
-    var totalBars : Int {
+    var totalBars: Int {
         3
     }
 
-    var signalBars : Int {
+    var signalBars: Int {
         if signalStrength < -80 {
-            return 1  //near
+            return 1  // near
         }
 
         if signalStrength > -50 {
-            return 3 //immediate
+            return 3 // immediate
         }
 
-        return 2 //near
+        return 2 // near
     }
-
-
 
 }
 
@@ -44,15 +42,14 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     fileprivate lazy var logger = Logger(forType: Self.self)
 
-    //fileprivate let deviceNames = SupportedDevices.allNames
-    //fileprivate let serviceUUIDs:[CBUUID]? = [CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")]
+    // fileprivate let deviceNames = SupportedDevices.allNames
+    // fileprivate let serviceUUIDs:[CBUUID]? = [CBUUID(string: "6E400001-B5A3-F393-E0A9-E50E24DCCA9E")]
 
     private var discoveredDevices = [CBPeripheral]()
 
     public let passThrough = PassthroughSubject<CBPeripheral, Never>()
     public let passThroughMetaData = PassthroughSubject<(CBPeripheral, [String: Any]), Never>()
     public let throttledRSSI = GenericThrottler(identificator: \RSSIInfo.bledeviceID, interval: 5)
-
 
     private var rescanTimerBag = Set<AnyCancellable>()
 
@@ -69,17 +66,17 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         // discovered but unconnected peripherals
         // This should work, but in practice, most devices will still only be discovered once, meaning that we cannot update rssi values
         // without either a new scan, or connecting to the peripheral and using .readrssi()
-        //centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
+        // centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey : true])
         centralManager = CBCentralManager(delegate: self, queue: nil, options: nil)
         //        slipBuffer.delegate = self
         logger.debug("BluetoothSearchManager init called ")
 
         // Ugly hack to be able to update rssi continously without connecting to peripheral
         // Yes, this consumes extra power, but this feature is very convenient when needed, but very rarely used (only during setup)
-        //startTimer()
+        // startTimer()
     }
 
-    public func startTimer(){
+    public func startTimer() {
         stopTimer()
 
         Timer.publish(every: 10, on: .main, in: .default)
@@ -111,15 +108,11 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     func scanForCompatibleDevices() {
 
-        
-
         if centralManager.state == .poweredOn && !centralManager.isScanning {
             logger.debug("Before scan for transmitter while central manager state \(String(describing: self.centralManager.state.rawValue))")
 
-
             // nil because mioamiao1 not advertising its services
-            centralManager.scanForPeripherals(withServices: nil, options:nil)
-
+            centralManager.scanForPeripherals(withServices: nil, options: nil)
 
             // Ugly hack to be able to update rssi continously without connecting to peripheral
             // Yes, this consumes extra power, but this feature is very convenient when needed, but very rarely used (only during setup)
@@ -137,8 +130,6 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
             }
     }
 
-
-
     // MARK: - CBCentralManagerDelegate
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -147,9 +138,9 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         case .poweredOff, .resetting, .unauthorized, .unknown, .unsupported:
             logger.debug("Central Manager was either .poweredOff, .resetting, .unauthorized, .unknown, .unsupported: \(String(describing: central.state))")
         case .poweredOn:
-            //we don't want this to start scanning right away, but rather wait until the view has appeared
+            // we don't want this to start scanning right away, but rather wait until the view has appeared
             // this means that the view is responsible for calling scanForCompatibleDevices it self
-            //scanForCompatibleDevices() // power was switched on, while app is running -> reconnect.
+            // scanForCompatibleDevices() // power was switched on, while app is running -> reconnect.
             break
 
         @unknown default:
@@ -166,18 +157,18 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         if LibreTransmitters.isSupported(peripheral) {
             logger.debug("dabear:: did recognize device: \(name): \(peripheral.identifier)")
             self.addDiscoveredDevice(peripheral, with: advertisementData, rssi: RSSI.intValue)
-            //peripheral.delegate = self
-            //peripheral.readRSSI()
+            // peripheral.delegate = self
+            // peripheral.readRSSI()
         } else {
             if UserDefaults.standard.dangerModeActivated {
-                //allow listing any device when danger mode is active
+                // allow listing any device when danger mode is active
 
                 let name = String(describing: peripheral.name)
 
                 logger.debug("dabear:: did add unknown device due to dangermode being active \(name): \(peripheral.identifier)")
                 self.addDiscoveredDevice(peripheral, with: advertisementData, rssi: RSSI.intValue)
-                //peripheral.delegate = self
-                //peripheral.readRSSI()
+                // peripheral.delegate = self
+                // peripheral.readRSSI()
 
             } else {
                 logger.debug("dabear:: did not add unknown device: \(name): \(peripheral.identifier)")
@@ -186,7 +177,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
     }
 
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        //self.lastConnectedIdentifier = peripheral.identifier.uuidString
+        // self.lastConnectedIdentifier = peripheral.identifier.uuidString
 
     }
 
@@ -231,7 +222,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
                     logger.debug("Set notify value for this characteristic")
                 }
                 if characteristic.uuid == CBUUID(string: "6E400002-B5A3-F393-E0A9-E50E24DCCA9E") {
-                    //writeCharacteristic = characteristic
+                    // writeCharacteristic = characteristic
                 }
             }
         } else {
@@ -239,12 +230,11 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
         }
     }
 
-    
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
 
-        //throttledRSSI.incoming.send(RSSIInfo(bledeviceID: peripheral.identifier.uuidString, signalStrength: RSSI.intValue))
+        // throttledRSSI.incoming.send(RSSIInfo(bledeviceID: peripheral.identifier.uuidString, signalStrength: RSSI.intValue))
 
-        //peripheral.readRSSI() //we keep contuing to update the rssi (only works if peripheral is already connected....
+        // peripheral.readRSSI() //we keep contuing to update the rssi (only works if peripheral is already connected....
 
     }
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {

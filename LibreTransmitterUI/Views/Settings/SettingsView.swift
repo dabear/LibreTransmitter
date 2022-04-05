@@ -14,7 +14,6 @@ import LoopKit
 import LoopKitUI
 import UniformTypeIdentifiers
 
-
 public struct SettingsItem: View {
     @State var title: String = "" // we don't want this to change after it is set
     @Binding var detail: String
@@ -24,13 +23,13 @@ public struct SettingsItem: View {
         self._detail = detail
     }
 
-    //basically allows caller to set a static string without having to use .constant
+    // basically allows caller to set a static string without having to use .constant
     init(title: String, detail: String) {
         self.title = title
         self._detail = Binding<String>(get: {
             detail
-        }, set: { newVal in
-            //pass
+        }, set: { _ in
+            // pass
         })
     }
 
@@ -44,8 +43,7 @@ public struct SettingsItem: View {
     }
 }
 
-
-private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
+private class FactoryCalibrationInfo: ObservableObject, Equatable, Hashable {
     @Published var i1 = ""
     @Published var i2 = ""
     @Published var i3 = ""
@@ -53,7 +51,6 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
     @Published var i5 = ""
     @Published var i6 = ""
     @Published var validForFooter = ""
-
 
     // For swiftuis stateobject to be able to compare two objects for equality,
     // we must exclude the publishers them selves in the comparison
@@ -66,15 +63,15 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
 
     }
 
-    //todo: consider using cgmmanagers observable directly
-    static func loadState() -> FactoryCalibrationInfo{
+    // todo: consider using cgmmanagers observable directly
+    static func loadState() -> FactoryCalibrationInfo {
 
         let newState = FactoryCalibrationInfo()
 
         // User editable calibrationdata: keychain.getLibreNativeCalibrationData()
         // Default Calibrationdata stored in sensor: cgmManager?.calibrationData
 
-        //do not change this, there is UI support for editing calibrationdata anyway
+        // do not change this, there is UI support for editing calibrationdata anyway
         guard let c = KeychainManagerWrapper.standard.getLibreNativeCalibrationData() else {
             return newState
         }
@@ -92,7 +89,7 @@ private class FactoryCalibrationInfo : ObservableObject, Equatable, Hashable{
 
 }
 
-class SettingsModel : ObservableObject {
+class SettingsModel: ObservableObject {
     @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
 
 }
@@ -105,68 +102,69 @@ struct SettingsView: View {
 
     @ObservedObject private var glucoseMeasurement: LibreTransmitter.GlucoseInfo
 
-
     @ObservedObject private var notifyComplete: GenericObservableObject
     @ObservedObject private var notifyDelete: GenericObservableObject
 
-    //most of the settings are now retrieved from the cgmmanager observables instead
+    // most of the settings are now retrieved from the cgmmanager observables instead
     @StateObject var model = SettingsModel()
     @State private var presentableStatus: StatusMessage?
     @ObservedObject var alarmStatus: LibreTransmitter.AlarmStatus
 
     @State private var showingDestructQuestion = false
     @State private var showingExporter = false
-    //@Environment(\.presentationMode) var presentationMode
-
+    // @Environment(\.presentationMode) var presentationMode
 
     static func asHostedViewController(
         displayGlucoseUnitObservable: DisplayGlucoseUnitObservable,
         notifyComplete: GenericObservableObject,
         notifyDelete: GenericObservableObject,
-        transmitterInfoObservable:LibreTransmitter.TransmitterInfo,
+        transmitterInfoObservable: LibreTransmitter.TransmitterInfo,
         sensorInfoObervable: LibreTransmitter.SensorInfo,
         glucoseInfoObservable: LibreTransmitter.GlucoseInfo,
         alarmStatus: LibreTransmitter.AlarmStatus) -> UIHostingController<SettingsView> {
         UIHostingController(rootView: self.init(
-            displayGlucoseUnitObservable: displayGlucoseUnitObservable, transmitterInfo: transmitterInfoObservable, sensorInfo: sensorInfoObervable, glucoseMeasurement: glucoseInfoObservable, notifyComplete: notifyComplete, notifyDelete: notifyDelete, alarmStatus: alarmStatus
+            displayGlucoseUnitObservable: displayGlucoseUnitObservable,
+            transmitterInfo: transmitterInfoObservable,
+            sensorInfo: sensorInfoObervable,
+            glucoseMeasurement: glucoseInfoObservable,
+            notifyComplete: notifyComplete,
+            notifyDelete: notifyDelete,
+            alarmStatus: alarmStatus
 
         ))
     }
-
 
     private var glucoseUnit: HKUnit {
         displayGlucoseUnitObservable.displayGlucoseUnit
     }
 
-
     static let formatter = NumberFormatter()
 
-    var dangerModeActivated : Binding<String> = ({
+    var dangerModeActivated: Binding<String> = ({
         Binding(
             get: { UserDefaults.standard.dangerModeActivated ? "Activated" : "Not activated" },
-            set: { newVal in
-                //UserDefaults.standard.dangerModeActivated = newVal
-                //we dont support setting it currently
+            set: { _ in
+                // UserDefaults.standard.dangerModeActivated = newVal
+                // we dont support setting it currently
             })
     }
 
     )()
-
 
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
     var body: some View {
         overview
-            //.navigationViewStyle(StackNavigationViewStyle())
+            // .navigationViewStyle(StackNavigationViewStyle())
             .navigationBarTitle(Text("Libre Bluetooth"), displayMode: .inline)
             .navigationBarItems(trailing: dismissButton)
-            .onAppear{
+            .onAppear {
                 print("dabear:: settingsview appeared")
-                //While loop does this request on our behalf, freeaps does not
+                // While loop does this request on our behalf, freeaps does not
                 NotificationHelper.requestNotificationPermissionsIfNeeded()
 
-                //only override savedglucose unit if we haven't saved this locally before
+                // only override savedglucose unit if we haven't saved this locally before
                 if UserDefaults.standard.mmGlucoseUnit == nil {
                     UserDefaults.standard.mmGlucoseUnit = glucoseUnit
                 }
@@ -176,10 +174,9 @@ struct SettingsView: View {
                 // as an observable in swiftui without bringing in large third party
                 // dependencies or hand crafting it, which would be error prone
 
-
                 let newFactoryInfo = FactoryCalibrationInfo.loadState()
 
-                if newFactoryInfo != self.model.factoryCalibrationInfos.first{
+                if newFactoryInfo != self.model.factoryCalibrationInfos.first {
                     print("dabear:: factoryinfo was new")
 
                     self.model.factoryCalibrationInfos.removeAll()
@@ -204,7 +201,6 @@ struct SettingsView: View {
             }
         }
     }
-
 
     var measurementSection : some View {
         Section(header: Text("Last measurement")) {
@@ -242,7 +238,6 @@ struct SettingsView: View {
         }
     }
 
-
     var transmitterInfoSection: some View {
         Section(header: Text("Transmitter Info")) {
             if !transmitterInfo.battery.isEmpty {
@@ -270,7 +265,6 @@ struct SettingsView: View {
                 SettingsItem(title: "Valid for footer", detail: factoryCalibrationInfo.validForFooter )
             }
 
-
             ZStack {
                 NavigationLink(destination: CalibrationEditView()) {
                     Button("Edit calibrations") {
@@ -283,21 +277,18 @@ struct SettingsView: View {
         }
     }
 
-
-
     private var dismissButton: some View {
         Button( action: {
             // This should be enough
-            //self.presentationMode.wrappedValue.dismiss()
+            // self.presentationMode.wrappedValue.dismiss()
 
-            //but since Loop uses uihostingcontroller wrapped in cgmviewcontroller we need
+            // but since Loop uses uihostingcontroller wrapped in cgmviewcontroller we need
             // to notify the parent to close the cgmviewcontrollers navigation
             notifyComplete.notify()
         }) {
             Text("Done")
         }
     }
-
 
     var destructSection: some View {
         Section {
@@ -319,10 +310,10 @@ struct SettingsView: View {
         }
     }
 
-    //todo: replace sub with navigationlinks
+    // todo: replace sub with navigationlinks
     var advancedSection: some View {
         Section(header: Text("Advanced")) {
-            //these subviews don't really need to be notified once glucose unit changes
+            // these subviews don't really need to be notified once glucose unit changes
             // so we just pass glucoseunit directly on init
             ZStack {
                 NavigationLink(destination: AlarmSettingsView(glucoseUnit: self.glucoseUnit)) {
@@ -341,10 +332,8 @@ struct SettingsView: View {
                 }
             }
 
-
             // Decided against adding ui for activating danger mode this time
             // Consider doing it in the future, but no rush. dangermode is only used for calibrationedit and bluetooth devices debugging.
-
 
             SettingsItem(title: "Danger mode", detail: dangerModeActivated)
                 .onTapGesture {
@@ -373,7 +362,7 @@ struct SettingsView: View {
 
             snoozeSection
             measurementSection
-            if !glucoseMeasurement.predictionDate.isEmpty{
+            if !glucoseMeasurement.predictionDate.isEmpty {
                 predictionSection
             }
             sensorInfoSection
@@ -381,7 +370,7 @@ struct SettingsView: View {
             factoryCalibrationSection
             advancedSection
 
-            //disable for now due to null byte document issues
+            // disable for now due to null byte document issues
             if true {
                 logExportSection
             }
@@ -399,14 +388,10 @@ struct SettingsView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
 
-
     }
-
-
-
 
 }
 
@@ -438,7 +423,6 @@ struct LogsAsTextFile: FileDocument {
 
     }
 }
-
 
 struct SettingsOverview_Previews: PreviewProvider {
     static var previews: some View {

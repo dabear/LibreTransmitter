@@ -14,7 +14,7 @@ public protocol LibreTransmitterProxyProtocol: AnyObject {
     static var smallImage: UIImage? { get }
     static var manufacturerer: String { get }
     static var requiresPhoneNFC: Bool { get }
-    static var requiresSetup : Bool { get }
+    static var requiresSetup: Bool { get }
     static func canSupportPeripheral(_ peripheral: CBPeripheral) -> Bool
 
     static var writeCharacteristic: UUIDContainer? { get set }
@@ -27,12 +27,9 @@ public protocol LibreTransmitterProxyProtocol: AnyObject {
     func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?)
     func didDiscoverWriteCharacteristics(_ peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic)
     func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic)
-    func didWrite(_ peripheral: CBPeripheral, characteristics: CBCharacteristic) 
+    func didWrite(_ peripheral: CBPeripheral, characteristics: CBCharacteristic)
 
     func reset()
-
-
-    
 
     static func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String?
 
@@ -47,7 +44,7 @@ extension LibreTransmitterProxyProtocol {
     }
 
     func didDiscoverWriteCharacteristics(_ peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic) {
-        
+
     }
 
     func didDiscoverNotificationCharacteristic(_ peripheral: CBPeripheral, notifyCharacteristic: CBCharacteristic) {
@@ -59,7 +56,7 @@ extension LibreTransmitterProxyProtocol {
 
     }
 
-    static var requiresSetup : Bool { return false}
+    static var requiresSetup: Bool { return false}
     static var requiresPhoneNFC: Bool { return false }
 
     static var requiresDelayedReconnect: Bool { return false}

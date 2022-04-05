@@ -11,13 +11,9 @@ import Combine
 import LibreTransmitter
 import HealthKit
 
-
-
 struct GlucoseSettingsView: View {
 
-
     @State private var presentableStatus: StatusMessage?
-
 
     private var glucoseUnit: HKUnit
 
@@ -29,32 +25,26 @@ struct GlucoseSettingsView: View {
             UserDefaults.standard.mmGlucoseUnit = glucoseUnit
         }
 
-
-
     }
-
-
 
     @AppStorage("no.bjorninge.mmSyncToNs") var mmSyncToNS: Bool = true
     @AppStorage("no.bjorninge.mmBackfillFromHistory") var mmBackfillFromHistory: Bool = true
     @AppStorage("no.bjorninge.mmBackfillFromTrend") var mmBackfillFromTrend: Bool = false
     @AppStorage("no.bjorninge.shouldPersistSensorData") var shouldPersistSensorData: Bool = false
 
-
-
     var body: some View {
         List {
-            
-            Section(header: Text("Backfill options"), footer:Text("Backfilling from trend is currently not well supported by Loop") ) {
-                Toggle("Backfill from history", isOn:$mmBackfillFromHistory)
+
+            Section(header: Text("Backfill options"), footer: Text("Backfilling from trend is currently not well supported by Loop") ) {
+                Toggle("Backfill from history", isOn: $mmBackfillFromHistory)
                 Toggle("Backfill from trend", isOn: $mmBackfillFromTrend)
             }
             Section(header: Text("Remote data storage")) {
-                Toggle("Upload to nightscout", isOn:$mmSyncToNS)
+                Toggle("Upload to nightscout", isOn: $mmSyncToNS)
 
             }
             Section(header: Text("Debug options"), footer: Text("Adds a lot of data to the Issue Report ")) {
-                Toggle("Persist sensordata", isOn:$shouldPersistSensorData)
+                Toggle("Persist sensordata", isOn: $shouldPersistSensorData)
                     .onChange(of: shouldPersistSensorData) {newValue in
                         if !newValue {
                             UserDefaults.standard.queuedSensorData = nil
@@ -65,17 +55,13 @@ struct GlucoseSettingsView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message) , dismissButton: .default(Text("Got it!")))
+            Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
         .navigationBarTitle("Glucose Settings")
 
     }
 
-
-
-
 }
-
 
 struct GlucoseSettingsView_Previews: PreviewProvider {
     static var previews: some View {
