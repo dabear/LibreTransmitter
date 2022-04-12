@@ -6,7 +6,7 @@
 #  Copyright © 2019 LoopKit Authors. All rights reserved.
 #  Modified by dabear
 
-echo "Gathering build details in ${SRCROOT}"
+echo "Libretransmitter Gathering build details in ${SRCROOT}"
 cd "${SRCROOT}"
 
 plist="${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}"

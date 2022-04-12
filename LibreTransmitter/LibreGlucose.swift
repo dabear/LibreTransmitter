@@ -10,17 +10,16 @@ import os.log
 
 private var logger = Logger(forType: "LibreGlucose")
 
-public struct LibreGlucose {
+public struct LibreGlucose: Codable, Hashable {
     public let unsmoothedGlucose: Double
     public var glucoseDouble: Double
     public var error = [MeasurementError.OK]
     public var glucose: UInt16 {
         UInt16(glucoseDouble.rounded())
     }
-    // trend is deprecated here, it should only be calculated once in latestbackfill
-    // public var trend: UInt8
+
     public var timestamp: Date
-    // public let collector: String?
+
 
     public static func timeDifference(oldGlucose: LibreGlucose, newGlucose: LibreGlucose) -> TimeInterval {
         newGlucose.startDate.timeIntervalSince(oldGlucose.startDate)

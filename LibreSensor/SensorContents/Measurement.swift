@@ -18,7 +18,7 @@ protocol MeasurementProtocol {
     var error: [MeasurementError] { get}
 }
 
-public enum MeasurementError: Int, CaseIterable {
+public enum MeasurementError: Int, CaseIterable, Codable {
     case OK = 0
     case SD14_FIFO_OVERFLOW      = 1
     case FILTER_DELTA            = 0x02
@@ -53,7 +53,7 @@ struct SimplifiedMeasurement: MeasurementProtocol {
 }
 
 /// Structure for one glucose measurement including value, date and raw data bytes
-public struct Measurement: MeasurementProtocol {
+public struct Measurement: MeasurementProtocol, Codable, Hashable {
     /// The date for this measurement
     let date: Date
     /// The minute counter for this measurement
