@@ -387,6 +387,11 @@ extension LibreTransmitterManager {
                 self.glucoseInfoObservable.predictionMGDL = formatter.string(from: d.quantity, for: .milligramsPerDeciliter) ?? "-"
                 self.glucoseInfoObservable.predictionDate = self.longDateFormatter.string(from: d.timestamp)
 
+            } else {
+                self.glucoseInfoObservable.predictionMMOL = ""
+                self.glucoseInfoObservable.predictionMGDL = ""
+                self.glucoseInfoObservable.predictionDate = ""
+
             }
 
         }
@@ -456,6 +461,7 @@ extension LibreTransmitterManager {
 
         if filtered.count < 15 {
             logger.info("dabear: not creating blood sugar prediction: less data elements than needed (\(filtered.count))")
+            self.latestPrediction = nil
             return
         }
 
