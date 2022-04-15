@@ -131,7 +131,6 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public private(set) var latestPrediction: LibreGlucose?
 
-    public private(set) var l2predictionHelper = LimitedQueue<Measurement>(limit: 20)
     public private(set) var latestBackfill: LibreGlucose? {
         willSet(newValue) {
             guard let newValue = newValue else {
@@ -444,28 +443,20 @@ extension LibreTransmitterManager {
 // MARK: - Direct bluetooth updates
 extension LibreTransmitterManager {
 
-    private func createBloodSugarPrediction(calibration: SensorData.CalibrationInfo){
-        let allGlucoses = l2predictionHelper.array.sorted{ $0.date > $1.date }
-
-        guard let latestGlucose = allGlucoses.first else {
-            logger.info("dabear: not creating blood sugar prediction: no data")
-            return
-        }
+    private func createBloodSugarPrediction(_ measurements: [Measurement], calibration: SensorData.CalibrationInfo) {
+        let allGlucoses = measurements.sorted { $0.date > $1.date }
 
         // Increase to up to 15 to move closer to real blood sugar
         // The cost is slightly more noise on consecutive readings
         let glucosePredictionMinutes: Double = 10
-        let earliestMeasurementDate = latestGlucose.date - TimeInterval(minutes: 15)
 
-        let filtered = allGlucoses.filter { $0.date >= earliestMeasurementDate}.removingDuplicates()
-
-        if filtered.count < 15 {
-            logger.info("dabear: not creating blood sugar prediction: less data elements than needed (\(filtered.count))")
+        if allGlucoses.count < 15 {
+            logger.info("dabear: not creating blood sugar prediction: less data elements than needed (\(allGlucoses.count))")
             self.latestPrediction = nil
             return
         }
 
-        if let predicted = filtered.predictBloodSugar(glucosePredictionMinutes) {
+        if let predicted = allGlucoses.predictBloodSugar(glucosePredictionMinutes) {
             let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
             let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
 
@@ -475,6 +466,13 @@ extension LibreTransmitterManager {
             logger.debug("Tried to predict glucose value but failed!")
         }
 
+    }
+
+    public func libreSensorDidUpdate(with error: LibreError) {
+
+        self.delegateQueue.async {
+            self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
+        }
 
     }
 
@@ -511,62 +509,26 @@ extension LibreTransmitterManager {
             return
         }
 
-        guard bleData.crcVerified else {
-            self.delegateQueue.async {
-                self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.checksumValidationError))
-            }
-
-            logger.debug("did not get bledata with valid crcs")
-            return
-        }
-
         if sensor.maxAge > 0 {
             let minutesLeft = Double(sensor.maxAge - bleData.age)
             NotificationHelper.sendSensorExpireAlertIfNeeded(minutesLeft: minutesLeft)
 
         }
 
-
-
         let sortedTrends = bleData.trend.sorted { $0.date > $1.date}
 
         let glucose = LibreGlucose.fromTrendMeasurements(sortedTrends, nativeCalibrationData: calibrationData, returnAll: UserDefaults.standard.mmBackfillFromTrend)
-        // glucose += LibreGlucose.fromHistoryMeasurements(bleData.history, nativeCalibrationData: calibrationData)
-
-        // while libre2 fram scans contains historymeasurements for the last 8 hours,
-        // history from bledata contains just a couple of data points, so we don't bother
-        /*if UserDefaults.standard.mmBackfillFromHistory {
-            let sortedHistory = bleData.history.sorted{ $0.date > $1.date}
-            glucose += LibreGlucose.fromHistoryMeasurements(sortedHistory, nativeCalibrationData: calibrationData)
-        }*/
 
         let newGlucose = glucosesToSamplesFilter(glucose, startDate: getStartDateForFilter())
-        /*glucose
-            .filter { $0.isStateValid }
-            .compactMap {
-                return NewGlucoseSample(date: $0.startDate,
-                             quantity: $0.quantity,
-                             isDisplayOnly: false,
-                             wasUserEntered: false,
-                             syncIdentifier: $0.syncId,
-                             device: device)
-            }*/
 
         if newGlucose.isEmpty {
             self.countTimesWithoutData &+= 1
         } else {
             self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
-
-            for elem in sortedTrends.reversed() {
-                self.l2predictionHelper.enqueue(elem)
-            }
-            self.createBloodSugarPrediction(calibration: calibrationData)
+            self.createBloodSugarPrediction(bleData.trend, calibration: calibrationData)
             self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
             self.countTimesWithoutData = 0
         }
-
-        // todo: predictions also for libre2 bluetooth data
-        // self.latestPrediction = prediction?.first
 
         self.setObservables(sensorData: nil, bleData: bleData, metaData: Device)
 
@@ -671,7 +633,6 @@ extension LibreTransmitterManager {
 
             let prediction = glucoseArrayWithPrediction?.prediction
 
-
             let newGlucose = self.glucosesToSamplesFilter(glucose, startDate: self.getStartDateForFilter())
 
             if newGlucose.isEmpty {
@@ -708,26 +669,23 @@ extension LibreTransmitterManager {
         var entries: [LibreGlucose] = []
         var prediction: [LibreGlucose] = []
 
-        let predictGlucose = true
-
         // Increase to up to 15 to move closer to real blood sugar
         // The cost is slightly more noise on consecutive readings
         let glucosePredictionMinutes: Double = 10
 
-        if predictGlucose {
-            // We cheat here by forcing the loop to think that the predicted glucose value is the current blood sugar value.
-            logger.debug("Predicting glucose value")
-            if let predicted = data.predictBloodSugar(glucosePredictionMinutes) {
-                let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
-                let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
+        // We cheat here by forcing the loop to think that the predicted glucose value is the current blood sugar value.
+        logger.debug("Predicting glucose value")
+        if let predicted = data.predictBloodSugar(glucosePredictionMinutes) {
+            let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+            let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
 
-                prediction.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
-                logger.debug("Predicted glucose (not used) was: \(currentBg)")
-            } else {
-                logger.debug("Tried to predict glucose value but failed!")
-            }
-
+            prediction.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
+            logger.debug("Predicted glucose (not used) was: \(currentBg)")
+        } else {
+            logger.debug("Tried to predict glucose value but failed!")
         }
+
+
 
         let trends = data.trendMeasurements()
         let firstTrend = trends.first?.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)

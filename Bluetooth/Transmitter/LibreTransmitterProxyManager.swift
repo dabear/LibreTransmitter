@@ -32,6 +32,7 @@ public protocol LibreTransmitterDelegate: AnyObject {
     // Will always happen on managerQueue
     func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata)
     func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata)
+    func libreSensorDidUpdate(with error: LibreError)
 
     func noLibreTransmitterSelected()
     func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?)
@@ -46,6 +47,11 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata) {
         dispatchToDelegate { manager in
             manager.delegate?.libreSensorDidUpdate(with: bleData, and: Device)
+        }
+    }
+    func libreSensorDidUpdate(with error: LibreError) {
+        dispatchToDelegate { manager in
+            manager.delegate?.libreSensorDidUpdate(with: error)
         }
     }
 

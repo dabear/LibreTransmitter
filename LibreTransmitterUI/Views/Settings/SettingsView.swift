@@ -51,11 +51,11 @@ private class FactoryCalibrationInfo: ObservableObject, Equatable, Hashable {
     @Published var i5 = ""
     @Published var i6 = ""
     @Published var validForFooter = ""
-
+    
     // For swiftuis stateobject to be able to compare two objects for equality,
     // we must exclude the publishers them selves in the comparison
 
-   static func ==(lhs: FactoryCalibrationInfo, rhs: FactoryCalibrationInfo) -> Bool {
+   static func == (lhs: FactoryCalibrationInfo, rhs: FactoryCalibrationInfo) -> Bool {
         lhs.i1 == rhs.i1 && lhs.i2 == rhs.i2 &&
         lhs.i3 == rhs.i3 && lhs.i4 == rhs.i4 &&
         lhs.i5 == rhs.i5 && lhs.i6 == rhs.i6 &&
@@ -285,9 +285,9 @@ struct SettingsView: View {
             // but since Loop uses uihostingcontroller wrapped in cgmviewcontroller we need
             // to notify the parent to close the cgmviewcontrollers navigation
             notifyComplete.notify()
-        }) {
+        }, label:  {
             Text("Done")
-        }
+        })
     }
 
     var destructSection: some View {

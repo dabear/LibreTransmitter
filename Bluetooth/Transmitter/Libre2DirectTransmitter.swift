@@ -109,6 +109,8 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
 
     }
 
+    // previously captured trend values, limit to the last 20-ish minutes
+    private var capturedTrends =  LimitedQueue<Measurement>(limit: 20)
     func handleCompleteMessage() {
         guard rxBuffer.count >= expectedBufferSize else {
             logger.debug("libre2 handle complete message with incorrect buffersize")
@@ -126,11 +128,44 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
             let decryptedBLE = Data(try Libre2.decryptBLE(id: [UInt8](sensor.uuid), data: [UInt8](rxBuffer)))
             let sensorUpdate = Libre2.parseBLEData(decryptedBLE)
 
+            guard sensorUpdate.crcVerified else {
+                delegate?.libreSensorDidUpdate(with: .checksumValidationError)
+                return
+            }
+
             metadata = LibreTransmitterMetadata(hardware: "-", firmware: "-", battery: 100,
                                                 name: Self.shortTransmitterName,
                                                 macAddress: nil,
                                                 patchInfo: sensor.patchInfo.hexEncodedString().uppercased(),
                                                 uid: [UInt8](sensor.uuid))
+
+            // todo: test
+
+            // todo: reset when sensor changes, but we currently don't need this
+            // due to requirement of deleting cgmmanager when changing sensors
+            if let latestGlucose = sensorUpdate.trend.first,
+               let oldestGlucose = sensorUpdate.trend.last {
+                //ensures captured trends are recent enough
+                // but also older than the trends sent by sensor this time around
+                let latestGlucoseDate = latestGlucose.date - TimeInterval(minutes: 15)
+                let oldestGlucoseDate = oldestGlucose.date
+
+                let filtered = capturedTrends.array.filter {
+                    $0.date >= latestGlucoseDate &&
+                    $0.date < oldestGlucoseDate
+                }.removingDuplicates()
+
+                for trend in sensorUpdate.trend {
+                    capturedTrends.enqueue(trend)
+                }
+
+                logger.debug("dabear: sensor updated with trends: \((sensorUpdate.trend.count)): \(sensorUpdate.trend)")
+
+                if !filtered.isEmpty {
+                    logger.debug("dabear: Would be adding previously captured trends \((filtered.count)): \(filtered)")
+                    //sensorUpdate.trend += filtered
+                }
+            }
 
             delegate?.libreSensorDidUpdate(with: sensorUpdate, and: metadata!)
 
