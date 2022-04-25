@@ -10,19 +10,23 @@ import Foundation
 import LibreTransmitter
 
 public struct LimitedQueue<T: Codable>: Codable {
-  public var array  = [T]()
-  var limit: Int = 10
+    public var array  = [T]()
+    var limit: Int = 10
 
-  mutating func enqueue(_ element: T) {
-    while array.count >= limit {
-        array.removeFirst()
+    mutating func enqueue(_ element: T) {
+        while array.count >= limit {
+            array.removeFirst()
+        }
+        array.append(element)
     }
-    array.append(element)
-  }
 
-  mutating func dequeue() -> T? {
-    array.isEmpty ? nil : array.removeFirst()
-  }
+    mutating func removeAll() {
+        array.removeAll()
+    }
+
+    mutating func dequeue() -> T? {
+        array.isEmpty ? nil : array.removeFirst()
+    }
 }
 extension UserDefaults {
     private enum Key: String {

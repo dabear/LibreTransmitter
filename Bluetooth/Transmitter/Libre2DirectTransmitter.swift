@@ -112,6 +112,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
     // previously captured trend values, limit to the last 20-ish minutes
     // we have some leniency here by having up to 30 data elements
     private var bufferedTrends =  LimitedQueue<Measurement>(limit: 30)
+    private var lastSensorUUID : [UInt8]?
     func handleCompleteMessage() {
         guard rxBuffer.count >= expectedBufferSize else {
             logger.debug("libre2 handle complete message with incorrect buffersize")
@@ -139,6 +140,24 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
                                                 macAddress: nil,
                                                 patchInfo: sensor.patchInfo.hexEncodedString().uppercased(),
                                                 uid: [UInt8](sensor.uuid))
+
+            // When end user has changed sensor we cannot trust the current(new) calibrationdata
+            // to apply for both old and new sensor.
+            // Since we don't support multiple sets of calibration datas we chooce to remove
+            // all buffered calibration data
+            if let currentSensorUUID = metadata?.uid {
+                if let lastSensorUUID = lastSensorUUID,
+                    lastSensorUUID != currentSensorUUID {
+                    bufferedTrends.removeAll()
+
+                }
+                lastSensorUUID = currentSensorUUID
+            }
+
+
+
+
+
 
 
             // todo: reset when sensor changes, but we currently don't need this
