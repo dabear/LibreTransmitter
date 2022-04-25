@@ -14,7 +14,7 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
     @Published public var sensorState = ""
     @Published public var sensorSerial = ""
 
-    public static func ==(lhs: SensorInfo, rhs: SensorInfo) -> Bool {
+    public static func == (lhs: SensorInfo, rhs: SensorInfo) -> Bool {
          lhs.sensorAge == rhs.sensorAge && lhs.sensorAgeLeft == rhs.sensorAgeLeft &&
          lhs.sensorEndTime == rhs.sensorEndTime && lhs.sensorState == rhs.sensorState &&
          lhs.sensorSerial == rhs.sensorSerial

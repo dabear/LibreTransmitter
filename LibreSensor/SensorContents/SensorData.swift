@@ -434,15 +434,15 @@ public extension Array where Element ==  Measurement {
         let mostRecentDate = mostRecent.date
         let futureDate = mostRecentDate.addingTimeInterval(60*minutes)
 
-        var glucoseAge = sorted.compactMap { measurement in
+        let glucoseAge = sorted.compactMap { measurement in
             Double(measurement.date.timeIntervalSince1970)
         }
 
-        var rawGlucoseValues = sorted.compactMap { measurement in
+        let rawGlucoseValues = sorted.compactMap { measurement in
             Double(measurement.rawGlucose)
         }
 
-        var glucosePrediction = linearRegression(glucoseAge, rawGlucoseValues)(futureDate.timeIntervalSince1970)
+        let glucosePrediction = linearRegression(glucoseAge, rawGlucoseValues)(futureDate.timeIntervalSince1970)
 
         let predicted = Measurement(date: futureDate,
                                    rawGlucose: Int(glucosePrediction.rounded()),
@@ -454,7 +454,6 @@ public extension Array where Element ==  Measurement {
 }
 
 public extension SensorData {
-
 
     /// Uses trend data to predict a measurement 10 minutes into the future
     ///

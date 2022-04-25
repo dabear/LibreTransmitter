@@ -109,6 +109,9 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
 
     }
 
+    // previously captured trend values, limit to the last 20-ish minutes
+    // we have some leniency here by having up to 30 data elements
+    private var bufferedTrends =  LimitedQueue<Measurement>(limit: 30)
     func handleCompleteMessage() {
         guard rxBuffer.count >= expectedBufferSize else {
             logger.debug("libre2 handle complete message with incorrect buffersize")
@@ -124,13 +127,51 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
 
         do {
             let decryptedBLE = Data(try Libre2.decryptBLE(id: [UInt8](sensor.uuid), data: [UInt8](rxBuffer)))
-            let sensorUpdate = Libre2.parseBLEData(decryptedBLE)
+            var sensorUpdate = Libre2.parseBLEData(decryptedBLE)
+
+            guard sensorUpdate.crcVerified else {
+                delegate?.libreSensorDidUpdate(with: .checksumValidationError)
+                return
+            }
 
             metadata = LibreTransmitterMetadata(hardware: "-", firmware: "-", battery: 100,
                                                 name: Self.shortTransmitterName,
                                                 macAddress: nil,
                                                 patchInfo: sensor.patchInfo.hexEncodedString().uppercased(),
                                                 uid: [UInt8](sensor.uuid))
+
+
+            // todo: reset when sensor changes, but we currently don't need this
+            // due to requirement of deleting cgmmanager when changing sensors
+            if let latestGlucose = sensorUpdate.trend.last,
+               let oldestGlucose = sensorUpdate.trend.first {
+                //ensures captured trends are recent enough
+                // but also older than the trends sent by sensor this time around
+                let latestGlucoseDate = latestGlucose.date - TimeInterval(minutes: 20)
+                let oldestGlucoseDate = oldestGlucose.date
+
+                let filtered = bufferedTrends.array.filter {
+                    $0.date > latestGlucoseDate &&
+                    $0.date < oldestGlucoseDate
+                }.removingDuplicates(byKey: { $0.idValue})
+
+                // Could refactor this to be more performant, but decided not to
+                // This is more explicit and easier to grasp than doing above and below
+                // in one operation
+                for trend in sensorUpdate.trend {
+                    if !bufferedTrends.array.contains(where: { $0.date > trend.date}) {
+                        bufferedTrends.enqueue(trend)
+                    }
+
+                }
+
+                logger.debug("dabear: sensor updated with trends: \((sensorUpdate.trend.count)): \(sensorUpdate.trend)")
+
+                if !filtered.isEmpty {
+                    logger.debug("dabear: Adding previously captured trends \((filtered.count)): \(filtered)")
+                    sensorUpdate.trend += filtered
+                }
+            }
 
             delegate?.libreSensorDidUpdate(with: sensorUpdate, and: metadata!)
 

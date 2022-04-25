@@ -62,12 +62,12 @@ struct SnoozeView: View {
         var celltext = ""
 
         switch activeAlarms {
-            case .high:
-                celltext = "High Glucose Alarm active"
-            case .low:
-                celltext = "Low Glucose Alarm active"
-            case .none:
-                celltext = "No Glucose Alarm active"
+        case .high:
+            celltext = "High Glucose Alarm active"
+        case .low:
+            celltext = "Low Glucose Alarm active"
+        case .none:
+            celltext = "No Glucose Alarm active"
         }
 
         if let until = GlucoseScheduleList.snoozedUntil {
@@ -92,10 +92,10 @@ struct SnoozeView: View {
                 UserDefaults.standard.snoozedUntil = untilDate < Date() ? nil : untilDate
                 print("will snooze for \(snoozeFor) until \(untilDate.description(with: .current))")
                 snoozeDescription = getSnoozeDescription()
-            }) {
+            }, label:  {
                 Text("Click to Snooze Alerts")
                     .padding()
-            }
+            })
         }
 
     }

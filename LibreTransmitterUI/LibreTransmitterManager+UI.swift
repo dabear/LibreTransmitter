@@ -14,7 +14,6 @@ import Combine
 
 extension LibreTransmitterManager: CGMManagerUI {
 
-    // TODO Placeholder.
     public var cgmStatusBadge: DeviceStatusBadge? {
         nil
     }
@@ -61,12 +60,10 @@ extension LibreTransmitterManager: CGMManagerUI {
         return nav
     }
 
-    // TODO Placeholder. This functionality will come with LOOP-1311
     public var cgmStatusHighlight: DeviceStatusHighlight? {
         nil
     }
 
-    // TODO Placeholder. This functionality will come with LOOP-1311
     public var cgmLifecycleProgress: DeviceLifecycleProgress? {
         nil
     }

@@ -103,6 +103,8 @@
 		27ED67BA26990D6B003E5DAB /* GenericObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */; };
 		27ED67BC269B8277003E5DAB /* KeyChainManagerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */; };
 		27F1593026CAF77200EBA666 /* GenericThrottler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1592E26CAF6BE00EBA666 /* GenericThrottler.swift */; };
+		27F93B2A2816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F93B292816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift */; };
+		27F93B2C2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F93B2B2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift */; };
 		27FED6CC26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */; };
 		27FED6CD26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */; };
 		432B0E8C1CDFC3C50045347B /* LibreTransmitter.h in Headers */ = {isa = PBXBuildFile; fileRef = 432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -214,6 +216,8 @@
 		27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericObservableObject.swift; sourceTree = "<group>"; };
 		27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainManagerWrapper.swift; sourceTree = "<group>"; };
 		27F1592E26CAF6BE00EBA666 /* GenericThrottler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericThrottler.swift; sourceTree = "<group>"; };
+		27F93B292816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibreTransmitterManager+Libre2EU.swift"; sourceTree = "<group>"; };
+		27F93B2B2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibreTransmitterManager+Transmitters.swift"; sourceTree = "<group>"; };
 		27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ic_bubble_mini_3-2.png"; sourceTree = "<group>"; };
 		432B0E881CDFC3C50045347B /* LibreTransmitter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LibreTransmitter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibreTransmitter.h; sourceTree = "<group>"; };
@@ -541,6 +545,8 @@
 				27850D0C25672CA60020D109 /* LibreGlucose.swift */,
 				43AB5125213315D300B3D58D /* Localizable.strings */,
 				43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */,
+				27F93B2B2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift */,
+				27F93B292816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift */,
 				432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */,
 				432B0E8D1CDFC3C50045347B /* Info.plist */,
 				B40BF26723ABD55200A43CEE /* OSLog.swift */,
@@ -859,6 +865,7 @@
 				27850DCE25672F780020D109 /* SensorData.swift in Sources */,
 				2764E85F26FBB7DA0016A585 /* LogExport.swift in Sources */,
 				2746C73C26D91FC900E31BD9 /* Libre2DirectTransmitter.swift in Sources */,
+				27F93B2C2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift in Sources */,
 				27850CFB25672C0C0020D109 /* GlucoseSchedules.swift in Sources */,
 				27850D9125672F020020D109 /* CBPeripheralExtensions.swift in Sources */,
 				27850DA625672F1E0020D109 /* MiaomiaoTransmitter.swift in Sources */,
@@ -894,6 +901,7 @@
 				27850D9225672F020020D109 /* LibreTransmitterMetadata.swift in Sources */,
 				27DD8F26268FA75A00649010 /* SensorInfo.swift in Sources */,
 				27850DC425672F640020D109 /* GlucoseSmoothing.swift in Sources */,
+				27F93B2A2816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift in Sources */,
 				27850DCF25672F780020D109 /* CRC.swift in Sources */,
 				2764E86126FC6DC10016A585 /* Features.swift in Sources */,
 				27ED67B82698EF38003E5DAB /* AlarmStatus.swift in Sources */,
