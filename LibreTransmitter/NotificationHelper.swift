@@ -14,7 +14,7 @@ import UserNotifications
 import os.log
 
 private var logger = Logger(forType: "NotificationHelper")
-
+// MARK: - Notification Utilities
 public enum NotificationHelper {
 
     private enum Identifiers: String {
@@ -52,61 +52,6 @@ public enum NotificationHelper {
         [HKUnit.milligramsPerDeciliter, HKUnit.millimolesPerLiter].contains(unit)
     }
 
-    public static func sendRestoredStateNotification(msg: String) {
-        ensureCanSendNotification {
-            logger.debug("dabear:: sending RestoredStateNotification")
-
-            let content = UNMutableNotificationContent()
-            content.title = "State was restored"
-            content.body = msg
-
-            addRequest(identifier: .restoredState, content: content )
-        }
-    }
-
-    public static func sendBluetoothPowerOffNotification() {
-        ensureCanSendNotification {
-            logger.debug("dabear:: sending BluetoothPowerOffNotification")
-
-            let content = UNMutableNotificationContent()
-            content.title = "Bluetooth Power Off"
-            content.body = "Please turn on Bluetooth"
-
-            addRequest(identifier: .bluetoothPoweredOff, content: content)
-        }
-    }
-
-    public static func sendNoTransmitterSelectedNotification() {
-        ensureCanSendNotification {
-            logger.debug("dabear:: sending NoTransmitterSelectedNotification")
-
-            let content = UNMutableNotificationContent()
-            content.title = "No Libre Transmitter Selected"
-            content.body = "Delete CGMManager and start anew. Your libreoopweb credentials will be preserved"
-
-            addRequest(identifier: .noBridgeSelected, content: content)
-        }
-    }
-
-    private static func ensureCanSendGlucoseNotification(_ completion: @escaping (_ unit: HKUnit) -> Void ) {
-        ensureCanSendNotification {
-            if let glucoseUnit = UserDefaults.standard.mmGlucoseUnit, GlucoseUnitIsSupported(unit: glucoseUnit) {
-                completion(glucoseUnit)
-            }
-        }
-    }
-
-    public static func requestNotificationPermissionsIfNeeded() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            logger.debug("settings.authorizationStatus: \(String(describing: settings.authorizationStatus.rawValue))")
-            if ![.authorized, .provisional].contains(settings.authorizationStatus) {
-                requestNotificationPermissions()
-            }
-
-        }
-
-    }
-
     private static func requestNotificationPermissions() {
         logger.debug("requestNotificationPermissions called")
         let center = UNUserNotificationCenter.current()
@@ -134,7 +79,241 @@ public enum NotificationHelper {
         }
     }
 
-    public static func sendInvalidChecksumIfDeveloper(_ sensorData: SensorData) {
+    private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false) {
+        let center = UNUserNotificationCenter.current()
+        // content.sound = UNNotificationSound.
+        if #available(iOSApplicationExtension 15.0, *) {
+            content.interruptionLevel = .timeSensitive
+        }
+        let request = UNNotificationRequest(identifier: identifier.rawValue, content: content, trigger: nil)
+
+        if deleteOld {
+            // Required since ios12+ have started to cache/group notifications
+            center.removeDeliveredNotifications(withIdentifiers: [identifier.rawValue])
+            center.removePendingNotificationRequests(withIdentifiers: [identifier.rawValue])
+        }
+
+        center.add(request) { error in
+            if let error = error {
+                logger.debug("dabear:: unable to addNotificationRequest: \(error.localizedDescription)")
+                return
+            }
+
+            logger.debug("dabear:: sending \(identifier.rawValue) notification")
+        }
+    }
+
+    public static func requestNotificationPermissionsIfNeeded() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            logger.debug("settings.authorizationStatus: \(String(describing: settings.authorizationStatus.rawValue))")
+            if ![.authorized, .provisional].contains(settings.authorizationStatus) {
+                requestNotificationPermissions()
+            }
+        }
+    }
+
+    static func ensureCanSendGlucoseNotification(_ completion: @escaping (_ unit: HKUnit) -> Void ) {
+        ensureCanSendNotification {
+            if let glucoseUnit = UserDefaults.standard.mmGlucoseUnit, GlucoseUnitIsSupported(unit: glucoseUnit) {
+                completion(glucoseUnit)
+            }
+        }
+    }
+}
+
+// MARK: Sensor related notification sendouts
+public extension NotificationHelper {
+    static func sendSensorNotDetectedNotificationIfNeeded(noSensor: Bool) {
+        guard UserDefaults.standard.mmAlertNoSensorDetected && noSensor else {
+            logger.debug("Not sending noSensorDetected notification")
+            return
+        }
+
+        sendSensorNotDetectedNotification()
+    }
+
+    private static func sendSensorNotDetectedNotification() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "No Sensor Detected"
+            content.body = "This might be an intermittent problem, but please check that your transmitter is tightly secured over your sensor"
+
+            addRequest(identifier: .noSensorDetected, content: content)
+        }
+    }
+
+    static func sendSensorChangeNotificationIfNeeded() {
+        guard UserDefaults.standard.mmAlertNewSensorDetected else {
+            logger.debug("not sending sendSensorChange notification ")
+            return
+        }
+        sendSensorChangeNotification()
+    }
+
+    static func sendSensorChangeNotification() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "New Sensor Detected"
+            content.body = "Please wait up to 30 minutes before glucose readings are available!"
+
+            addRequest(identifier: .sensorChange, content: content)
+            // content.sound = UNNotificationSound.
+
+        }
+    }
+
+    static func sendSensorTryAgainLaterNotification() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "Invalid Glucose sample detected, try again later"
+            content.body = "Sensor might have temporarily stopped, fallen off or is too cold or too warm"
+
+            addRequest(identifier: .tryAgainLater, content: content)
+            // content.sound = UNNotificationSound.
+
+        }
+    }
+
+    static func sendInvalidSensorNotificationIfNeeded(sensorData: SensorData) {
+        let isValid = sensorData.isLikelyLibre1FRAM && (sensorData.state == .starting || sensorData.state == .ready)
+
+        guard UserDefaults.standard.mmAlertInvalidSensorDetected && !isValid else {
+            logger.debug("not sending invalidSensorDetected notification")
+            return
+        }
+
+        sendInvalidSensorNotification(sensorData: sensorData)
+    }
+
+    enum CalibrationMessage: String {
+        case starting = "Calibrating sensor, please stand by!"
+        case noCalibration = "Could not calibrate sensor, check libreoopweb permissions and internet connection"
+        case invalidCalibrationData = "Could not calibrate sensor, invalid calibrationdata"
+        case success = "Success!"
+    }
+
+    static func sendCalibrationNotification(_ calibrationMessage: CalibrationMessage) {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.sound = .default
+            content.title = "Extracting calibrationdata from sensor"
+            content.body = calibrationMessage.rawValue
+
+            addRequest(identifier: .calibrationOngoing,
+                       content: content,
+                       deleteOld: true)
+        }
+    }
+
+
+
+    static func sendInvalidSensorNotification(sensorData: SensorData) {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "Invalid Sensor Detected"
+
+            if !sensorData.isLikelyLibre1FRAM {
+                content.body = "Detected sensor seems not to be a libre 1 sensor!"
+            } else if !(sensorData.state == .starting || sensorData.state == .ready) {
+                content.body = "Detected sensor is invalid: \(sensorData.state.description)"
+            }
+
+            content.sound = .default
+
+            addRequest(identifier: .invalidSensor, content: content)
+        }
+    }
+
+    private static var lastSensorExpireAlert: Date?
+
+    static func sendSensorExpireAlertIfNeeded(minutesLeft: Double) {
+        guard UserDefaults.standard.mmAlertWillSoonExpire else {
+            logger.debug("mmAlertWillSoonExpire toggle was not enabled, not sending expiresoon alarm")
+            return
+        }
+
+        guard TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) else {
+            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(minutesLeft.twoDecimals) minutes")
+            return
+        }
+
+        let now = Date()
+        // only once per 6 hours
+        let min45 = 60.0 * 60 * 6
+
+        if let earlier = lastSensorExpireAlert {
+            if earlier.addingTimeInterval(min45) < now {
+                sendSensorExpireAlert(minutesLeft: minutesLeft)
+                lastSensorExpireAlert = now
+            } else {
+                logger.debug("Sensor is soon expiring, but lastSensorExpireAlert was sent less than 6 hours ago, so aborting")
+            }
+        } else {
+            sendSensorExpireAlert(minutesLeft: minutesLeft)
+            lastSensorExpireAlert = now
+        }
+    }
+
+    static func sendSensorExpireAlertIfNeeded(sensorData: SensorData) {
+        sendSensorExpireAlertIfNeeded(minutesLeft: Double(sensorData.minutesLeft))
+    }
+
+    private static func sendSensorExpireAlert(minutesLeft: Double) {
+        ensureCanSendNotification {
+
+            let hours = minutesLeft == 0 ? 0 : round(minutesLeft/60)
+
+            let dynamicText =  hours <= 1 ?  "minutes: \(minutesLeft.twoDecimals)" : "hours: \(hours.twoDecimals)"
+
+            let content = UNMutableNotificationContent()
+            content.title = "Sensor Ending Soon"
+            content.body = "Current Sensor is Ending soon! Sensor Life left in \(dynamicText)"
+
+            addRequest(identifier: .sensorExpire, content: content, deleteOld: true)
+        }
+    }
+}
+
+
+// MARK: - Notification sendout
+public extension NotificationHelper {
+    static func sendRestoredStateNotification(msg: String) {
+        ensureCanSendNotification {
+            logger.debug("dabear:: sending RestoredStateNotification")
+
+            let content = UNMutableNotificationContent()
+            content.title = "State was restored"
+            content.body = msg
+
+            addRequest(identifier: .restoredState, content: content )
+        }
+    }
+
+    static func sendBluetoothPowerOffNotification() {
+        ensureCanSendNotification {
+            logger.debug("dabear:: sending BluetoothPowerOffNotification")
+
+            let content = UNMutableNotificationContent()
+            content.title = "Bluetooth Power Off"
+            content.body = "Please turn on Bluetooth"
+
+            addRequest(identifier: .bluetoothPoweredOff, content: content)
+        }
+    }
+
+    static func sendNoTransmitterSelectedNotification() {
+        ensureCanSendNotification {
+            logger.debug("dabear:: sending NoTransmitterSelectedNotification")
+
+            let content = UNMutableNotificationContent()
+            content.title = "No Libre Transmitter Selected"
+            content.body = "Delete CGMManager and start anew. Your libreoopweb credentials will be preserved"
+
+            addRequest(identifier: .noBridgeSelected, content: content)
+        }
+    }
+
+    static func sendInvalidChecksumIfDeveloper(_ sensorData: SensorData) {
         guard UserDefaults.standard.dangerModeActivated else {
             return
         }
@@ -154,7 +333,7 @@ public enum NotificationHelper {
 
     private static var glucoseNotifyCalledCount = 0
 
-    public static func sendGlucoseNotitifcationIfNeeded(glucose: LibreGlucose, oldValue: LibreGlucose?, trend: GlucoseTrend?, battery: String?) {
+    static func sendGlucoseNotitifcationIfNeeded(glucose: LibreGlucose, oldValue: LibreGlucose?, trend: GlucoseTrend?, battery: String?) {
         glucoseNotifyCalledCount &+= 1
 
         let shouldSendGlucoseAlternatingTimes = glucoseNotifyCalledCount != 0 && UserDefaults.standard.mmNotifyEveryXTimes != 0
@@ -185,30 +364,12 @@ public enum NotificationHelper {
         }
     }
 
-    private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false) {
-        let center = UNUserNotificationCenter.current()
-        // content.sound = UNNotificationSound.
-        if #available(iOSApplicationExtension 15.0, *) {
-            content.interruptionLevel = .timeSensitive
-        }
-        let request = UNNotificationRequest(identifier: identifier.rawValue, content: content, trigger: nil)
-
-        if deleteOld {
-            // Required since ios12+ have started to cache/group notifications
-            center.removeDeliveredNotifications(withIdentifiers: [identifier.rawValue])
-            center.removePendingNotificationRequests(withIdentifiers: [identifier.rawValue])
-        }
-
-        center.add(request) { error in
-            if let error = error {
-                logger.debug("dabear:: unable to addNotificationRequest: \(error.localizedDescription)")
-                return
-            }
-
-            logger.debug("dabear:: sending \(identifier.rawValue) notification")
-        }
-    }
-    private static func sendGlucoseNotitifcation(glucose: LibreGlucose, oldValue: LibreGlucose?, alarm: GlucoseScheduleAlarmResult = .none, isSnoozed: Bool = false, trend: GlucoseTrend?, showPhoneBattery: Bool = false, transmitterBattery: String?) {
+    private static func sendGlucoseNotitifcation(glucose: LibreGlucose, oldValue: LibreGlucose?,
+                                                 alarm: GlucoseScheduleAlarmResult = .none,
+                                                 isSnoozed: Bool = false,
+                                                 trend: GlucoseTrend?,
+                                                 showPhoneBattery: Bool = false,
+                                                 transmitterBattery: String?) {
         ensureCanSendGlucoseNotification { _ in
             let content = UNMutableNotificationContent()
             let glucoseDesc = glucose.description
@@ -269,108 +430,11 @@ public enum NotificationHelper {
         }
     }
 
-    public enum CalibrationMessage: String {
-        case starting = "Calibrating sensor, please stand by!"
-        case noCalibration = "Could not calibrate sensor, check libreoopweb permissions and internet connection"
-        case invalidCalibrationData = "Could not calibrate sensor, invalid calibrationdata"
-        case success = "Success!"
-    }
 
-    public static func sendCalibrationNotification(_ calibrationMessage: CalibrationMessage) {
-        ensureCanSendNotification {
-            let content = UNMutableNotificationContent()
-            content.sound = .default
-            content.title = "Extracting calibrationdata from sensor"
-            content.body = calibrationMessage.rawValue
-
-            addRequest(identifier: .calibrationOngoing,
-                       content: content,
-                       deleteOld: true)
-        }
-    }
-
-    public static func sendSensorNotDetectedNotificationIfNeeded(noSensor: Bool) {
-        guard UserDefaults.standard.mmAlertNoSensorDetected && noSensor else {
-            logger.debug("Not sending noSensorDetected notification")
-            return
-        }
-
-        sendSensorNotDetectedNotification()
-    }
-
-    private static func sendSensorNotDetectedNotification() {
-        ensureCanSendNotification {
-            let content = UNMutableNotificationContent()
-            content.title = "No Sensor Detected"
-            content.body = "This might be an intermittent problem, but please check that your transmitter is tightly secured over your sensor"
-
-            addRequest(identifier: .noSensorDetected, content: content)
-        }
-    }
-
-    public static func sendSensorChangeNotificationIfNeeded() {
-        guard UserDefaults.standard.mmAlertNewSensorDetected else {
-            logger.debug("not sending sendSensorChange notification ")
-            return
-        }
-        sendSensorChangeNotification()
-    }
-
-    private static func sendSensorChangeNotification() {
-        ensureCanSendNotification {
-            let content = UNMutableNotificationContent()
-            content.title = "New Sensor Detected"
-            content.body = "Please wait up to 30 minutes before glucose readings are available!"
-
-            addRequest(identifier: .sensorChange, content: content)
-            // content.sound = UNNotificationSound.
-
-        }
-    }
-
-    public static func sendSensorTryAgainLaterNotification() {
-        ensureCanSendNotification {
-            let content = UNMutableNotificationContent()
-            content.title = "Invalid Glucose sample detected, try again later"
-            content.body = "Sensor might have temporarily stopped, fallen off or is too cold or too warm"
-
-            addRequest(identifier: .tryAgainLater, content: content)
-            // content.sound = UNNotificationSound.
-
-        }
-    }
-
-    public static func sendInvalidSensorNotificationIfNeeded(sensorData: SensorData) {
-        let isValid = sensorData.isLikelyLibre1FRAM && (sensorData.state == .starting || sensorData.state == .ready)
-
-        guard UserDefaults.standard.mmAlertInvalidSensorDetected && !isValid else {
-            logger.debug("not sending invalidSensorDetected notification")
-            return
-        }
-
-        sendInvalidSensorNotification(sensorData: sensorData)
-    }
-
-    private static func sendInvalidSensorNotification(sensorData: SensorData) {
-        ensureCanSendNotification {
-            let content = UNMutableNotificationContent()
-            content.title = "Invalid Sensor Detected"
-
-            if !sensorData.isLikelyLibre1FRAM {
-                content.body = "Detected sensor seems not to be a libre 1 sensor!"
-            } else if !(sensorData.state == .starting || sensorData.state == .ready) {
-                content.body = "Detected sensor is invalid: \(sensorData.state.description)"
-            }
-
-            content.sound = .default
-
-            addRequest(identifier: .invalidSensor, content: content)
-        }
-    }
 
     private static var lastBatteryWarning: Date?
 
-    public static func sendLowBatteryNotificationIfNeeded(device: LibreTransmitterMetadata) {
+    static func sendLowBatteryNotificationIfNeeded(device: LibreTransmitterMetadata) {
         guard UserDefaults.standard.mmAlertLowBatteryWarning else {
             logger.debug("mmAlertLowBatteryWarning toggle was not enabled, not sending low notification")
             return
@@ -411,53 +475,5 @@ public enum NotificationHelper {
         }
     }
 
-    private static var lastSensorExpireAlert: Date?
-
-    public static func sendSensorExpireAlertIfNeeded(minutesLeft: Double) {
-        guard UserDefaults.standard.mmAlertWillSoonExpire else {
-            logger.debug("mmAlertWillSoonExpire toggle was not enabled, not sending expiresoon alarm")
-            return
-        }
-
-        guard TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) else {
-            logger.debug("Sensor time left was more than 24 hours, not sending notification: \(minutesLeft.twoDecimals) minutes")
-            return
-        }
-
-        let now = Date()
-        // only once per 6 hours
-        let min45 = 60.0 * 60 * 6
-
-        if let earlier = lastSensorExpireAlert {
-            if earlier.addingTimeInterval(min45) < now {
-                sendSensorExpireAlert(minutesLeft: minutesLeft)
-                lastSensorExpireAlert = now
-            } else {
-                logger.debug("Sensor is soon expiring, but lastSensorExpireAlert was sent less than 6 hours ago, so aborting")
-            }
-        } else {
-            sendSensorExpireAlert(minutesLeft: minutesLeft)
-            lastSensorExpireAlert = now
-        }
-    }
-
-    public static func sendSensorExpireAlertIfNeeded(sensorData: SensorData) {
-        sendSensorExpireAlertIfNeeded(minutesLeft: Double(sensorData.minutesLeft))
-    }
-
-    private static func sendSensorExpireAlert(minutesLeft: Double) {
-        ensureCanSendNotification {
-
-            let hours = minutesLeft == 0 ? 0 : round(minutesLeft/60)
-
-            let dynamicText =  hours <= 1 ?  "minutes: \(minutesLeft.twoDecimals)" : "hours: \(hours.twoDecimals)"
-
-            let content = UNMutableNotificationContent()
-            content.title = "Sensor Ending Soon"
-            content.body = "Current Sensor is Ending soon! Sensor Life left in \(dynamicText)"
-
-            addRequest(identifier: .sensorExpire, content: content, deleteOld: true)
-        }
-    }
 
 }
