@@ -11,30 +11,6 @@ import LoopKit
 
 extension LibreTransmitterManager {
 
-    private func createBloodSugarPrediction(_ measurements: [Measurement], calibration: SensorData.CalibrationInfo) {
-        let allGlucoses = measurements.sorted { $0.date > $1.date }
-
-        // Increase to up to 15 to move closer to real blood sugar
-        // The cost is slightly more noise on consecutive readings
-        let glucosePredictionMinutes: Double = 10
-
-        if allGlucoses.count < 15 {
-            logger.info("dabear: not creating blood sugar prediction: less data elements than needed (\(allGlucoses.count))")
-            self.latestPrediction = nil
-            return
-        }
-
-        if let predicted = allGlucoses.predictBloodSugar(glucosePredictionMinutes) {
-            let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
-            let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
-
-            self.latestPrediction = LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate)
-            logger.debug("Predicted glucose (not used) was: \(currentBg)")
-        } else {
-            logger.debug("Tried to predict glucose value but failed!")
-        }
-
-    }
 
     public func libreSensorDidUpdate(with error: LibreError) {
 
@@ -93,7 +69,7 @@ extension LibreTransmitterManager {
             self.countTimesWithoutData &+= 1
         } else {
             self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
-            self.createBloodSugarPrediction(bleData.trend, calibration: calibrationData)
+            self.latestPrediction =  self.createBloodSugarPrediction(bleData.trend, calibration: calibrationData)
             self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
             self.countTimesWithoutData = 0
         }

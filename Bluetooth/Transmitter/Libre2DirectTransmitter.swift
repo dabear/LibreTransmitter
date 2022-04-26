@@ -154,12 +154,6 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
                 lastSensorUUID = currentSensorUUID
             }
 
-
-
-
-
-
-
             // todo: reset when sensor changes, but we currently don't need this
             // due to requirement of deleting cgmmanager when changing sensors
             if let latestGlucose = sensorUpdate.trend.last,

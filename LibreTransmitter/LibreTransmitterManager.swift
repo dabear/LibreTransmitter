@@ -268,6 +268,31 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
 // MARK: - Convenience functions
 extension LibreTransmitterManager {
+
+    internal func createBloodSugarPrediction(_ measurements: [Measurement], calibration: SensorData.CalibrationInfo) -> LibreGlucose? {
+        let allGlucoses = measurements.sorted { $0.date > $1.date }
+
+        // Increase to up to 15 to move closer to real blood sugar
+        // The cost is slightly more noise on consecutive readings
+        let glucosePredictionMinutes: Double = 10
+
+        guard allGlucoses.count > 15 else {
+            logger.info("dabear: not creating blood sugar prediction: less data elements than needed (\(allGlucoses.count))")
+            return nil
+        }
+
+        if let predicted = allGlucoses.predictBloodSugar(glucosePredictionMinutes) {
+            let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+            let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
+            return LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate)
+            logger.debug("Predicted glucose (not used) was: \(currentBg)")
+        } else {
+            return nil
+            logger.debug("Tried to predict glucose value but failed!")
+        }
+
+    }
+
     func setObservables(sensorData: SensorData?, bleData: Libre2.LibreBLEResponse?, metaData: LibreTransmitterMetadata?) {
         logger.debug("dabear:: setObservables called")
         DispatchQueue.main.async {

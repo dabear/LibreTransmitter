@@ -127,27 +127,12 @@ extension LibreTransmitterManager {
         var entries: [LibreGlucose] = []
         var prediction: [LibreGlucose] = []
 
-        // Increase to up to 15 to move closer to real blood sugar
-        // The cost is slightly more noise on consecutive readings
-        let glucosePredictionMinutes: Double = 10
+        let trends = data.trendMeasurements()
 
-        // We cheat here by forcing the loop to think that the predicted glucose value is the current blood sugar value.
-        logger.debug("Predicting glucose value")
-        if let predicted = data.predictBloodSugar(glucosePredictionMinutes) {
-            let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
-            let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
-
-            prediction.append(LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate))
-            logger.debug("Predicted glucose (not used) was: \(currentBg)")
-        } else {
-            logger.debug("Tried to predict glucose value but failed!")
+        if let temp = createBloodSugarPrediction(trends, calibration: calibration) {
+            prediction.append(temp)
         }
 
-
-
-        let trends = data.trendMeasurements()
-        let firstTrend = trends.first?.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
-        logger.debug("first trend was: \(String(describing: firstTrend))")
         entries = LibreGlucose.fromTrendMeasurements(trends, nativeCalibrationData: calibration, returnAll: UserDefaults.standard.mmBackfillFromTrend)
 
         if UserDefaults.standard.mmBackfillFromHistory {

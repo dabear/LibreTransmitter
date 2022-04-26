@@ -414,24 +414,22 @@ public extension Array where Element ==  Measurement {
         return { x in intercept + slope * x }
     }
 
-    public func predictBloodSugar(_ minutes: Double = 10) -> Measurement? {
+    func predictBloodSugar(_ minutes: Double = 10) -> Measurement? {
 
-        let trends = self// .filter { !$0.error.contains(.SENSOR_SIGNAL_LOW)}
-
-        guard trends.count > 15 else {
-            return trends.first
+        guard count > 15 else {
+            return first
         }
 
-        guard let mostRecent = trends.first else {
+        guard let first = first else {
             return nil
         }
 
-        let sorted = trends.sorted { $0.date < $1.date}
+        let sorted = sorted { $0.date < $1.date}
 
         // keep the recent raw temperatures, we don't want to apply linear regression to them
-        let mostRecentTemperature = mostRecent.rawTemperature
-        let mostRecentAdjustment = mostRecent.rawTemperatureAdjustment
-        let mostRecentDate = mostRecent.date
+        let mostRecentTemperature = first.rawTemperature
+        let mostRecentAdjustment = first.rawTemperatureAdjustment
+        let mostRecentDate = first.date
         let futureDate = mostRecentDate.addingTimeInterval(60*minutes)
 
         let glucoseAge = sorted.compactMap { measurement in
@@ -450,22 +448,5 @@ public extension Array where Element ==  Measurement {
                                    rawTemperatureAdjustment: mostRecentAdjustment)
         return predicted
 
-    }
-}
-
-public extension SensorData {
-
-    /// Uses trend data to predict a measurement 10 minutes into the future
-    ///
-    /// This makes it possible to better align glucose data  from the intertestual fluid with actual blood sugar values,
-    /// Intertestual fluid lags about 10 to 15 minutes (for most people) behind blood sugar values measuretd by a finger stick
-    ///
-    /// - Returns: a  predicted measurement 10 minutes into the future, or the most recent glucose value if such prediction is impossible. If no reading exists, this will return nil
-    ///
-
-    internal func predictBloodSugar(_ minutes: Double = 10) -> Measurement? {
-
-        let trends = self.trendMeasurements()// .filter { !$0.error.contains(.SENSOR_SIGNAL_LOW)}
-        return trends.predictBloodSugar(minutes)
     }
 }
