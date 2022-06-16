@@ -1,6 +1,5 @@
 # LibreTransmitter for Loop
 This is a https://github.com/loopkit/loop plugin for connecting to libresensors via miaomiao and bubble transmitters
-For all supported sensors you need such a transmitter, even for the libre 2 which has builtin bluetooth. 
 
 # Supported sensors
 * US Libre 1 10 day sensors (tested)
