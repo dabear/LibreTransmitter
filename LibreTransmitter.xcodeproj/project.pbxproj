@@ -10,9 +10,6 @@
 		270C1429266047490063405B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C1428266047490063405B /* NotificationSettingsView.swift */; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
 		273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
-		273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
-		273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
-		273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */ = {isa = PBXBuildFile; fileRef = 273BFDD025ACAB000042E1EC /* copy-frameworks.sh */; };
 		2746C73C26D91FC900E31BD9 /* Libre2DirectTransmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */; };
 		2746C73F26DCF83700E31BD9 /* Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73D26DCF83400E31BD9 /* Features.swift */; };
 		2746C74226DD0F8800E31BD9 /* Libre2DirectSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C74126DD0F8800E31BD9 /* Libre2DirectSetup.swift */; };
@@ -141,7 +138,6 @@
 
 /* Begin PBXFileReference section */
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
-		273BFDD025ACAB000042E1EC /* copy-frameworks.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "copy-frameworks.sh"; sourceTree = "<group>"; };
 		2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libre2DirectTransmitter.swift; sourceTree = "<group>"; };
 		2746C73D26DCF83400E31BD9 /* Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features.swift; sourceTree = "<group>"; };
 		2746C74126DD0F8800E31BD9 /* Libre2DirectSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libre2DirectSetup.swift; sourceTree = "<group>"; };
@@ -417,7 +413,6 @@
 		27850CD125672BA40020D109 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
-				273BFDD025ACAB000042E1EC /* copy-frameworks.sh */,
 				27850CD225672BA40020D109 /* capture-build-details.sh */,
 			);
 			path = Scripts;
@@ -678,7 +673,6 @@
 				B40BF25A23ABD47400A43CEE /* Sources */,
 				B40BF25B23ABD47400A43CEE /* Frameworks */,
 				B40BF25C23ABD47400A43CEE /* Resources */,
-				273BFDCC25ACA9D00042E1EC /* ShellScript */,
 				27BA139728019DE200681D31 /* Run script capture-build-details */,
 			);
 			buildRules = (
@@ -763,7 +757,6 @@
 				27850E5725673CF70020D109 /* bubble.png in Resources */,
 				43AB5127213315D300B3D58D /* Localizable.strings in Resources */,
 				27FED6CC26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */,
-				273BFDDC25ACAB7B0042E1EC /* copy-frameworks.sh in Resources */,
 				27850E4B25673CE60020D109 /* miaomiao-small.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -776,7 +769,6 @@
 				27850D6825672DFB0020D109 /* icons8-drop-down-arrow-50.png in Resources */,
 				43AB511B21330D1400B3D58D /* Localizable.strings in Resources */,
 				27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */,
-				273BFDD825ACAB7A0042E1EC /* copy-frameworks.sh in Resources */,
 				27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */,
 				27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */,
 				27850D6425672DFB0020D109 /* libresensor.png in Resources */,
@@ -790,32 +782,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				273BFDD425ACAB4F0042E1EC /* copy-frameworks.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		273BFDCC25ACA9D00042E1EC /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/LibreTransmitter.framework/LibreTransmitter",
-				"$(BUILT_PRODUCTS_DIR)/LibreTransmitterUI.framework/LibreTransmitterUI",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Scripts/copy-frameworks.sh\"\n";
-		};
 		27BA139627FCC0ED00681D31 /* swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
