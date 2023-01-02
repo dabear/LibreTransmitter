@@ -8,8 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		270C1429266047490063405B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C1428266047490063405B /* NotificationSettingsView.swift */; };
+		2735A6E029637DEA00D4E868 /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
+		2735A6E129637DEA00D4E868 /* LibreTransmitter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2735A6E429637DEA00D4E868 /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
+		2735A6E529637DEA00D4E868 /* LibreTransmitterUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
-		273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
 		2746C73C26D91FC900E31BD9 /* Libre2DirectTransmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */; };
 		2746C73F26DCF83700E31BD9 /* Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73D26DCF83400E31BD9 /* Features.swift */; };
 		2746C74226DD0F8800E31BD9 /* Libre2DirectSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C74126DD0F8800E31BD9 /* Libre2DirectSetup.swift */; };
@@ -120,6 +123,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2735A6E229637DEA00D4E868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 432B0E871CDFC3C50045347B;
+			remoteInfo = LibreTransmitter;
+		};
+		2735A6E629637DEA00D4E868 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 43A8EC81210E664300A81379;
+			remoteInfo = LibreTransmitterUI;
+		};
 		A9E521F6225E949400EDDEF2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
@@ -127,14 +144,22 @@
 			remoteGlobalIDString = 432B0E871CDFC3C50045347B;
 			remoteInfo = LibreTransmitter;
 		};
-		B40BF26A23ABD5E100A43CEE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 432B0E7F1CDFC3C50045347B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 43A8EC81210E664300A81379;
-			remoteInfo = LibreTransmitterUI;
-		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2735A6E829637DEA00D4E868 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2735A6E129637DEA00D4E868 /* LibreTransmitter.framework in Embed Frameworks */,
+				2735A6E529637DEA00D4E868 /* LibreTransmitterUI.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
@@ -294,7 +319,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				273BFDBD25A73DF80042E1EC /* LibreTransmitterUI.framework in Frameworks */,
+				2735A6E029637DEA00D4E868 /* LibreTransmitter.framework in Frameworks */,
+				2735A6E429637DEA00D4E868 /* LibreTransmitterUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,11 +700,13 @@
 				B40BF25B23ABD47400A43CEE /* Frameworks */,
 				B40BF25C23ABD47400A43CEE /* Resources */,
 				27BA139728019DE200681D31 /* Run script capture-build-details */,
+				2735A6E829637DEA00D4E868 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				B40BF26B23ABD5E100A43CEE /* PBXTargetDependency */,
+				2735A6E329637DEA00D4E868 /* PBXTargetDependency */,
+				2735A6E729637DEA00D4E868 /* PBXTargetDependency */,
 			);
 			name = LibreTransmitterPlugin;
 			productName = LibreTransmitterPlugin;
@@ -938,15 +966,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2735A6E329637DEA00D4E868 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 432B0E871CDFC3C50045347B /* LibreTransmitter */;
+			targetProxy = 2735A6E229637DEA00D4E868 /* PBXContainerItemProxy */;
+		};
+		2735A6E729637DEA00D4E868 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 43A8EC81210E664300A81379 /* LibreTransmitterUI */;
+			targetProxy = 2735A6E629637DEA00D4E868 /* PBXContainerItemProxy */;
+		};
 		A9E521F7225E949400EDDEF2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 432B0E871CDFC3C50045347B /* LibreTransmitter */;
 			targetProxy = A9E521F6225E949400EDDEF2 /* PBXContainerItemProxy */;
-		};
-		B40BF26B23ABD5E100A43CEE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 43A8EC81210E664300A81379 /* LibreTransmitterUI */;
-			targetProxy = B40BF26A23ABD5E100A43CEE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1254,7 +1287,7 @@
 				INFOPLIST_FILE = LibreTransmitterPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				LD_RUNPATH_SEARCH_PATHS = "@rpath $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -1287,7 +1320,7 @@
 				INFOPLIST_FILE = LibreTransmitterPlugin/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				LD_RUNPATH_SEARCH_PATHS = "@rpath $(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_FAST_MATH = YES;
