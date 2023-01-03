@@ -232,7 +232,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     // lazy because we don't want to scan immediately
-    internal lazy var proxy: LibreTransmitterProxyManager? = LibreTransmitterProxyManager()
+    public lazy var proxy: LibreTransmitterProxyManager? = LibreTransmitterProxyManager()
 
     /*
      These properties are mostly useful for swiftui
@@ -312,6 +312,9 @@ extension LibreTransmitterManager {
                 self.logger.debug("dabear::will set sensorInfoObservable")
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
+                self.sensorInfoObservable.sensorMinutesLeft = sensorData.minutesLeft
+                self.sensorInfoObservable.sensorMinutesSinceStart = sensorData.minutesSinceStart
+                self.sensorInfoObservable.sensorMaxMinutesWearTime = sensorData.maxMinutesWearTime
 
                 self.sensorInfoObservable.sensorState = sensorData.state.description
                 self.sensorInfoObservable.sensorSerial = sensorData.serialNumber
@@ -356,6 +359,11 @@ extension LibreTransmitterManager {
                     // after the sensor has been done a new measurement, so using Date() should be fine here
                     return Date().addingTimeInterval(TimeInterval(minutes: Double(minutesLeft)))
                 }
+                
+                self.sensorInfoObservable.sensorMinutesLeft = minutesLeft
+                self.sensorInfoObservable.sensorMinutesSinceStart = minutesLeft
+                self.sensorInfoObservable.sensorMaxMinutesWearTime = maxMinutesWearTime
+                
 
                 self.sensorInfoObservable.sensorAge = humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = humanReadableTimeLeft

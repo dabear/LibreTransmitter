@@ -43,31 +43,31 @@ extension LibreTransmitterDelegate {
     public func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {}
 }
 
-final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, LibreTransmitterDelegate {
-    func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata) {
+public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, LibreTransmitterDelegate {
+    public func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata) {
         dispatchToDelegate { manager in
             manager.delegate?.libreSensorDidUpdate(with: bleData, and: Device)
         }
     }
-    func libreSensorDidUpdate(with error: LibreError) {
+    public func libreSensorDidUpdate(with error: LibreError) {
         dispatchToDelegate { manager in
             manager.delegate?.libreSensorDidUpdate(with: error)
         }
     }
 
-    func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {
+    public func libreManagerDidRestoreState(found peripherals: [CBPeripheral], connected to: CBPeripheral?) {
         dispatchToDelegate { manager in
             manager.delegate?.libreManagerDidRestoreState(found: peripherals, connected: to)
         }
     }
 
-    func noLibreTransmitterSelected() {
+    public func noLibreTransmitterSelected() {
         dispatchToDelegate { manager in
             manager.delegate?.noLibreTransmitterSelected()
         }
     }
 
-    func libreTransmitterStateChanged(_ state: BluetoothmanagerState) {
+    public func libreTransmitterStateChanged(_ state: BluetoothmanagerState) {
 
         logger.debug("libreTransmitterStateChanged delegating")
         dispatchToDelegate { manager in
@@ -75,7 +75,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func libreTransmitterReceivedMessage(_ messageIdentifier: UInt16, txFlags: UInt8, payloadData: Data) {
+    public func libreTransmitterReceivedMessage(_ messageIdentifier: UInt16, txFlags: UInt8, payloadData: Data) {
 
         logger.debug("libreTransmitterReceivedMessage delegating")
         dispatchToDelegate { manager in
@@ -83,7 +83,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
+    public func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
         self.metadata = Device
         self.sensorData = sensorData
 
@@ -149,7 +149,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    private var state: BluetoothmanagerState = .Unassigned {
+    public private(set) var state: BluetoothmanagerState = .Unassigned {
         didSet {
             dispatchToDelegate { manager in
                 // Help delegate initialize by sending current state directly after delegate assignment
@@ -282,7 +282,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     // MARK: - CBCentralManagerDelegate
 
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Central Manager did update state to \(String(describing: central.state.rawValue))")
 
@@ -380,7 +380,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func centralManager(_ central: CBCentralManager, willRestoreState dict: [String: Any]) {
+    public func centralManager(_ central: CBCentralManager, willRestoreState dict: [String: Any]) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Central Manager will restore state to \(String(describing: dict.debugDescription))")
 
@@ -434,7 +434,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did discover peripheral while state \(String(describing: self.state.rawValue)) with name: \(String(describing: peripheral.name)), wantstoterminate?: \(self.wantsToTerminate)")
@@ -498,7 +498,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    public func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did connect peripheral while state \(String(describing: self.state.rawValue)) with name: \(String(describing: peripheral.name))")
@@ -511,7 +511,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         peripheral.discoverServices(serviceUUIDs)
     }
 
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+    public func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did fail to connect peripheral while state: \(String(describing: self.state.rawValue))")
@@ -551,7 +551,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+    public func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did disconnect peripheral while state: \(String(describing: self.state.rawValue)))")
@@ -574,7 +574,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     // MARK: - CBPeripheralDelegate
 
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Did discover services. is plugin nil? \((self.activePlugin == nil ? "nil" : "not nil"))")
         if let error {
@@ -611,7 +611,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     }
 
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did discover characteristics for service \(String(describing: peripheral.name))")
@@ -636,7 +636,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Did update notification state for characteristic: \(String(describing: characteristic.debugDescription))")
 
@@ -650,7 +650,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     }
 
     private var lastNotifyUpdate: Date?
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         let now = Date()
@@ -683,7 +683,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         }
     }
 
-    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+    public func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Did Write value \(String(describing: characteristic.value?.hexEncodedString())) for characteristic \(String(characteristic.debugDescription))")
         self.activePlugin?.didWrite(peripheral, characteristics: characteristic)

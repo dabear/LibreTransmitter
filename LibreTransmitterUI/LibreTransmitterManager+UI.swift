@@ -12,6 +12,12 @@ import HealthKit
 import LibreTransmitter
 import Combine
 
+struct LibreLifecycleProgress: DeviceLifecycleProgress {
+    var percentComplete: Double
+
+    var progressState: LoopKit.DeviceLifecycleProgressState
+}
+
 extension LibreTransmitterManager: CGMManagerUI {
 
     public var cgmStatusBadge: DeviceStatusBadge? {
@@ -65,7 +71,36 @@ extension LibreTransmitterManager: CGMManagerUI {
     }
 
     public var cgmLifecycleProgress: DeviceLifecycleProgress? {
-        nil
+        let isConnected = [.Connected,.Notifying].contains(self.proxy?.state)
+        
+        guard isConnected else {
+            return nil
+        }
+        
+        let minutesLeft = Double(self.sensorInfoObservable.sensorMinutesLeft)
+        let minutesSinceStart = Double(self.sensorInfoObservable.sensorMinutesSinceStart)
+        let maxWearTime = Double(self.sensorInfoObservable.sensorMaxMinutesWearTime)
+        
+        if minutesLeft <= 0 {
+            return LibreLifecycleProgress(percentComplete: 1, progressState: .critical)
+        }
+        if maxWearTime == 0 {
+            //shouldn't really happen, but if it does we don't want to crash because of a minor UI issue
+            return nil
+        }
+        
+        let progress = 1-(minutesSinceStart / maxWearTime)
+        
+        // This matches the manufacturere's app where it displays a notification when sensor has less than 3 days left
+        if TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24*3) {
+            if TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) {
+                return LibreLifecycleProgress(percentComplete: progress, progressState: .warning)
+            }
+            return LibreLifecycleProgress(percentComplete: progress, progressState: .normalCGM)
+        }
+        
+        return nil
+        
     }
 }
 
