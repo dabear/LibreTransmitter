@@ -215,8 +215,9 @@ public extension Libre2 {
             UInt8(truncatingIfNeeded: r2 >> 8)
         ]
     }
-
+    // swiftlint:disable all
     typealias LibreBLEResponse = (age: Int, trend: [Measurement], history: [Measurement], crcVerified: Bool)
+    // swiftlint:enable all
 
     static func parseBLEData(_ data: Data) -> LibreBLEResponse {
         var measurementTrend: [Measurement] = []

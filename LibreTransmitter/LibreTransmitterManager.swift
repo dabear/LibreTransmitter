@@ -187,9 +187,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     }
 
-    public var managerIdentifier: String {
-        Self.className
-    }
+    public var managerIdentifier = "LibreTransmitterManager"
 
     public required convenience init?(rawState: CGMManager.RawStateValue) {
 
