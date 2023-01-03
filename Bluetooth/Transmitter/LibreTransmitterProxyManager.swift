@@ -163,7 +163,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
     public func dispatchToDelegate( _ closure :@escaping  (_ aself: LibreTransmitterProxyManager) -> Void ) {
         delegateQueue.async { [weak self] in
-            if let self = self {
+            if let self {
                 closure(self)
             }
         }
@@ -274,7 +274,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                 logger.debug("Stopping scan")
                 centralManager.stopScan()
             }
-            if let peripheral = peripheral {
+            if let peripheral {
                 centralManager.cancelPeripheralConnection(peripheral)
             }
         }
@@ -313,7 +313,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
             logger.debug("Central Manager was powered on")
 
             // not sure if needed, but can be helpful when state is restored
-            if let peripheral = peripheral, delegate != nil {
+            if let peripheral, delegate != nil {
                 // do not scan if already connected
                 switch peripheral.state {
                 case .disconnected, .disconnecting:
@@ -339,7 +339,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
                         }
                     }
 
-                    if let serviceUUIDs = serviceUUIDs, !serviceUUIDs.isEmpty {
+                    if let serviceUUIDs, !serviceUUIDs.isEmpty {
                         peripheral.discoverServices(serviceUUIDs) // good practice to just discover the services, needed
                     } else {
                         logger.debug("Central Manager was powered on, could not discover services")
@@ -515,7 +515,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did fail to connect peripheral while state: \(String(describing: self.state.rawValue))")
-        if let error = error {
+        if let error {
             logger.error("Did fail to connect peripheral error: \(error.localizedDescription)")
         }
         state = .Disconnected
@@ -555,7 +555,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         dispatchPrecondition(condition: .onQueue(managerQueue))
 
         logger.debug("Did disconnect peripheral while state: \(String(describing: self.state.rawValue)))")
-        if let error = error {
+        if let error {
             logger.error("Did disconnect peripheral error: \(error.localizedDescription)")
         }
 
@@ -577,7 +577,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Did discover services. is plugin nil? \((self.activePlugin == nil ? "nil" : "not nil"))")
-        if let error = error {
+        if let error {
             logger.error("Did discover services error: \(error.localizedDescription)")
         }
 
@@ -616,7 +616,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         logger.debug("Did discover characteristics for service \(String(describing: peripheral.name))")
 
-        if let error = error {
+        if let error {
             logger.error("Did discover characteristics for service error: \(error.localizedDescription)")
         }
 
@@ -640,7 +640,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
         dispatchPrecondition(condition: .onQueue(managerQueue))
         logger.debug("Did update notification state for characteristic: \(String(describing: characteristic.debugDescription))")
 
-        if let error = error {
+        if let error {
             logger.error("Peripheral did update notification state for characteristic: \(error.localizedDescription) with error")
         } else {
             self.reset()
@@ -671,7 +671,7 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
 
         self.lastNotifyUpdate = now
 
-        if let error = error {
+        if let error {
             logger.error("Characteristic update error: \(error.localizedDescription)")
         } else {
             if characteristic.uuid == notifyCharacteristicUUID, let value = characteristic.value {
@@ -691,8 +691,8 @@ final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDelegate, CB
     }
 
     func requestData() {
-       guard let peripheral = peripheral,
-            let writeCharacteristic = writeCharacteristic else {
+       guard let peripheral,
+            let writeCharacteristic else {
                 return
         }
         self.activePlugin?.requestData(writeCharacteristics: writeCharacteristic, peripheral: peripheral)

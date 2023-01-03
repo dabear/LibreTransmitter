@@ -420,10 +420,9 @@ public extension Array where Element ==  Measurement {
             return first
         }
 
-        guard let first = first else {
+        guard let first else {
             return nil
         }
-
         let sorted = sorted { $0.date < $1.date}
 
         // keep the recent raw temperatures, we don't want to apply linear regression to them

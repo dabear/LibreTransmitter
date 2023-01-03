@@ -126,7 +126,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                                             return
                                         }
 
-                                        if let sensorType = sensorType {
+                                        if let sensorType {
                                             do {
                                                 let decryptedBytes = try Libre2.decryptFRAM(type: sensorType, id: [UInt8](sensorUID), info: [UInt8](patchInfo), data: [UInt8](fram))
 
@@ -152,6 +152,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
     }
 
     private func readRaw(_ address: UInt16, _ bytes: Int, buffer: Data = Data(), tag: NFCISO15693Tag, handler: @escaping (UInt16, Data, Error?) -> Void) {
+        
         var buffer = buffer
         let addressToRead = address + UInt16(buffer.count)
 

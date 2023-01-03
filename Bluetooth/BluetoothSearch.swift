@@ -193,7 +193,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         logger.debug("Did discover services")
-        if let error = error {
+        if let error {
             logger.error("Did discover services error: \(error.localizedDescription)")
         }
 
@@ -209,7 +209,7 @@ final class BluetoothSearchManager: NSObject, CBCentralManagerDelegate, CBPeriph
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         logger.debug("Did discover characteristics for service \(String(describing: peripheral.name))")
 
-        if let error = error {
+        if let error {
             logger.error("Did discover characteristics for service error: \(error.localizedDescription)")
         }
 

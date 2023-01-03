@@ -20,6 +20,7 @@ extension LibreTransmitterManager {
 
         self.logger.debug("dabear:: got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
         var sensorData = sensorData
+        
 
         NotificationHelper.sendLowBatteryNotificationIfNeeded(device: Device)
         self.setObservables(sensorData: nil, bleData: nil, metaData: Device)
@@ -69,11 +70,11 @@ extension LibreTransmitterManager {
         // self.lastValidSensorData = sensorData
 
         self.handleGoodReading(data: sensorData) { [weak self] error, glucoseArrayWithPrediction in
-            guard let self = self else {
+            guard let self else {
                 print("dabear:: handleGoodReading could not lock on self, aborting")
                 return
             }
-            if let error = error {
+            if let error {
                 self.logger.error("dabear:: handleGoodReading returned with error: \(error.errorDescription)")
                 self.delegateQueue.async {
                     self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
@@ -146,24 +147,25 @@ extension LibreTransmitterManager {
     public func handleGoodReading(data: SensorData?, _ callback: @escaping (LibreError?, GlucoseArrayWithPrediction?) -> Void) {
         // only care about the once per minute readings here, historical data will not be considered
 
-        guard let data = data else {
+        guard let data else {
             callback(.noSensorData, nil)
             return
         }
 
-        if let calibrationdata = calibrationData {
+        
+        if let calibrationData {
             logger.debug("dabear:: calibrationdata loaded")
 
-            if calibrationdata.isValidForFooterWithReverseCRCs == data.footerCrc.byteSwapped {
+            if calibrationData.isValidForFooterWithReverseCRCs == data.footerCrc.byteSwapped {
                 logger.debug("dabear:: calibrationdata correct for this sensor, returning last values")
 
-                callback(nil, readingToGlucose(data, calibration: calibrationdata))
+                callback(nil, readingToGlucose(data, calibration: calibrationData))
                 return
             } else {
                 logger.debug(
                 """
                 dabear:: calibrationdata incorrect for this sensor, calibrationdata.isValidForFooterWithReverseCRCs:
-                \(calibrationdata.isValidForFooterWithReverseCRCs),
+                \(calibrationData.isValidForFooterWithReverseCRCs),
                 data.footerCrc.byteSwapped: \(data.footerCrc.byteSwapped)
                 """)
 

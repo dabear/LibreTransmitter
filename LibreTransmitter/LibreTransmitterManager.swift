@@ -133,7 +133,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     internal var latestBackfill: LibreGlucose? {
         willSet(newValue) {
-            guard let newValue = newValue else {
+            guard let newValue else {
                 return
             }
 
@@ -164,7 +164,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
             logger.debug("dabear:: latestBackfill set, newvalue is \(newValue.description)")
 
-            if let oldValue = oldValue {
+            if let oldValue {
                 // the idea here is to use the diff between the old and the new glucose to calculate slope and direction, rather than using trend from the glucose value.
                 // this is because the old and new glucose values represent earlier readouts, while the trend buffer contains somewhat more jumpy (noisy) values.
                 let timediff = LibreGlucose.timeDifference(oldGlucose: oldValue, newGlucose: newValue)
@@ -174,7 +174,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 trend = oldIsRecentEnough ? newValue.GetGlucoseTrend(last: oldValue) : nil
 
                 var batteries : [(name: String, percentage: Int)]?
-                if let metaData = metaData, let battery = battery {
+                if let metaData, let battery {
                     batteries = [(name: metaData.name, percentage: battery)]
                 }
 
@@ -308,7 +308,7 @@ extension LibreTransmitterManager {
             self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
             self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
 
-            if let sensorData = sensorData {
+            if let sensorData {
                 self.logger.debug("dabear::will set sensorInfoObservable")
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
@@ -326,7 +326,7 @@ extension LibreTransmitterManager {
 
                 }
 
-            } else if let bleData = bleData, let sensor = UserDefaults.standard.preSelectedSensor {
+            } else if let bleData, let sensor = UserDefaults.standard.preSelectedSensor {
                 let aday = 86_400.0 // in seconds
                 var humanReadableSensorAge: String {
                     let days = TimeInterval(bleData.age * 60) / aday
@@ -369,7 +369,7 @@ extension LibreTransmitterManager {
                     self.glucoseInfoObservable.checksum = "\(mapping.reverseFooterCRC)"
                 }
 
-                if let sensorEndTime = sensorEndTime {
+                if let sensorEndTime {
                     self.sensorInfoObservable.sensorEndTime = self.dateFormatter.string(from: sensorEndTime )
 
                 } else {

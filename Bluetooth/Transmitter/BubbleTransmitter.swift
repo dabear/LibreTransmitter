@@ -84,7 +84,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     override class func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String? {
         let (amac, afirmware, ahardware) = Self.getDeviceDetailsFromAdvertisementInternal(advertisementData: advertisementData)
 
-        if let amac = amac, let ahardware = ahardware, let afirmware = afirmware {
+        if let amac, let ahardware, let afirmware {
             return "\(amac)\n HW:\(ahardware), FW: \(afirmware)"
         }
 
@@ -149,7 +149,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
             battery = Int(value[4])
 
             bLogger.debug("dabear:: Got bubbledevice: \(self.metadata.debugDescription)")
-           if let writeCharacteristic = writeCharacteristic {
+           if let writeCharacteristic {
 
                peripheral.writeValue(Data([0x02, 0x00, 0x00, 0x00, 0x00, 0x2B]), for: writeCharacteristic, type: .withResponse)
            }
@@ -205,7 +205,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
 
         bLogger.debug("dabear:: bubble got sensordata \(self.sensorData.debugDescription) and metadata \(self.metadata.debugDescription), delegate is \(self.delegate.debugDescription)")
 
-        if let sensorData = sensorData, let metadata = metadata {
+        if let sensorData, let metadata {
             delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
         }
     }

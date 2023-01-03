@@ -49,7 +49,7 @@ public struct KeychainManagerWrapper {
     private func query(by class: CFString) -> Query {
         var query: Query = [kSecClass as String: `class`]
 
-        if let accessGroup = accessGroup {
+        if let accessGroup {
             query[kSecAttrAccessGroup as String] = accessGroup as NSObject?
         }
 
@@ -59,17 +59,17 @@ public struct KeychainManagerWrapper {
     private func queryForInternetPassword(account: String? = nil, url: URL? = nil, label: String? = nil) -> Query {
         var query = self.query(by: kSecClassInternetPassword)
 
-        if let account = account {
+        if let account {
             query[kSecAttrAccount as String] = account as NSObject?
         }
 
-        if let url = url, let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+        if let url, let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
             for (key, value) in components.keychainAttributes {
                 query[key] = value
             }
         }
 
-        if let label = label {
+        if let label {
             query[kSecAttrLabel as String] = label as NSObject?
         }
 
@@ -78,6 +78,7 @@ public struct KeychainManagerWrapper {
 
     private func updatedQuery(_ query: Query, withPassword password: Data) throws -> Query {
         var query = query
+        
 
         query[kSecValueData as String] = password as NSObject?
         query[kSecAttrAccessible as String] = accessibility
@@ -114,7 +115,7 @@ public struct KeychainManagerWrapper {
             }
         }
 
-        if let label = label {
+        if let label {
             query[kSecAttrLabel as String] = label as NSObject?
         }
 
@@ -130,7 +131,7 @@ public struct KeychainManagerWrapper {
 
         try delete(query)
 
-        if let credentials = credentials {
+        if let credentials {
             try setInternetPassword(credentials.password, account: credentials.username, atURL: credentials.url, label: label)
         }
     }
@@ -231,11 +232,11 @@ private extension URLComponents {
             query[kSecAttrProtocol as String] = `protocol`.secAttrProtocol
         }
 
-        if let host = host {
+        if let host {
             query[kSecAttrServer as String] = host as NSObject
         }
 
-        if let port = port {
+        if let port {
             query[kSecAttrPort as String] = port as NSObject
         }
 

@@ -35,7 +35,7 @@ extension LibreTransmitterManager {
         logger.debug("Directly connected to libresensor of type \(typeDesc). Details:  \(Device.description)")
 
         guard let mapping = UserDefaults.standard.calibrationMapping,
-              let calibrationData = calibrationData,
+              let calibrationData,
               let sensor = UserDefaults.standard.preSelectedSensor else {
             logger.error("calibrationdata, sensor uid or mapping missing, could not continue")
             self.delegateQueue.async {

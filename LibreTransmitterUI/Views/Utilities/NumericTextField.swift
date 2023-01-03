@@ -143,7 +143,7 @@ public struct NumericTextField: View {
         self.requiresIntegerValue = false
         self.isReadOnly = isReadOnly
         self.showDescription = showDescription
-        if let formErrorState = formErrorState {
+        if let formErrorState {
             self.formstate = formErrorState
         }
     }
@@ -154,7 +154,7 @@ public struct NumericTextField: View {
         self.isReadOnly = isReadOnly
         self.showDescription = showDescription
 
-        if let formErrorState = formErrorState {
+        if let formErrorState {
             self.formstate = formErrorState
         }
 

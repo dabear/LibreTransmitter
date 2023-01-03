@@ -129,17 +129,17 @@ private struct DeviceItem: View {
             VStack(alignment: .leading) {
                 Text("\(details1)")
                     .font(.system(size: 20, weight: .medium, design: .default))
-                if let details2 = details2 {
+                if let details2 {
                     Text("\(details2)")
                 }
-                if let details3 = details3 {
+                if let details3 {
                     Text("\(details3)")
                 }
 
             }
             Spacer()
             VStack(alignment: .center, spacing: /*@START_MENU_TOKEN@*/nil/*@END_MENU_TOKEN@*/, content: {
-                if let rssi = rssi {
+                if let rssi {
                     SignalStrengthIndicator(bars: .constant(rssi.signalBars), totalBars: rssi.totalBars)
                         .frame(width: 40, height: 40, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 }

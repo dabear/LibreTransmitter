@@ -94,7 +94,7 @@ public enum NotificationHelper {
         }
 
         center.add(request) { error in
-            if let error = error {
+            if let error {
                 logger.debug("dabear:: unable to addNotificationRequest: \(error.localizedDescription)")
                 return
             }
@@ -395,7 +395,7 @@ public extension NotificationHelper {
 
             body.append("Glucose: \(glucoseDesc)")
 
-            if let oldValue = oldValue {
+            if let oldValue {
                 body.append( LibreGlucose.glucoseDiffDesc(oldValue: oldValue, newValue: glucose))
             }
 
@@ -412,7 +412,7 @@ public extension NotificationHelper {
                 body2.append("Phone: \(battery)%")
             }
 
-            if let transmitterBattery = transmitterBattery {
+            if let transmitterBattery {
                 body2.append("Transmitter: \(transmitterBattery)")
             }
 

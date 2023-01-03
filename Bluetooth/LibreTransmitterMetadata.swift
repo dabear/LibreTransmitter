@@ -43,7 +43,7 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
     }
 
     public func sensorType() -> SensorType? {
-        guard let patchInfo = patchInfo else { return nil }
+        guard let patchInfo else { return nil }
         return SensorType(patchInfo: patchInfo)
     }
 }

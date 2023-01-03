@@ -68,10 +68,10 @@ class GenericThrottler<T, U: Hashable> {
     private func setupIncoming() {
         incoming
         .sink { [weak self] el in
-            guard let self = self else {
+            guard let self else {
                 return
             }
-
+            
             let id = el.self[keyPath: self.identificator]
 
             let neverPublished = !self.initiallyPublished.contains(id)

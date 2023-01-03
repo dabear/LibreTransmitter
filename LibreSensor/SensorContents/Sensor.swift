@@ -17,7 +17,7 @@ public extension UserDefaults {
 
         }
         set {
-            if let newValue = newValue {
+            if let newValue {
                 let encoder = JSONEncoder()
                 if let encoded = try? encoder.encode(newValue) {
                     set(encoded, forKey: Key.sensor.rawValue)
@@ -39,7 +39,7 @@ public extension UserDefaults {
 
         }
         set {
-            if let newValue = newValue {
+            if let newValue {
                 let encoder = JSONEncoder()
                 if let encoded = try? encoder.encode(newValue) {
                     set(encoded, forKey: Key.calibrationMapping.rawValue)
@@ -90,7 +90,7 @@ public struct Sensor: Codable {
     /*
     public var elapsedLifetime: Int? {
         get {
-            if let remainingLifetime = remainingLifetime {
+            if let remainingLifetime {
                 return max(0, lifetime - remainingLifetime)
             }
 
@@ -100,7 +100,7 @@ public struct Sensor: Codable {
 
     public var remainingLifetime: Int? {
         get {
-            if let age = age {
+            if let age {
                 return max(0, lifetime - age)
             }
 

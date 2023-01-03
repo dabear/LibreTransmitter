@@ -15,7 +15,7 @@ internal class FrameworkBundle {
 }
 
 func LocalizedString(_ key: String, tableName: String? = nil, value: String? = nil, comment: String) -> String {
-    if let value = value {
+    if let value {
         return NSLocalizedString(key, tableName: tableName, bundle: FrameworkBundle.main, value: value, comment: comment)
     } else {
         return NSLocalizedString(key, tableName: tableName, bundle: FrameworkBundle.main, comment: comment)
