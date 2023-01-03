@@ -41,7 +41,7 @@ public struct SensorData: Codable {
     /// Date when data was read from sensor
     let date: Date
     /// Minutes (approx) since start of sensor
-    var minutesSinceStart: Int {
+    public var minutesSinceStart: Int {
         Int(body[293]) << 8 + Int(body[292])
     }
     /// Maximum time in Minutes he sensor can be worn before it expires
@@ -78,7 +78,7 @@ public struct SensorData: Codable {
     }
 
     // the amount of minutes left before this sensor expires
-    var minutesLeft: Int {
+    public var minutesLeft: Int {
        maxMinutesWearTime - minutesSinceStart
     }
 
@@ -420,10 +420,9 @@ public extension Array where Element ==  Measurement {
             return first
         }
 
-        guard let first = first else {
+        guard let first else {
             return nil
         }
-
         let sorted = sorted { $0.date < $1.date}
 
         // keep the recent raw temperatures, we don't want to apply linear regression to them

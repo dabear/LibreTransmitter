@@ -146,7 +146,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
             // Since we don't support multiple sets of calibration datas we chooce to remove
             // all buffered calibration data
             if let currentSensorUUID = metadata?.uid {
-                if let lastSensorUUID = lastSensorUUID,
+                if let lastSensorUUID,
                     lastSensorUUID != currentSensorUUID {
                     bufferedTrends.removeAll()
 

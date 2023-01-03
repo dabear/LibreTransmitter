@@ -21,7 +21,7 @@ extension UserDefaults {
 
         }
         set {
-            if let newValue = newValue {
+            if let newValue {
                 set(newValue, forKey: Key.libre2UiD.rawValue)
             } else {
                 print("Removing preSelectedUid")
@@ -38,7 +38,7 @@ extension UserDefaults {
             return nil
         }
         set {
-            if let newValue = newValue {
+            if let newValue {
                 set(newValue, forKey: Key.bluetoothDeviceUUIDString.rawValue)
             } else {
                 removeObject(forKey: Key.bluetoothDeviceUUIDString.rawValue)

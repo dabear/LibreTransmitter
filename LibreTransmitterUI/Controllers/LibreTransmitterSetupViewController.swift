@@ -88,7 +88,7 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerOnb
             // stored both preSelectedDevice and selectedUID !
         }
 
-        if let cgmManager = cgmManager {
+        if let cgmManager {
             logger.debug("dabear: Setupcontroller Saving from setup")
             cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didCreateCGMManager: cgmManager)
             cgmManagerOnboardingDelegate?.cgmManagerOnboarding(didOnboardCGMManager: cgmManager)

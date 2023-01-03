@@ -127,7 +127,7 @@ extension LibreGlucose {
 
     static func GetGlucoseTrend(current: Self?, last: Self?) -> GlucoseTrend {
 
-        guard let current = current, let last = last else {
+        guard let current, let last else {
             return  .flat
         }
 

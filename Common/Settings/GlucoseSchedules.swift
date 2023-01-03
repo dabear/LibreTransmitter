@@ -121,7 +121,7 @@ class GlucoseScheduleList: Codable, CustomStringConvertible {
     public static func isSnoozed() -> Bool {
         let now = Date()
 
-        if let snoozedUntil = snoozedUntil {
+        if let snoozedUntil {
             return snoozedUntil >= now
         }
         return false
@@ -171,7 +171,7 @@ class GlucoseSchedule: Codable, CustomStringConvertible {
             toDate = Calendar.current.date(byAdding: toComponents, to: previousMidnight)!
         }
 
-        if let fromDate = fromDate, let toDate = toDate, toDate >= fromDate {
+        if let fromDate, let toDate, toDate >= fromDate {
             return DateInterval(start: fromDate, end: toDate)
         }
         return nil

@@ -315,14 +315,14 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
         sensorData = SensorData(uuid: Data(rxBuffer.subdata(in: 5..<13)), bytes: [UInt8](rxBuffer.subdata(in: 18..<362)), date: Date())
 
-       if let sensorData = sensorData, let metadata = metadata {
+       if let sensorData, let metadata {
             delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
         }
     }
 
     // Confirm (to replace) the sensor. Iif a new sensor is detected and shall be used, send this command (0xD301)
     func confirmSensor(peripheral: CBPeripheral, writeCharacteristics: CBCharacteristic?) {
-        guard let writeCharacteristics = writeCharacteristics else {
+        guard let writeCharacteristics else {
             logger.error("could not confirm sensor")
             return
         }
