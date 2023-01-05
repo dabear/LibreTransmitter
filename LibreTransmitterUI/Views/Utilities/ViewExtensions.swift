@@ -10,8 +10,10 @@ import SwiftUI
 
 #if canImport(UIKit)
 extension View {
-    func hideKeyboard() {
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    func hideKeyboardPreIos16() {
+        if #available(iOS 16.0, *) {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
     }
 }
 #endif

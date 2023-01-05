@@ -191,7 +191,7 @@ struct AlarmDateRow: View {
                 }.onTapGesture {
                     print("cheduleActivationRow tapped")
                     subviewSelection = tag
-                    self.hideKeyboard()
+                    self.hideKeyboardPreIos16()
 
                 }
 
@@ -245,7 +245,7 @@ struct AlarmLowRow: View {
 
         }
         .onTapGesture {
-            self.hideKeyboard()
+            self.hideKeyboardPreIos16()
         }
     }
 }
@@ -280,7 +280,7 @@ struct AlarmHighRow: View {
 
         }
         .onTapGesture {
-            self.hideKeyboard()
+            self.hideKeyboardPreIos16()
         }
     }
 }
@@ -299,15 +299,23 @@ struct AlarmSettingsView: View {
     @StateObject var alarmState = AlarmSettingsState.loadState()
 
     @State private var subviewSelection: Int?
+    
+    
 
     var body: some View {
-
-        list
-        .ignoresSafeArea()
+        erasedWithKeyboardDismissal(list)
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
 
+    }
+    
+    func erasedWithKeyboardDismissal(_ view: any View) -> AnyView {
+        if #available(iOS 16.0, *) {
+            return AnyView(view.scrollDismissesKeyboard(.interactively))
+        }
+        
+        return AnyView(view)
     }
 
     @StateObject var errorReporter = FormErrorState()
@@ -322,7 +330,7 @@ struct AlarmSettingsView: View {
                     AlarmHighRow(schedule: schedule, glucoseUnit: glucoseUnit, glucoseUnitDesc: glucoseUnitDesc, errorReporter: errorReporter)
 
                 }.onTapGesture {
-                    self.hideKeyboard()
+                    self.hideKeyboardPreIos16()
                 }
 
             }
