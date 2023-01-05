@@ -312,7 +312,7 @@ struct AlarmSettingsView: View {
     
     func erasedWithKeyboardDismissal(_ view: any View) -> AnyView {
         if #available(iOS 16.0, *) {
-            return AnyView(view.scrollDismissesKeyboard(.interactively))
+            return AnyView(view.scrollDismissesKeyboard(.immediately))
         }
         
         return AnyView(view)
