@@ -564,7 +564,7 @@ extension LibreTransmitterManager {
     public func getDeviceType() -> String {
         proxy?.shortTransmitterName ?? "Unknown"
     }
-    public func getSmallImage() -> UIImage? {
-        proxy?.activePluginType?.smallImage ?? UIImage(named: "libresensor", in: Bundle.current, compatibleWith: nil)
+    public func getSmallImage() -> UIImage {
+        proxy?.activePluginType?.smallImage ?? UIImage(named: "libresensor", in: Bundle.current, compatibleWith: nil)!
     }
 }

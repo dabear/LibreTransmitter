@@ -43,6 +43,8 @@ extension LibreTransmitterManager: CGMManagerUI {
             alarmStatus: self.alarmStatus)
 
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
+        nav.navigationItem.largeTitleDisplayMode = .always
+        nav.navigationBar.prefersLargeTitles = true
 
         doneNotifier.listenOnce { [weak nav] in
             nav?.notifyComplete()
