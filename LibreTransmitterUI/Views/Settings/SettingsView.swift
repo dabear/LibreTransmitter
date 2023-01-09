@@ -89,10 +89,7 @@ private class FactoryCalibrationInfo: ObservableObject, Equatable, Hashable {
 
 }
 
-class SettingsModel: ObservableObject {
-    @Published  fileprivate var factoryCalibrationInfos = [FactoryCalibrationInfo()]
 
-}
 
 struct SettingsView: View {
 
@@ -105,13 +102,12 @@ struct SettingsView: View {
     @ObservedObject private var notifyComplete: GenericObservableObject
     @ObservedObject private var notifyDelete: GenericObservableObject
 
-    // most of the settings are now retrieved from the cgmmanager observables instead
-    @StateObject var model = SettingsModel()
+   
     @State private var presentableStatus: StatusMessage?
     @ObservedObject var alarmStatus: LibreTransmitter.AlarmStatus
 
     @State private var showingDestructQuestion = false
-    @State private var showingExporter = false
+    //@State private var showingExporter = false
     // @Environment(\.presentationMode) var presentationMode
 
     static func asHostedViewController(
@@ -140,64 +136,75 @@ struct SettingsView: View {
 
     static let formatter = NumberFormatter()
 
-    var dangerModeActivated: Binding<String> = ({
-        Binding(
-            get: { UserDefaults.standard.dangerModeActivated ? "Activated" : "Not activated" },
-            set: { _ in
-                // UserDefaults.standard.dangerModeActivated = newVal
-                // we dont support setting it currently
-            })
-    }
-
-    )()
+    
 
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
     var body: some View {
-        overview
-            // .navigationViewStyle(StackNavigationViewStyle())
-            .navigationBarTitle(Text("Libre Bluetooth"), displayMode: .inline)
-            .navigationBarItems(trailing: dismissButton)
+            List {
+                
+                headerSection
+                
+                snoozeSection
+                measurementSection
+                if !glucoseMeasurement.predictionDate.isEmpty {
+                    predictionSection
+                }
+                
+                transmitterInfoSection
+                
+                
+                NavigationLink(destination: CalibrationEditView()) {
+                    Button("Edit calibrations") {
+                        print("edit calibration clicked")
+                    }
+                }
+                advancedSection
+                
+                // disable for now due to null byte document issues
+                /*if false {
+                 logExportSection
+                 }*/
+                
+                destructSection
+                    .listStyle(InsetGroupedListStyle())
+                
+                
+            }
+
             .onAppear {
                 print("dabear:: settingsview appeared")
                 // While loop does this request on our behalf, freeaps does not
                 NotificationHelper.requestNotificationPermissionsIfNeeded()
-
+                
                 // only override savedglucose unit if we haven't saved this locally before
                 if UserDefaults.standard.mmGlucoseUnit == nil {
                     UserDefaults.standard.mmGlucoseUnit = glucoseUnit
                 }
-                // Yes we load factory calibrationdata every time the view appears
-                // I know this is  bad, but the calibrationdata is stored in
-                // the keychain and there is no simple way of wrapping the keychain
-                // as an observable in swiftui without bringing in large third party
-                // dependencies or hand crafting it, which would be error prone
-
-                let newFactoryInfo = FactoryCalibrationInfo.loadState()
-
-                if newFactoryInfo != self.model.factoryCalibrationInfos.first {
-                    print("dabear:: factoryinfo was new")
-
-                    self.model.factoryCalibrationInfos.removeAll()
-                    self.model.factoryCalibrationInfos.append(newFactoryInfo)
-
-                }
-
+                
             }
-
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    doneButton
+                }
+            }
+            //.navigationBarTitle("Libre bluetooth", displayMode: .large)
+            .navigationTitle("Libre bluetooth")
     }
+        
+
+    
 
     var snoozeSection: some View {
         Section {
             NavigationLink(destination: SnoozeView(isAlarming: $alarmStatus.isAlarming, activeAlarms: $alarmStatus.glucoseScheduleAlarmResult)) {
-                if alarmStatus.isAlarming {
-                    Text("Snooze Alerts").frame(alignment: .center)
-                        .padding(.top, 30)
-                        .padding(.bottom, 30)
-                } else {
-                    Text("Snooze Alerts").frame(alignment: .center)
-                }
+                Image(systemName: "pause.circle.fill")
+                    .font(.system(size: 22))
+                    .foregroundColor(.blue)
+                Text("Pause Glucose alarms").frame(alignment: .center)
+                    .foregroundColor(.blue)
+                
             }
         }
     }
@@ -228,16 +235,6 @@ struct SettingsView: View {
         }
     }
 
-    var sensorInfoSection : some View {
-        Section(header: Text("Sensor Info")) {
-            SettingsItem(title: "Sensor Age", detail: $sensorInfo.sensorAge )
-            SettingsItem(title: "Sensor Age Left", detail: $sensorInfo.sensorAgeLeft )
-            SettingsItem(title: "Sensor Endtime", detail: $sensorInfo.sensorEndTime )
-            SettingsItem(title: "Sensor State", detail: $sensorInfo.sensorState )
-            SettingsItem(title: "Sensor Serial", detail: $sensorInfo.sensorSerial )
-        }
-    }
-
     var transmitterInfoSection: some View {
         Section(header: Text("Transmitter Info")) {
             if !transmitterInfo.battery.isEmpty {
@@ -252,43 +249,13 @@ struct SettingsView: View {
         }
     }
 
-    var factoryCalibrationSection: some View {
-        Section(header: Text("Factory Calibration Parameters")) {
-            ForEach(self.model.factoryCalibrationInfos, id: \.self) { factoryCalibrationInfo in
 
-                SettingsItem(title: "i1", detail: factoryCalibrationInfo.i1 )
-                SettingsItem(title: "i2", detail: factoryCalibrationInfo.i2 )
-                SettingsItem(title: "i3", detail: factoryCalibrationInfo.i3 )
-                SettingsItem(title: "i4", detail: factoryCalibrationInfo.i4 )
-                SettingsItem(title: "i5", detail: factoryCalibrationInfo.i5 )
-                SettingsItem(title: "i6", detail: factoryCalibrationInfo.i6 )
-                SettingsItem(title: "Valid for footer", detail: factoryCalibrationInfo.validForFooter )
-            }
-
-            ZStack {
-                NavigationLink(destination: CalibrationEditView()) {
-                    Button("Edit calibrations") {
-                        print("edit calibration clicked")
-                    }
-                }
-
-            }
-
-        }
-    }
-
-    private var dismissButton: some View {
-        Button( action: {
-            // This should be enough
-            // self.presentationMode.wrappedValue.dismiss()
-
-            // but since Loop uses uihostingcontroller wrapped in cgmviewcontroller we need
-            // to notify the parent to close the cgmviewcontrollers navigation
+    private var doneButton: some View {
+        Button("Done", action: {
             notifyComplete.notify()
-        }, label:  {
-            Text("Done")
         })
     }
+
 
     var destructSection: some View {
         Section {
@@ -332,69 +299,183 @@ struct SettingsView: View {
                 }
             }
 
-            // Decided against adding ui for activating danger mode this time
-            // Consider doing it in the future, but no rush. dangermode is only used for calibrationedit and bluetooth devices debugging.
-
-            SettingsItem(title: "Danger mode", detail: dangerModeActivated)
-                .onTapGesture {
-                    print("danger mode tapped")
-                    presentableStatus = StatusMessage(title: "Danger mode", message: "Danger mode was a legacy ui only feature")
-                }
-
         }
     }
 
-    var logExportSection : some View {
+    /*var logExportSection : some View {
         Section {
             Button("Export logs") {
-                if Features.supportsLogExport {
-                    showingExporter = true
-                } else {
-                    presentableStatus = StatusMessage(title: "Export not available", message: "Log export requires ios 15")
-                }
+                showingExporter = true
             }.foregroundColor(.blue)
-
+        }
+    }*/
+    
+    private var daysRemaining: Int? {
+        let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
+        if remaining > .days(1)  {
+            return Int(remaining.days)
+        }
+        return nil
+    }
+    
+    private var hoursRemaining: Int? {
+        let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
+        if remaining > .hours(1) {
+            return Int(remaining.hours.truncatingRemainder(dividingBy: 24))
+        }
+        return nil
+    }
+    
+    private var minutesRemaining: Int? {
+        let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
+        if remaining < .hours(2) {
+            return Int(remaining.minutes.truncatingRemainder(dividingBy: 60))
+        }
+        return nil
+    }
+    
+    func timeComponent(value: Int, units: String) -> some View {
+        Group {
+            Text(String(value)).font(.system(size: 28)).fontWeight(.heavy)
+                .foregroundColor(.primary)
+                //.foregroundColor(viewModel.podOk ? .primary : .secondary)
+            Text(units).foregroundColor(.secondary)
+        }
+    }
+    
+    var showProgress : Bool {
+        return ["Notifying"].contains(transmitterInfo.connectionState)
+    }
+    
+    
+    var lifecycleProgress: some View {
+        VStack(spacing: 2) {
+            HStack(alignment: .lastTextBaseline, spacing: 3) {
+                if showProgress {
+                    Text("Sensor expires in ")
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("No Connection: ")
+                        .foregroundColor(.secondary)
+                    + Text("\(transmitterInfo.connectionState)")
+                        .foregroundColor(.secondary)
+                }
+                /*Text("Sensor Status: ")
+                    .foregroundColor(.primary)
+                + Text("\(transmitterInfo.connectionState)")
+                    .foregroundColor(.secondary)
+                 */
+                Spacer()
+                if showProgress {
+                    daysRemaining.map { (days) in
+                        timeComponent(value: days, units: days == 1 ?
+                                      LocalizedString("day", comment: "Unit for singular day in sensor liferemaining") :
+                                        LocalizedString("days", comment: "Unit for plural days in sensor life remaining"))
+                    }
+                    hoursRemaining.map { (hours) in
+                        timeComponent(value: hours, units: hours == 1 ?
+                                      LocalizedString("hour", comment: "Unit for singular hour in sensor life remaining") :
+                                        LocalizedString("hours", comment: "Unit for plural hours in sensor life remaining"))
+                    }
+                    minutesRemaining.map { (minutes) in
+                        timeComponent(value: minutes, units: minutes == 1 ?
+                                      LocalizedString("minute", comment: "Unit for singular minute in sensor life remaining") :
+                                        LocalizedString("minutes", comment: "Unit for plural minutes in sensor life remaining"))
+                    }
+                }
+            }
+            if showProgress {
+                
+                SwiftUI.ProgressView(value: sensorInfo.calculateProgress())
+                    .scaleEffect(x: 1, y: 4, anchor: .center)
+                    .padding(.top, 2)
+                //ProgressView(progress: ))
+                Spacer()
+            }
+            //.accentColor(self.viewModel.lifeState.progressColor(guidanceColors: guidanceColors))
+        }
+    }
+    
+    var headerImage: some View {
+        VStack(alignment: .center) {
+            Image(uiImage: UIImage(named: "libresensor200", in: Bundle.current, compatibleWith: nil)!)
+                .resizable()
+                .aspectRatio(contentMode: ContentMode.fit)
+                .frame(height: 100)
+                .padding(.horizontal)
+        }.frame(maxWidth: .infinity)
+    }
+    
+    var sensorStatusText : String {
+        var ret = sensorInfo.sensorState
+        return ret.isEmpty ? " - " : ret
+    }
+    var sensorStatus: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Sensor State")
+                .fontWeight(.heavy)
+                .fixedSize()
+            Text("\(sensorStatusText)")
+                .foregroundColor(.secondary)
+                .textSelection(.enabled)
+        }
+    }
+    
+    var sensorSerialText : String {
+        var ret = sensorInfo.sensorSerial
+        return ret.isEmpty ? " - " : ret
+    }
+    
+    var sensorSerial : some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Sensor Serial")
+                //.font(.system(size: 1))
+                .fontWeight(.heavy)
+                .fixedSize()
+            Text("\(sensorSerialText)")
+                .foregroundColor(.secondary)
+                .textSelection(.enabled)
+        }
+    }
+    
+    var headerSection: some View {
+        Section() {
+            VStack(alignment: .trailing) {
+                
+                Spacer()
+                headerImage
+                
+                lifecycleProgress
+                Spacer()
+                HStack(alignment: .top) {
+                    sensorStatus
+                    Spacer()
+                    sensorSerial
+                }
+                
+                /*Divider()
+                Text("some faultAction")
+                    .font(Font.footnote.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                 */
+                
+            }
+            /*if true {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("some notice title")
+                        .font(Font.subheadline.weight(.bold))
+                    Text("some notice details")
+                        .font(Font.footnote.weight(.semibold))
+                }.padding(.vertical, 8)
+            }*/
         }
     }
 
-    var overview: some View {
-        List {
-
-            snoozeSection
-            measurementSection
-            if !glucoseMeasurement.predictionDate.isEmpty {
-                predictionSection
-            }
-            sensorInfoSection
-            transmitterInfoSection
-            factoryCalibrationSection
-            advancedSection
-
-            // disable for now due to null byte document issues
-            if true {
-                logExportSection
-            }
-
-            destructSection
-
-        }
-        .fileExporter(isPresented: $showingExporter, document: LogsAsTextFile(), contentType: .plainText) { result in
-            switch result {
-            case .success(let url):
-                print("Saved to \(url)")
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-        .listStyle(InsetGroupedListStyle())
-        .alert(item: $presentableStatus) { status in
-            Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
-        }
-
-    }
+    
 
 }
-
+/*
 struct LogsAsTextFile: FileDocument {
     // tell the system we support only plain text
     static var readableContentTypes = [UTType.plainText]
@@ -422,7 +503,7 @@ struct LogsAsTextFile: FileDocument {
         return wrapper
 
     }
-}
+}*/
 
 struct SettingsOverview_Previews: PreviewProvider {
     static var previews: some View {

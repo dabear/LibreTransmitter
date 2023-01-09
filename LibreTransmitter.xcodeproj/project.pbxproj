@@ -12,6 +12,7 @@
 		2735A6E129637DEA00D4E868 /* LibreTransmitter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2735A6E429637DEA00D4E868 /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
 		2735A6E529637DEA00D4E868 /* LibreTransmitterUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		27394069296C2A48001DD18D /* libresensor200.png in Resources */ = {isa = PBXBuildFile; fileRef = 27394068296C2A48001DD18D /* libresensor200.png */; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
 		2746C73C26D91FC900E31BD9 /* Libre2DirectTransmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */; };
 		2746C73F26DCF83700E31BD9 /* Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73D26DCF83400E31BD9 /* Features.swift */; };
@@ -163,6 +164,7 @@
 
 /* Begin PBXFileReference section */
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		27394068296C2A48001DD18D /* libresensor200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = libresensor200.png; sourceTree = "<group>"; };
 		2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libre2DirectTransmitter.swift; sourceTree = "<group>"; };
 		2746C73D26DCF83400E31BD9 /* Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features.swift; sourceTree = "<group>"; };
 		2746C74126DD0F8800E31BD9 /* Libre2DirectSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libre2DirectSetup.swift; sourceTree = "<group>"; };
@@ -482,6 +484,7 @@
 		27850D3E25672DFB0020D109 /* Graphics */ = {
 			isa = PBXGroup;
 			children = (
+				27394068296C2A48001DD18D /* libresensor200.png */,
 				27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */,
 				27850D4325672DFB0020D109 /* icons8-slide-up-50.png */,
 				27850D4425672DFB0020D109 /* icons8-schedule-50.png */,
@@ -798,6 +801,7 @@
 				43AB511B21330D1400B3D58D /* Localizable.strings in Resources */,
 				27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */,
 				27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */,
+				27394069296C2A48001DD18D /* libresensor200.png in Resources */,
 				27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */,
 				27850D6425672DFB0020D109 /* libresensor.png in Resources */,
 				27850D6625672DFB0020D109 /* icons8-slide-up-50.png in Resources */,

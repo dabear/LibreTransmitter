@@ -29,11 +29,4 @@ public final class Features {
         #endif
     }
 
-    static var supportsLogExport: Bool {
-        if #available(iOS 15, *) {
-            return true
-        }
-        return false
-    }
-
 }
