@@ -31,6 +31,8 @@ public enum NotificationHelper {
         case calibrationOngoing = "no.bjorninge.miaomiao.calibration-notification"
         case restoredState = "no.bjorninge.miaomiao.state-notification"
     }
+    
+    public static var criticalAlarmsEnabled = false
 
     public static func vibrateIfNeeded(count: Int = 3) {
         if UserDefaults.standard.mmGlucoseAlarmsVibrate {
@@ -51,19 +53,78 @@ public enum NotificationHelper {
     public static func GlucoseUnitIsSupported(unit: HKUnit) -> Bool {
         [HKUnit.milligramsPerDeciliter, HKUnit.millimolesPerLiter].contains(unit)
     }
+    
 
-    private static func requestNotificationPermissions() {
-        logger.debug("requestNotificationPermissions called")
+    private static func requestCriticalNotificationPermissions() {
+        logger.debug("requestCriticalNotificationPermissions called")
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.badge, .sound, .alert]) { (granted, error) in
+        center.requestAuthorization(options: [.badge, .sound, .alert, .criticalAlert]) { (granted, error) in
             if granted {
-                logger.debug("requestNotificationPermissions was granted")
+                logger.debug("requestCriticalNotificationPermissions was granted")
+                UNUserNotificationCenter.current().getNotificationSettings { settings in
+                    let (_, criticalStatus, authorizationStatus) = parsePermissions(settings)
+                    logger.debug("requestCriticalNotificationPermissions: alarms allowed: \(authorizationStatus). Critical alarms allowed? \(criticalStatus)")
+                    criticalAlarmsEnabled = settings.criticalAlertSetting == .enabled
+                }
             } else {
-                logger.debug("requestNotificationPermissions failed because of error: \(String(describing: error))")
+                logger.debug("requestCriticalNotificationPermissions failed because of error: \(String(describing: error))")
             }
 
         }
 
+    }
+    
+    private static func parsePermissions(_ settings: UNNotificationSettings) -> (Bool, String, String){
+        var criticalStatus : String
+        var authorizationStatus: String
+        var shouldRequestCriticalPermissions = false
+        switch settings.criticalAlertSetting {
+        case .disabled:
+            criticalStatus = "disabled"
+            shouldRequestCriticalPermissions = true
+        case .enabled:
+            criticalStatus = "enabled"
+        case .notSupported:
+            criticalStatus = "notSupported"
+        @unknown default:
+            criticalStatus = "unknown"
+        }
+        
+        switch settings.authorizationStatus {
+        case .notDetermined:
+            authorizationStatus = "notDetermined"
+        case .authorized:
+            authorizationStatus = "authorized"
+        case .denied:
+            authorizationStatus = "denied"
+        case .ephemeral:
+            authorizationStatus = "ephemeral"
+        case .provisional:
+            authorizationStatus = "provisional"
+        @unknown default:
+            authorizationStatus = "unknown"
+        }
+        
+        return (shouldRequestCriticalPermissions, criticalStatus, authorizationStatus)
+        
+    }
+
+
+    public static func requestNotificationPermissionsIfNeeded() {
+        // We assume loop will request necessary "non-critical" permissions for us
+        // So we are only interested in the "critical" permissions here
+        
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            logger.debug("settings.authorizationStatus: \(String(describing: settings.authorizationStatus))")
+            
+            let (shouldRequestCriticalPermissions, criticalStatus, authorizationStatus ) = parsePermissions(settings)
+            logger.debug("requestNotificationPermissionsIfNeeded: alarms allowed: \(authorizationStatus). Critical alarms allowed? \(criticalStatus)")
+            
+            if shouldRequestCriticalPermissions {
+                requestCriticalNotificationPermissions()
+            }
+            
+        }
     }
 
     private static func ensureCanSendNotification(_ completion: @escaping () -> Void ) {
@@ -72,19 +133,18 @@ public enum NotificationHelper {
                 logger.debug("dabear:: ensureCanSendNotification failed, authorization denied")
                 return
             }
-
             logger.debug("dabear:: sending notification was allowed")
 
             completion()
         }
     }
 
-    private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false) {
+    private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false, isCritical: Bool = false) {
         let center = UNUserNotificationCenter.current()
-        // content.sound = UNNotificationSound.
-        if #available(iOSApplicationExtension 15.0, *) {
-            content.interruptionLevel = .timeSensitive
-        }
+        
+        content.interruptionLevel = isCritical && Self.criticalAlarmsEnabled ? .critical : .timeSensitive
+        
+        
         let request = UNNotificationRequest(identifier: identifier.rawValue, content: content, trigger: nil)
 
         if deleteOld {
@@ -103,15 +163,7 @@ public enum NotificationHelper {
         }
     }
 
-    public static func requestNotificationPermissionsIfNeeded() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            logger.debug("settings.authorizationStatus: \(String(describing: settings.authorizationStatus.rawValue))")
-            if ![.authorized, .provisional].contains(settings.authorizationStatus) {
-                requestNotificationPermissions()
-            }
-        }
-    }
-
+    
     static func ensureCanSendGlucoseNotification(_ completion: @escaping (_ unit: HKUnit) -> Void ) {
         ensureCanSendNotification {
             if let glucoseUnit = UserDefaults.standard.mmGlucoseUnit, GlucoseUnitIsSupported(unit: glucoseUnit) {
@@ -269,7 +321,7 @@ public extension NotificationHelper {
             content.title = "Sensor Ending Soon"
             content.body = "Current Sensor is Ending soon! Sensor Life left in \(dynamicText)"
 
-            addRequest(identifier: .sensorExpire, content: content, deleteOld: true)
+            addRequest(identifier: .sensorExpire, content: content, deleteOld: true, isCritical: true)
         }
     }
 }
@@ -285,7 +337,7 @@ public extension NotificationHelper {
             content.title = "State was restored"
             content.body = msg
 
-            addRequest(identifier: .restoredState, content: content )
+            addRequest(identifier: .restoredState, content: content, deleteOld: true )
         }
     }
 
@@ -376,13 +428,17 @@ public extension NotificationHelper {
             var titles = [String]()
             var body = [String]()
             var body2 = [String]()
+            
+            var isCritical = false
             switch alarm {
             case .none:
                 titles.append("Glucose")
             case .low:
                 titles.append("LOWALERT!")
+                isCritical = true
             case .high:
                 titles.append("HIGHALERT!")
+                isCritical = true
             }
 
             if isSnoozed {
@@ -426,7 +482,7 @@ public extension NotificationHelper {
             content.body = body.joined(separator: ", ") + body2s
             addRequest(identifier: .glucocoseNotifications,
                        content: content,
-                       deleteOld: true)
+                       deleteOld: true, isCritical: isCritical && !isSnoozed)
         }
     }
 

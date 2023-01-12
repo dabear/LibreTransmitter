@@ -193,6 +193,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
         self.init()
         logger.debug("dabear:: LibreTransmitterManager  has run init from rawstate")
+        
     }
 
     public var rawState: CGMManager.RawStateValue {
@@ -210,11 +211,10 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public init() {
         lastConnected = nil
-        // let isui = (self is CGMManagerUI)
-        // self.miaomiaoService = MiaomiaoService(keychainManager: keychain)
 
         logger.debug("dabear: LibreTransmitterManager will be created now")
-        // proxy = MiaoMiaoBluetoothManager()
+        NotificationHelper.requestNotificationPermissionsIfNeeded()
+        
         proxy?.delegate = self
     }
 
