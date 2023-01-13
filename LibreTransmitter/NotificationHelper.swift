@@ -32,6 +32,11 @@ public enum NotificationHelper {
         case restoredState = "no.bjorninge.miaomiao.state-notification"
     }
     
+    // if you want LibreTransmitter to try upgrading to critical notifications, change this
+    public static var shouldRequestCriticalPermissions = false
+    
+    
+    //don't touch this please
     public static var criticalAlarmsEnabled = false
 
     public static func vibrateIfNeeded(count: Int = 3) {
@@ -62,7 +67,7 @@ public enum NotificationHelper {
             if granted {
                 logger.debug("\(#function) was granted")
                 UNUserNotificationCenter.current().getNotificationSettings { settings in
-                    let (_, criticalStatus, authorizationStatus) = parsePermissions(settings)
+                    let (criticalStatus, authorizationStatus) = parsePermissions(settings)
                     logger.debug("\(#function): alarms allowed: \(authorizationStatus). Critical alarms allowed? \(criticalStatus)")
                     criticalAlarmsEnabled = settings.criticalAlertSetting == .enabled
                 }
@@ -74,14 +79,12 @@ public enum NotificationHelper {
 
     }
     
-    private static func parsePermissions(_ settings: UNNotificationSettings) -> (Bool, String, String){
+    private static func parsePermissions(_ settings: UNNotificationSettings) -> (String, String){
         var criticalStatus : String
         var authorizationStatus: String
-        var shouldRequestCriticalPermissions = false
         switch settings.criticalAlertSetting {
         case .disabled:
             criticalStatus = "disabled"
-            shouldRequestCriticalPermissions = true
         case .enabled:
             criticalStatus = "enabled"
         case .notSupported:
@@ -105,7 +108,7 @@ public enum NotificationHelper {
             authorizationStatus = "unknown"
         }
         
-        return (shouldRequestCriticalPermissions, criticalStatus, authorizationStatus)
+        return (criticalStatus, authorizationStatus)
         
     }
 
@@ -117,10 +120,10 @@ public enum NotificationHelper {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             logger.debug("\(#function) settings.authorizationStatus: \(String(describing: settings.authorizationStatus))")
             
-            let (shouldRequestCriticalPermissions, criticalStatus, authorizationStatus ) = parsePermissions(settings)
+            let (criticalStatus, authorizationStatus ) = parsePermissions(settings)
             logger.debug("\(#function): alarms allowed: \(authorizationStatus). Critical alarms allowed? \(criticalStatus)")
             
-            if shouldRequestCriticalPermissions {
+            if shouldRequestCriticalPermissions && settings.criticalAlertSetting != .enabled {
                 requestCriticalNotificationPermissions()
             }
             

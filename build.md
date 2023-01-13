@@ -48,13 +48,22 @@ To utilize libre2direct you need to pair your sensor via NFC first, and therefor
 ## Give Libretransmitter Critical Alerts permissions
 Libretransmitter will by default send alarms as "timesensitve", appearing immediately on the lock screen.
 If you mute or set your phone to do not disturb, you can potentially miss out on such alarms.
-To remedy this, LibreTransmitter will dynamically try to upgrade any glucose alarms to "critical". 
+To remedy this, LibreTransmitter can be configured to try to upgrade any glucose alarms to "critical". 
 Critical alarms will sound even if your phone is set to to mute or "do not disturb" mode.
 
 For this to be possible, you will have to request special permissions from apple.
 This process is documented at https://stackoverflow.com/questions/66057840/ios-how-do-you-implement-critical-alerts-for-your-app-when-you-dont-have-an-en . 
-The linked article describes some necessary code changes, but that can be ignored; only the entitlements have to be added to Loop for LibreTransmitter to automatically use them.
-It's worth mentioning again that those permissions must be given to Loop itself, not to the LibreTransmitter package.
+The linked article describes some necessary code changes, but the code changes mentioned there should be ignored. You should only change this toggle in the 
+NotificationHelper.swift file
+
+```swift
+// if you want LibreTransmitter to try upgrading to critical notifications, change this
+    public static var shouldRequestCriticalPermissions = false
+
+```
+
+It's worth mentioning again that those permissions must be given to Loop itself, not to the LibreTransmitter package. The 
+com.apple.developer.usernotifications.critical-alerts permission must be added to Loop/Loop.entitlement file in the Loop folder (not inside LibreTransmitter
 
 ## Build the LoopWorkspace with LibreTransmitter Plugin
 * In xcode, go to Product->"Clean Build Folder"
