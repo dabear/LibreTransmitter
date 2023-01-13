@@ -142,7 +142,14 @@ public enum NotificationHelper {
     private static func addRequest(identifier: Identifiers, content: UNMutableNotificationContent, deleteOld: Bool = false, isCritical: Bool = false) {
         let center = UNUserNotificationCenter.current()
         
-        content.interruptionLevel = isCritical && Self.criticalAlarmsEnabled ? .critical : .timeSensitive
+        
+        if isCritical && Self.criticalAlarmsEnabled {
+            content.interruptionLevel =   .critical
+            content.sound = .defaultCriticalSound(withAudioVolume: 0.6)
+        } else {
+            content.interruptionLevel = .timeSensitive
+        }
+        
         
         
         let request = UNNotificationRequest(identifier: identifier.rawValue, content: content, trigger: nil)
