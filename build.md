@@ -45,8 +45,16 @@ To utilize libre2direct you need to pair your sensor via NFC first, and therefor
 * In Xcode, Open the Loop Project (not the LibreTransmitter project) in the navigator, go to "Signing & Capabilities",  then "+ Capability" and add the "NFC" or "Near field communication Tag Reading" capability.
 * In Loop's Info.plist, add the tag NFCReaderUsageDescription and set description to something similar to: "Loop will use NFC on the phone to pair libre2 sensors"
 
+## Give Libretransmitter Critical Alerts permissions
+Libretransmitter will by default send alarms as "timesensitve", appearing immediately on the lock screen.
+If you mute or set your phone to do not disturb, you can potentially miss out on such alarms.
+To remedy this, LibreTransmitter will dynamically try to upgrade any glucose alarms to "critical". 
+Critical alarms will sound even if your phone is set to to mute or "do not disturb" mode.
 
-
+For this to be possible, you will have to request special permissions from apple.
+This process is documented at https://stackoverflow.com/questions/66057840/ios-how-do-you-implement-critical-alerts-for-your-app-when-you-dont-have-an-en . 
+The linked article describes some necessary code changes, but that can be ignored; only the entitlements have to be added to Loop for LibreTransmitter to automatically use them.
+It's worth mentioning again that those permissions must be given to Loop itself, not to the LibreTransmitter package.
 
 ## Build the LoopWorkspace with LibreTransmitter Plugin
 * In xcode, go to Product->"Clean Build Folder"
