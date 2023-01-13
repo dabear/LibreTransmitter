@@ -53,17 +53,25 @@ Critical alarms will sound even if your phone is set to to mute or "do not distu
 
 For this to be possible, you will have to request special permissions from apple.
 This process is documented at https://stackoverflow.com/questions/66057840/ios-how-do-you-implement-critical-alerts-for-your-app-when-you-dont-have-an-en . 
-The linked article describes some necessary code changes, but the code changes mentioned there should be ignored. You should only change this toggle in the 
-NotificationHelper.swift file
+The linked article describes some necessary code changes, but the code changes mentioned there should be ignored. 
+
+It's worth mentioning again that those permissions must be given to Loop itself, not to the LibreTransmitter package. The
+com.apple.developer.usernotifications.critical-alerts permission must be added to Loop/Loop.entitlement file in the Loop folder (not inside LibreTransmitter
+
+### Method 1
+Using this method, only the LibreTransmitter cgm alarms can become critical
+
+You should only change this toggle in the NotificationHelper.swift file
 
 ```swift
 // if you want LibreTransmitter to try upgrading to critical notifications, change this
     public static var shouldRequestCriticalPermissions = false
 
 ```
+### Method 2
+Using this method, both Loop pump, cgm alarms and LibreTransmitter alarms will become critical
 
-It's worth mentioning again that those permissions must be given to Loop itself, not to the LibreTransmitter package. The 
-com.apple.developer.usernotifications.critical-alerts permission must be added to Loop/Loop.entitlement file in the Loop folder (not inside LibreTransmitter
+Go to the Loop Project (not target)→Build settings → Swift Compiler → Custom flags → Other swift flags section and edit the different configuration flags. Add the flag “CRITICAL_ALERTS_ENABLED” (without the quotes).
 
 ## Build the LoopWorkspace with LibreTransmitter Plugin
 * In xcode, go to Product->"Clean Build Folder"
