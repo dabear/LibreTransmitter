@@ -67,8 +67,7 @@ public enum NotificationHelper {
             if granted {
                 logger.debug("\(#function) was granted")
                 UNUserNotificationCenter.current().getNotificationSettings { settings in
-                    let (criticalStatus, authorizationStatus) = parsePermissions(settings)
-                    logger.debug("\(#function): alarms allowed: \(authorizationStatus). Critical alarms allowed? \(criticalStatus)")
+                    logPermissions(settings)
                     criticalAlarmsEnabled = settings.criticalAlertSetting == .enabled
                 }
             } else {
@@ -79,36 +78,9 @@ public enum NotificationHelper {
 
     }
     
-    private static func parsePermissions(_ settings: UNNotificationSettings) -> (String, String){
-        var criticalStatus : String
-        var authorizationStatus: String
-        switch settings.criticalAlertSetting {
-        case .disabled:
-            criticalStatus = "disabled"
-        case .enabled:
-            criticalStatus = "enabled"
-        case .notSupported:
-            criticalStatus = "notSupported"
-        @unknown default:
-            criticalStatus = "unknown"
-        }
+    private static func logPermissions(_ settings: UNNotificationSettings, caller: String = #function) {
         
-        switch settings.authorizationStatus {
-        case .notDetermined:
-            authorizationStatus = "notDetermined"
-        case .authorized:
-            authorizationStatus = "authorized"
-        case .denied:
-            authorizationStatus = "denied"
-        case .ephemeral:
-            authorizationStatus = "ephemeral"
-        case .provisional:
-            authorizationStatus = "provisional"
-        @unknown default:
-            authorizationStatus = "unknown"
-        }
-        
-        return (criticalStatus, authorizationStatus)
+        logger.debug("\(caller): alarms allowed: \(String(describing:settings.authorizationStatus)). Critical alarms allowed? \(String(describing:settings.criticalAlertSetting))")
         
     }
 
@@ -117,13 +89,12 @@ public enum NotificationHelper {
         // We assume loop will request necessary "non-critical" permissions for us
         // So we are only interested in the "critical" permissions here
         
+        
         UNUserNotificationCenter.current().getNotificationSettings { settings in
-            logger.debug("\(#function) settings.authorizationStatus: \(String(describing: settings.authorizationStatus))")
+            criticalAlarmsEnabled = settings.criticalAlertSetting == .enabled
+            logPermissions(settings)
             
-            let (criticalStatus, authorizationStatus ) = parsePermissions(settings)
-            logger.debug("\(#function): alarms allowed: \(authorizationStatus). Critical alarms allowed? \(criticalStatus)")
-            
-            if shouldRequestCriticalPermissions && settings.criticalAlertSetting != .enabled {
+            if shouldRequestCriticalPermissions {
                 requestCriticalNotificationPermissions()
             }
             
@@ -133,7 +104,7 @@ public enum NotificationHelper {
     private static func ensureCanSendNotification(_ completion: @escaping () -> Void ) {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
-                logger.debug("\(#function) ensureCanSendNotification failed, authorization denied")
+                logger.debug("\(#function) failed, authorization denied")
                 return
             }
             logger.debug("\(#function) sending notification was allowed")
