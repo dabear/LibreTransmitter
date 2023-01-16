@@ -17,12 +17,5 @@ extension Double {
     var twoDecimals: String {
         String(format: "%.2f", self)
     }
-    var fourDecimals: String {
-        String(format: "%.4f", self)
-    }
-
-    enum Number {
-        static var formatter = NumberFormatter()
-    }
-
+    
 }

@@ -78,21 +78,9 @@ extension LibreTransmitterManager: CGMManagerUI {
         guard isConnected else {
             return nil
         }
-        
         let minutesLeft = Double(self.sensorInfoObservable.sensorMinutesLeft)
-        let minutesSinceStart = Double(self.sensorInfoObservable.sensorMinutesSinceStart)
-        let maxWearTime = Double(self.sensorInfoObservable.sensorMaxMinutesWearTime)
         
-        if minutesLeft <= 0 {
-            return LibreLifecycleProgress(percentComplete: 1, progressState: .critical)
-        }
-        if maxWearTime == 0 {
-            //shouldn't really happen, but if it does we don't want to crash because of a minor UI issue
-            return nil
-        }
-        
-        let progress = 1-(minutesSinceStart / maxWearTime)
-        
+        let progress = self.sensorInfoObservable.calculateProgress()
         // This matches the manufacturere's app where it displays a notification when sensor has less than 3 days left
         if TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24*3) {
             if TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) {

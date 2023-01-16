@@ -158,7 +158,7 @@ struct CustomDataPickerView: View {
             return
         }
         if let p1 = externalState.startComponents?.ToTimeString(), let p2 = externalState.endComponents?.ToTimeString() {
-            externalState.componentsAsText = "\(p1)-\(p2)"
+            externalState.componentsAsText = "\(p1) - \(p2)"
         }
     }
 
