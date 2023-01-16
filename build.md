@@ -61,11 +61,15 @@ com.apple.developer.usernotifications.critical-alerts permission must be added t
 ### Method 1
 Using this method, only the LibreTransmitter cgm alarms can become critical
 
-You should only change this toggle in the NotificationHelper.swift file
+You should only change the shouldOverrideRequestCriticalPermissions toggle in the NotificationHelperOverride.swift file to true, like this:
 
 ```swift
-// if you want LibreTransmitter to try upgrading to critical notifications, change this
-    public static var shouldRequestCriticalPermissions = false
+enum NotificationHelperOverride {
+    static var shouldOverrideRequestCriticalPermissions : Bool {
+        // if you want LibreTransmitter to try upgrading to critical notifications, change this
+        true
+    }
+}
 
 ```
 ### Method 2
