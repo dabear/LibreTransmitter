@@ -43,54 +43,6 @@ public struct SettingsItem: View {
     }
 }
 
-private class FactoryCalibrationInfo: ObservableObject, Equatable, Hashable {
-    @Published var i1 = ""
-    @Published var i2 = ""
-    @Published var i3 = ""
-    @Published var i4 = ""
-    @Published var i5 = ""
-    @Published var i6 = ""
-    @Published var validForFooter = ""
-    
-    // For swiftuis stateobject to be able to compare two objects for equality,
-    // we must exclude the publishers them selves in the comparison
-
-   static func == (lhs: FactoryCalibrationInfo, rhs: FactoryCalibrationInfo) -> Bool {
-        lhs.i1 == rhs.i1 && lhs.i2 == rhs.i2 &&
-        lhs.i3 == rhs.i3 && lhs.i4 == rhs.i4 &&
-        lhs.i5 == rhs.i5 && lhs.i6 == rhs.i6 &&
-        lhs.validForFooter == rhs.validForFooter
-
-    }
-
-    // todo: consider using cgmmanagers observable directly
-    static func loadState() -> FactoryCalibrationInfo {
-
-        let newState = FactoryCalibrationInfo()
-
-        // User editable calibrationdata: keychain.getLibreNativeCalibrationData()
-        // Default Calibrationdata stored in sensor: cgmManager?.calibrationData
-
-        // do not change this, there is UI support for editing calibrationdata anyway
-        guard let c = KeychainManagerWrapper.standard.getLibreNativeCalibrationData() else {
-            return newState
-        }
-
-        newState.i1 = String(c.i1)
-        newState.i2 = String(c.i2)
-        newState.i3 = String(c.i3)
-        newState.i4 = String(c.i4)
-        newState.i5 = String(c.i5)
-        newState.i6 = String(c.i6)
-        newState.validForFooter = String(c.isValidForFooterWithReverseCRCs)
-
-        return newState
-    }
-
-}
-
-
-
 struct SettingsView: View {
 
     @ObservedObject private var displayGlucoseUnitObservable: DisplayGlucoseUnitObservable
@@ -143,17 +95,16 @@ struct SettingsView: View {
     // also add one herer
     var body: some View {
             List {
-                
                 headerSection
-                
                 snoozeSection
                 measurementSection
                 if !glucoseMeasurement.predictionDate.isEmpty {
                     predictionSection
                 }
                 
-                transmitterInfoSection
-                
+                NavigationLink(destination: deviceInfoSection) {
+                    SettingsItem(title: "Device details", detail: .constant(""))
+                }
                 
                 NavigationLink(destination: CalibrationEditView()) {
                     Button("Edit calibrations") {
@@ -231,27 +182,28 @@ struct SettingsView: View {
         }
     }
 
-    var transmitterInfoSection: some View {
-        Section(header: Text("Transmitter Info")) {
-            if !transmitterInfo.battery.isEmpty {
-                SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+    var deviceInfoSection: some View {
+        List {
+            Section(header: Text("Device Info")) {
+                if !transmitterInfo.battery.isEmpty {
+                    SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+                }
+                SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
+                SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
+                SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
+                SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
+                SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
+                SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
             }
-            SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
-            SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
-            SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
-            SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
-            SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
-            SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
         }
+        .textSelection(.enabled)
     }
-
 
     private var doneButton: some View {
         Button("Done", action: {
             notifyComplete.notify()
         })
     }
-
 
     var destructSection: some View {
         Section {

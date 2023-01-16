@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		270C1429266047490063405B /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270C1428266047490063405B /* NotificationSettingsView.swift */; };
+		271A39F52975844B0005FEDA /* NotificationHelperOverride.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271A39F42975844B0005FEDA /* NotificationHelperOverride.swift */; };
 		2735A6E029637DEA00D4E868 /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
 		2735A6E129637DEA00D4E868 /* LibreTransmitter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2735A6E429637DEA00D4E868 /* LibreTransmitterUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; };
@@ -164,6 +165,7 @@
 
 /* Begin PBXFileReference section */
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		271A39F42975844B0005FEDA /* NotificationHelperOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelperOverride.swift; sourceTree = "<group>"; };
 		27394068296C2A48001DD18D /* libresensor200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = libresensor200.png; sourceTree = "<group>"; };
 		2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libre2DirectTransmitter.swift; sourceTree = "<group>"; };
 		2746C73D26DCF83400E31BD9 /* Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features.swift; sourceTree = "<group>"; };
@@ -566,6 +568,7 @@
 				27ED67B62698EEEF003E5DAB /* Observables */,
 				27850D0B25672CA60020D109 /* ConcreteGlucoseDisplayable.swift */,
 				27850D0D25672CA60020D109 /* NotificationHelper.swift */,
+				271A39F42975844B0005FEDA /* NotificationHelperOverride.swift */,
 				27850D0C25672CA60020D109 /* LibreGlucose.swift */,
 				43AB5125213315D300B3D58D /* Localizable.strings */,
 				43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */,
@@ -893,6 +896,7 @@
 				27ED67BC269B8277003E5DAB /* KeyChainManagerWrapper.swift in Sources */,
 				27850DA525672F1C0020D109 /* LibreTransmitterProxyManager.swift in Sources */,
 				27850CF725672C0C0020D109 /* UserDefaults+Bluetooth.swift in Sources */,
+				271A39F52975844B0005FEDA /* NotificationHelperOverride.swift in Sources */,
 				27850CE725672C0C0020D109 /* DataExtensions.swift in Sources */,
 				27850D1225672CA60020D109 /* NotificationHelper.swift in Sources */,
 				27850CF325672C0C0020D109 /* UserDefaults+GlucoseSettings.swift in Sources */,

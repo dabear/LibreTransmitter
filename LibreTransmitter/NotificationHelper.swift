@@ -32,7 +32,7 @@ public enum NotificationHelper {
         case restoredState = "no.bjorninge.miaomiao.state-notification"
     }
     
-    // if you want LibreTransmitter to try upgrading to critical notifications, change this
+    
     public static var shouldRequestCriticalPermissions = false
     
     
@@ -94,7 +94,7 @@ public enum NotificationHelper {
             criticalAlarmsEnabled = settings.criticalAlertSetting == .enabled
             logPermissions(settings)
             
-            if shouldRequestCriticalPermissions {
+            if shouldRequestCriticalPermissions || NotificationHelperOverride.shouldOverrideRequestCriticalPermissions{
                 requestCriticalNotificationPermissions()
             }
             
