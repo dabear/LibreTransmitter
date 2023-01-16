@@ -42,16 +42,6 @@ public enum MeasurementError: Int, CaseIterable, Codable {
     }
 }
 
-struct SimplifiedMeasurement: MeasurementProtocol {
-    var rawGlucose: Int
-
-    var rawTemperature: Int
-
-    var rawTemperatureAdjustment: Int = 0
-
-    var error = [MeasurementError.OK]
-}
-
 /// Structure for one glucose measurement including value, date and raw data bytes
 public struct Measurement: MeasurementProtocol, Codable, Hashable {
     /// The date for this measurement
