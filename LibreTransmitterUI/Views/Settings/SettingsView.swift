@@ -143,17 +143,16 @@ struct SettingsView: View {
     // also add one herer
     var body: some View {
             List {
-                
                 headerSection
-                
                 snoozeSection
                 measurementSection
                 if !glucoseMeasurement.predictionDate.isEmpty {
                     predictionSection
                 }
                 
-                transmitterInfoSection
-                
+                NavigationLink(destination: deviceInfoSection) {
+                    SettingsItem(title: "Device details", detail: .constant(""))
+                }
                 
                 NavigationLink(destination: CalibrationEditView()) {
                     Button("Edit calibrations") {
@@ -231,27 +230,28 @@ struct SettingsView: View {
         }
     }
 
-    var transmitterInfoSection: some View {
-        Section(header: Text("Transmitter Info")) {
-            if !transmitterInfo.battery.isEmpty {
-                SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+    var deviceInfoSection: some View {
+        List {
+            Section(header: Text("Device Info")) {
+                if !transmitterInfo.battery.isEmpty {
+                    SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
+                }
+                SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
+                SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
+                SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
+                SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
+                SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
+                SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
             }
-            SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
-            SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
-            SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
-            SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
-            SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
-            SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
         }
+        .textSelection(.enabled)
     }
-
 
     private var doneButton: some View {
         Button("Done", action: {
             notifyComplete.notify()
         })
     }
-
 
     var destructSection: some View {
         Section {
