@@ -94,8 +94,8 @@ struct Libre2DirectSetup: View {
     If you have other apps connecting to the sensor via bluetooth, these need to be shut down or uninstalled.
 
     You can only have one app communicating with the sensor via bluetooth.
-    Then press the \"pariring and connection\" button below to start the process.
-    Please note that the bluetooth connection might take up to a couple of minutes before it starts working.
+    Then press the \"Pair sensor & connect\" button below to start the process.
+    Please note that the bluetooth connection usually takes up to a couple of minutes before it starts working.
     """
 
     var pairingDescriptionSection: some View {
