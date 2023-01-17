@@ -48,6 +48,13 @@ struct ModeSelectionView: View {
         // no navview needed when embedded into a hostingcontroller
         // NavigationView{
         List {
+            Section("Mode selection info") {
+                Text("""
+Select the type of setup you want
+
+You can choose between connecting directly to a bluetooth equipped Libre sensor or connect to a third party transmitter attached to your sensor
+""")
+            }
             modeSelectSection
         }
         .listStyle(InsetGroupedListStyle())

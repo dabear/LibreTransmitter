@@ -28,7 +28,8 @@ This is a https://github.com/loopkit/loop plugin for connecting to libresensors 
 
 # How it looks
 
-<img src="IMG_0888.png" width="25%"> <img src="IMG_0889.png" width="25%"> <img src="IMG_0890.png" width="25%">
+<img src="screenshots/add-cgm-libre.PNG" width="25%"> <img src="screenshots/modeselection.PNG" width="25%"> <img src="screenshots/nfcscaninfo.PNG" width="25%"> <img src="screenshots/transmitterselection.PNG" width="25%"> <img src="screenshots/settingsview.PNG" width="25%"> <img src="screenshots/deviceinfo.PNG" width="25%"> 
+
 
 
 # How to build
