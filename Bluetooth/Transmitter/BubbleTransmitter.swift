@@ -79,7 +79,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
 
     private var battery: Int?
 
-    fileprivate lazy var bLogger = Logger(forType: Self.self)
+    fileprivate lazy var bLogger = Logger()
 
     override class func getDeviceDetailsFromAdvertisement(advertisementData: [String: Any]?) -> String? {
         let (amac, afirmware, ahardware) = Self.getDeviceDetailsFromAdvertisementInternal(advertisementData: advertisementData)

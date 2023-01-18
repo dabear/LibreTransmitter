@@ -8,7 +8,7 @@ import HealthKit
 import LoopKit
 import os.log
 
-private var logger = Logger(forType: "LibreGlucose")
+private var logger = Logger()
 
 public struct LibreGlucose: Codable, Hashable {
     public let unsmoothedGlucose: Double
