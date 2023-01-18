@@ -113,7 +113,7 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
         activePluginType?.shortTransmitterName
     }
 
-    fileprivate lazy var logger = Logger(forType: Self.self)
+    fileprivate lazy var logger = Logger()
     var metadata: LibreTransmitterMetadata?
 
     var centralManager: CBCentralManager!

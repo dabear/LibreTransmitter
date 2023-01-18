@@ -88,8 +88,6 @@ struct SettingsView: View {
 
     static let formatter = NumberFormatter()
 
-    
-
     // no navigationview necessary when running inside a uihostingcontroller
     // uihostingcontroller seems to add a navigationview for us, causing problems if we
     // also add one herer
@@ -112,19 +110,11 @@ struct SettingsView: View {
                     }
                 }
                 advancedSection
-                
-                // disable for now due to null byte document issues
-                /*if false {
-                 logExportSection
-                 }*/
-                
                 destructSection
                     .listStyle(InsetGroupedListStyle())
                 
             }
-
             .onAppear {
-               
                 // only override savedglucose unit if we haven't saved this locally before
                 if UserDefaults.standard.mmGlucoseUnit == nil {
                     UserDefaults.standard.mmGlucoseUnit = glucoseUnit
@@ -140,8 +130,6 @@ struct SettingsView: View {
             .navigationTitle("Libre bluetooth")
     }
         
-
-    
 
     var snoozeSection: some View {
         Section {
@@ -174,7 +162,7 @@ struct SettingsView: View {
             if glucoseUnit == .millimolesPerLiter {
                     SettingsItem(title: "CurrentBG", detail: $glucoseMeasurement.predictionMMOL)
             } else if glucoseUnit == .milligramsPerDeciliter {
-                    SettingsItem(title: "Glucose", detail: $glucoseMeasurement.predictionMGDL)
+                    SettingsItem(title: "CurrentBG", detail: $glucoseMeasurement.predictionMGDL)
             }
 
             SettingsItem(title: "Date", detail: $glucoseMeasurement.predictionDate )
@@ -249,14 +237,6 @@ struct SettingsView: View {
 
         }
     }
-
-    /*var logExportSection : some View {
-        Section {
-            Button("Export logs") {
-                showingExporter = true
-            }.foregroundColor(.blue)
-        }
-    }*/
     
     private var daysRemaining: Int? {
         let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
@@ -355,7 +335,7 @@ struct SettingsView: View {
     }
     
     var sensorStatusText : String {
-        var ret = sensorInfo.sensorState
+        let ret = sensorInfo.sensorState
         return ret.isEmpty ? " - " : ret
     }
     var sensorStatus: some View {
@@ -370,7 +350,7 @@ struct SettingsView: View {
     }
     
     var sensorSerialText : String {
-        var ret = sensorInfo.sensorSerial
+        let ret = sensorInfo.sensorSerial
         return ret.isEmpty ? " - " : ret
     }
     
@@ -423,35 +403,6 @@ struct SettingsView: View {
     
 
 }
-/*
-struct LogsAsTextFile: FileDocument {
-    // tell the system we support only plain text
-    static var readableContentTypes = [UTType.plainText]
-
-    // a simple initializer that creates new, empty documents
-    init() {
-    }
-
-    // this initializer loads data that has been saved previously
-    init(configuration: ReadConfiguration) throws {
-    }
-
-    // this will be called when the system wants to write our data to disk
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        var data = Data()
-        do {
-            data = try getLogs()
-        } catch {
-            data.append("No logs available".data(using: .utf8, allowLossyConversion: false)!)
-        }
-
-        let wrapper = FileWrapper(regularFileWithContents: data)
-        let today = Date().getFormattedDate(format: "yyyy-MM-dd")
-        wrapper.preferredFilename = "libretransmitterlogs-\(today).txt"
-        return wrapper
-
-    }
-}*/
 
 struct SettingsOverview_Previews: PreviewProvider {
     static var previews: some View {

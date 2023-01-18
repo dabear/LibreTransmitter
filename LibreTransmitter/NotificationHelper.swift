@@ -13,7 +13,7 @@ import LoopKit
 import UserNotifications
 import os.log
 
-private var logger = Logger(forType: "NotificationHelper")
+private var logger = Logger()
 // MARK: - Notification Utilities
 public enum NotificationHelper {
 
