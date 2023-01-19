@@ -15,6 +15,8 @@
 		2735A6E529637DEA00D4E868 /* LibreTransmitterUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC82210E664300A81379 /* LibreTransmitterUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		27394069296C2A48001DD18D /* libresensor200.png in Resources */ = {isa = PBXBuildFile; fileRef = 27394068296C2A48001DD18D /* libresensor200.png */; };
 		273BFDB925A73C580042E1EC /* LibreTransmitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 432B0E881CDFC3C50045347B /* LibreTransmitter.framework */; };
+		274557C82979EA38003B027B /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274557C72979EA38003B027B /* LoggerExtension.swift */; };
+		274557C92979EA38003B027B /* LoggerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274557C72979EA38003B027B /* LoggerExtension.swift */; };
 		2746C73C26D91FC900E31BD9 /* Libre2DirectTransmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */; };
 		2746C73F26DCF83700E31BD9 /* Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C73D26DCF83400E31BD9 /* Features.swift */; };
 		2746C74226DD0F8800E31BD9 /* Libre2DirectSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C74126DD0F8800E31BD9 /* Libre2DirectSetup.swift */; };
@@ -165,6 +167,7 @@
 		270C1428266047490063405B /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
 		271A39F42975844B0005FEDA /* NotificationHelperOverride.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHelperOverride.swift; sourceTree = "<group>"; };
 		27394068296C2A48001DD18D /* libresensor200.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = libresensor200.png; sourceTree = "<group>"; };
+		274557C72979EA38003B027B /* LoggerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerExtension.swift; sourceTree = "<group>"; };
 		2746C73B26D91FC900E31BD9 /* Libre2DirectTransmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libre2DirectTransmitter.swift; sourceTree = "<group>"; };
 		2746C73D26DCF83400E31BD9 /* Features.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Features.swift; sourceTree = "<group>"; };
 		2746C74126DD0F8800E31BD9 /* Libre2DirectSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Libre2DirectSetup.swift; sourceTree = "<group>"; };
@@ -454,6 +457,7 @@
 				27850CDC25672C0C0020D109 /* DateExtensions.swift */,
 				27850CDD25672C0C0020D109 /* CollectionExtensions.swift */,
 				276EF5F12652F84F00571021 /* HashableClass.swift */,
+				274557C72979EA38003B027B /* LoggerExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -874,6 +878,7 @@
 				B40BF26823ABD55200A43CEE /* OSLog.swift in Sources */,
 				43A8EC9D210E68CE00A81379 /* LibreTransmitterManager.swift in Sources */,
 				27850DB225672F3F0020D109 /* LimitedQueue.swift in Sources */,
+				274557C82979EA38003B027B /* LoggerExtension.swift in Sources */,
 				27850D9825672F130020D109 /* BubbleTransmitter.swift in Sources */,
 				27850DCD25672F780020D109 /* SensorState.swift in Sources */,
 				27B2150526E2C4EB000C322D /* Sensor.swift in Sources */,
@@ -930,6 +935,7 @@
 				27850DAC25672F3E0020D109 /* LimitedQueue.swift in Sources */,
 				275EC998265AF64E0043210E /* StatusMessage.swift in Sources */,
 				27850D6C25672DFB0020D109 /* SnoozeView.swift in Sources */,
+				274557C92979EA38003B027B /* LoggerExtension.swift in Sources */,
 				276EF5E7264B1FCE00571021 /* AlarmSettingsView.swift in Sources */,
 				27850D6D25672DFB0020D109 /* BluetoothSelection.swift in Sources */,
 				270C1429266047490063405B /* NotificationSettingsView.swift in Sources */,

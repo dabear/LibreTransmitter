@@ -17,7 +17,7 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerOnb
     weak var cgmManagerOnboardingDelegate: CGMManagerOnboardingDelegate?
     weak var completionDelegate: CompletionDelegate?
 
-    fileprivate lazy var logger = Logger()
+    fileprivate lazy var logger = Logger(forType: Self.self)
 
     lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
 
