@@ -183,7 +183,7 @@ extension MiaoMiaoResponseState: CustomStringConvertible {
 
 class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
-    fileprivate lazy var logger = Logger()
+    fileprivate lazy var logger = Logger(forType: Self.self)
 
     func reset() {
         rxBuffer.resetAllBytes()
