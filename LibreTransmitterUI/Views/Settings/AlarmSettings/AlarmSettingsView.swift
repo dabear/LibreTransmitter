@@ -9,20 +9,12 @@
 import SwiftUI
 import HealthKit
 
-private class AlarmSettingsIcons {
-
-    public static var Shared = AlarmSettingsIcons()
-
-    public func getImage(resourceName: String) -> some View {
-        let bundle = Bundle(for: type(of: self))
-        if let uiimage = UIImage(named: resourceName, in: bundle, compatibleWith: nil) {
-            return AnyView(Image(uiImage: uiimage))
-        }
-        return AnyView(EmptyView())
-    }
-    lazy var icons8_schedule_50 : some View = getImage(resourceName: "icons8-schedule-50")
-    lazy var icons8_drop_down_arrow_50 : some View = getImage(resourceName: "icons8-drop-down-arrow-50")
-    lazy var icons8_slide_up_50: some View = getImage(resourceName: "icons8-slide-up-50")
+fileprivate func systemImage(_ name:String) -> some View{
+    Image(systemName: name)
+         .resizable()
+         .interpolation(.high)
+         .scaledToFit()
+         .frame(width: 40)
 }
 
 class AlarmScheduleState: ObservableObject, Identifiable, Hashable {
@@ -178,7 +170,7 @@ struct AlarmDateRow: View {
                            tag: tag,
                            selection: $subviewSelection) {
                 Group {
-                    AlarmSettingsIcons.Shared.icons8_schedule_50
+                    systemImage("clock.arrow.2.circlepath")
                         .frame(maxWidth: 50, alignment: .leading)
                     TextField("Active from - to ", text: Binding<String>(get: { "\(schedule.alarmDateComponents.componentsAsText)" },
                                                       set: { schedule.alarmDateComponents.componentsAsText = $0 }))
@@ -215,19 +207,12 @@ struct AlarmLowRow: View {
     var body: some View {
         HStack(alignment: .center) {
 
-            AlarmSettingsIcons.Shared.icons8_drop_down_arrow_50
+            systemImage("arrowtriangle.down.circle")
                 .frame(maxWidth: 50, alignment: .leading)
             Text("Low")
                 .frame(maxWidth: 100, alignment: .leading)
             Spacer()
 
-            /*TextField("glucose", text:  Binding<String>(get: { schedule.getLowAlarm(forUnit: glucoseUnit) },
-                                                        set: { schedule.setLowAlarm(forUnit: glucoseUnit, lowAlarm: $0) }))
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .disableAutocorrection(true)
-                .keyboardType(.decimalPad)
-                .border(Color(UIColor.separator))
-                .frame(maxWidth: 100, alignment: .trailing)*/
 
             NumericTextField(description: "glucose", showDescription: false,
                              numericValue: Binding<Double>(
@@ -260,7 +245,7 @@ struct AlarmHighRow: View {
     var body: some View {
         HStack(alignment: .center) {
 
-            AlarmSettingsIcons.Shared.icons8_slide_up_50
+            systemImage( "arrowtriangle.up.circle")
                 .frame(maxWidth: 50, alignment: .leading)
             Text("High")
                 .frame(maxWidth: 100, alignment: .leading)
@@ -295,9 +280,7 @@ struct AlarmSettingsView: View {
     }
 
     @State private var presentableStatus: StatusMessage?
-
     @StateObject var alarmState = AlarmSettingsState.loadState()
-
     @State private var subviewSelection: Int?
     
     

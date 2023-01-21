@@ -62,9 +62,6 @@
 		27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4025672DFB0020D109 /* miaomiao-small.png */; };
 		27850D6425672DFB0020D109 /* libresensor.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4125672DFB0020D109 /* libresensor.png */; };
 		27850D6525672DFB0020D109 /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4225672DFB0020D109 /* bubble.png */; };
-		27850D6625672DFB0020D109 /* icons8-slide-up-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4325672DFB0020D109 /* icons8-slide-up-50.png */; };
-		27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4425672DFB0020D109 /* icons8-schedule-50.png */; };
-		27850D6825672DFB0020D109 /* icons8-drop-down-arrow-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4525672DFB0020D109 /* icons8-drop-down-arrow-50.png */; };
 		27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4625672DFB0020D109 /* icons8-up-50.png */; };
 		27850D6A25672DFB0020D109 /* icons8-down-arrow-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 27850D4725672DFB0020D109 /* icons8-down-arrow-50.png */; };
 		27850D6C25672DFB0020D109 /* SnoozeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27850D4A25672DFB0020D109 /* SnoozeView.swift */; };
@@ -222,9 +219,6 @@
 		27850D4025672DFB0020D109 /* miaomiao-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "miaomiao-small.png"; sourceTree = "<group>"; };
 		27850D4125672DFB0020D109 /* libresensor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = libresensor.png; sourceTree = "<group>"; };
 		27850D4225672DFB0020D109 /* bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubble.png; sourceTree = "<group>"; };
-		27850D4325672DFB0020D109 /* icons8-slide-up-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-slide-up-50.png"; sourceTree = "<group>"; };
-		27850D4425672DFB0020D109 /* icons8-schedule-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-schedule-50.png"; sourceTree = "<group>"; };
-		27850D4525672DFB0020D109 /* icons8-drop-down-arrow-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-drop-down-arrow-50.png"; sourceTree = "<group>"; };
 		27850D4625672DFB0020D109 /* icons8-up-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-up-50.png"; sourceTree = "<group>"; };
 		27850D4725672DFB0020D109 /* icons8-down-arrow-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icons8-down-arrow-50.png"; sourceTree = "<group>"; };
 		27850D4A25672DFB0020D109 /* SnoozeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnoozeView.swift; sourceTree = "<group>"; };
@@ -488,9 +482,6 @@
 			children = (
 				27394068296C2A48001DD18D /* libresensor200.png */,
 				27FED6CB26C275A8001BD5E4 /* ic_bubble_mini_3-2.png */,
-				27850D4325672DFB0020D109 /* icons8-slide-up-50.png */,
-				27850D4425672DFB0020D109 /* icons8-schedule-50.png */,
-				27850D4525672DFB0020D109 /* icons8-drop-down-arrow-50.png */,
 				27850D4625672DFB0020D109 /* icons8-up-50.png */,
 				27850D4725672DFB0020D109 /* icons8-down-arrow-50.png */,
 				27850D4025672DFB0020D109 /* miaomiao-small.png */,
@@ -800,14 +791,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				27FED6CD26C275A8001BD5E4 /* ic_bubble_mini_3-2.png in Resources */,
-				27850D6825672DFB0020D109 /* icons8-drop-down-arrow-50.png in Resources */,
 				43AB511B21330D1400B3D58D /* Localizable.strings in Resources */,
 				27850D6325672DFB0020D109 /* miaomiao-small.png in Resources */,
-				27850D6725672DFB0020D109 /* icons8-schedule-50.png in Resources */,
 				27394069296C2A48001DD18D /* libresensor200.png in Resources */,
 				27850D6925672DFB0020D109 /* icons8-up-50.png in Resources */,
 				27850D6425672DFB0020D109 /* libresensor.png in Resources */,
-				27850D6625672DFB0020D109 /* icons8-slide-up-50.png in Resources */,
 				27850D6525672DFB0020D109 /* bubble.png in Resources */,
 				27850D6A25672DFB0020D109 /* icons8-down-arrow-50.png in Resources */,
 			);
