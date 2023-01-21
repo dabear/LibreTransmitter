@@ -290,7 +290,7 @@ struct AlarmSettingsView: View {
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
-
+        .navigationBarTitle("Alarm Settings")
     }
     
     func erasedWithKeyboardDismissal(_ view: any View) -> AnyView {
