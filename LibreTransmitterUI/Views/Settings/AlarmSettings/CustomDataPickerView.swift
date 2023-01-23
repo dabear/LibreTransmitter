@@ -103,54 +103,62 @@ struct CustomDataPickerView: View {
     }
 
     var pickers: some View {
-        HStack {
-            Picker("", selection: $externalState.start.animation(), content: {
-                ForEach(startTimes.indices) { i in
-                    Text("\(startTimes[i])").tag(i)
-               }
-            })
-            // .border(Color.green)
+      HStack {
+        Picker("", selection: $externalState.start,
+          content: {
+            ForEach(startTimes.indices) { i in
+              Text("\(startTimes[i])").tag(i)
+            }
+          }
+        )
+        // .border(Color.green)
 
-            .zIndex(10)
-            .frame(width: 100)
-            .clipped()
-            .labelsHidden()
+        .zIndex(10)
+        .frame(width: 100)
+        .clipped()
+        .labelsHidden()
 
-            Text("To ")
+        Text("To ")
 
-            Picker("", selection: $externalState.end.animation(), content: {
-                ForEach(endTimes.indices) { i in
-                    Text("\(endTimes[i])").tag(i)
-               }
-            })
-            // .border(Color.red)
-            .zIndex(11)
-            .frame(width: 100)
-            .clipped()
-            .labelsHidden()
+        Picker("", selection: $externalState.end,
+          content: {
+            ForEach(endTimes.indices) { i in
+              Text("\(endTimes[i])").tag(i)
+            }
+          }
+        )
+        // .border(Color.red)
+        .zIndex(11)
+        .frame(width: 100)
+        .clipped()
+        .labelsHidden()
 
         // }
 
         .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading:
+        .navigationBarItems(
+          leading:
             Button("Cancel") {
-                print("cancel button pressed, restoring state...")
-                restoreAlarmExternalState()
-                popView()
+              print("cancel button pressed, restoring state...")
+              restoreAlarmExternalState()
+              popView()
 
-            }.accentColor(.red), trailing:
-                Button("Save") {
-                    print("Save button pressed...")
-                    verifyRange()
-                }
-                .accentColor(.red)
+            }.accentColor(.red),
+          trailing:
+            Button("Save") {
+              print("Save button pressed...")
+              verifyRange()
+            }
+            .disabled(saveButtonDisabled)
+            .accentColor(.red)
 
         )
-        }
+      }
 
     }
 
     @State private var presentableStatus: StatusMessage?
+    @State private var saveButtonDisabled = true
 
     private func updateTextualState(_ shouldDelete: Bool = false) {
         if shouldDelete {
@@ -169,11 +177,13 @@ struct CustomDataPickerView: View {
         .onChange(of: externalState.start, perform: { value in
             print("selectedtart changed to \(value)")
             externalState.startComponents = startComponentTimes[value]
+            saveButtonDisabled = false
 
         })
         .onChange(of: externalState.end, perform: { value in
             print("selectedEnd changed to \(value)")
             externalState.endComponents = endComponentTimes[value]
+            saveButtonDisabled = false
 
         })
         .onAppear {

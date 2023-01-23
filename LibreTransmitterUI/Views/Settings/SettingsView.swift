@@ -24,7 +24,7 @@ public struct SettingsItem: View {
     }
 
     // basically allows caller to set a static string without having to use .constant
-    init(title: String, detail: String) {
+    init(title: String, detail: String="") {
         self.title = title
         self._detail = Binding<String>(get: {
             detail
@@ -53,6 +53,8 @@ struct SettingsView: View {
 
     @ObservedObject private var notifyComplete: GenericObservableObject
     @ObservedObject private var notifyDelete: GenericObservableObject
+    @ObservedObject private var notifyReset: GenericObservableObject
+    @ObservedObject private var notifyReconnect: GenericObservableObject
 
    
     @State private var presentableStatus: StatusMessage?
@@ -66,6 +68,8 @@ struct SettingsView: View {
         displayGlucoseUnitObservable: DisplayGlucoseUnitObservable,
         notifyComplete: GenericObservableObject,
         notifyDelete: GenericObservableObject,
+        notifyReset: GenericObservableObject,
+        notifyReconnect: GenericObservableObject,
         transmitterInfoObservable: LibreTransmitter.TransmitterInfo,
         sensorInfoObervable: LibreTransmitter.SensorInfo,
         glucoseInfoObservable: LibreTransmitter.GlucoseInfo,
@@ -77,6 +81,8 @@ struct SettingsView: View {
             glucoseMeasurement: glucoseInfoObservable,
             notifyComplete: notifyComplete,
             notifyDelete: notifyDelete,
+            notifyReset: notifyReset,
+            notifyReconnect: notifyReconnect,
             alarmStatus: alarmStatus
 
         ))
@@ -101,7 +107,7 @@ struct SettingsView: View {
                 }
                 
                 NavigationLink(destination: deviceInfoSection) {
-                    SettingsItem(title: "Device details", detail: .constant(""))
+                    SettingsItem(title: "Device details")
                 }
                 
                 NavigationLink(destination: CalibrationEditView()) {
@@ -110,10 +116,13 @@ struct SettingsView: View {
                     }
                 }
                 advancedSection
+                // To be enabled once logic is wired up correctly
+                sensorChangeSection
+                    
                 destructSection
-                    .listStyle(InsetGroupedListStyle())
+                    
                 
-            }
+            }.listStyle(InsetGroupedListStyle())
             .onAppear {
                 // only override savedglucose unit if we haven't saved this locally before
                 if UserDefaults.standard.mmGlucoseUnit == nil {
@@ -192,6 +201,18 @@ struct SettingsView: View {
             notifyComplete.notify()
         })
     }
+    
+    var sensorChangeSection: some View {
+        Section {
+            ZStack {
+                NavigationLink(destination: AuthView(completeNotifier: notifyComplete, notifyReset: notifyReset, notifyReconnect: notifyReconnect)) {
+                    Button("Change Sensor") {
+                    }.foregroundColor(.blue)
+                }
+            }
+        }
+    }
+
 
     var destructSection: some View {
         Section {
@@ -200,11 +221,17 @@ struct SettingsView: View {
             }.foregroundColor(.red)
             .alert(isPresented: $showingDestructQuestion) {
                 Alert(
-                    title: Text("Are you sure you want to remove this cgm from loop?"),
-                    message: Text("There is no undo"),
+                    title: Text("Are you sure you want to remove this cgm from loop? "),
+                    message: Text("There is no undo. Deleting requires authentication!"),
                     primaryButton: .destructive(Text("Delete")) {
-
-                        notifyDelete.notify()
+                        
+                        self.authenticate { success in
+                            print("dabear: got authentication response: \(success)")
+                            if success {
+                                notifyDelete.notify()
+                            }
+                        }
+                        
                     },
                     secondaryButton: .cancel()
                 )
@@ -220,18 +247,18 @@ struct SettingsView: View {
             // so we just pass glucoseunit directly on init
             ZStack {
                 NavigationLink(destination: AlarmSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Alarms", detail: .constant(""))
+                    SettingsItem(title: "Alarms")
                 }
             }
             ZStack {
                 NavigationLink(destination: GlucoseSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Glucose Settings", detail: .constant(""))
+                    SettingsItem(title: "Glucose Settings")
                 }
             }
 
             ZStack {
                 NavigationLink(destination: NotificationSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Notifications", detail: .constant(""))
+                    SettingsItem(title: "Notifications")
                 }
             }
 

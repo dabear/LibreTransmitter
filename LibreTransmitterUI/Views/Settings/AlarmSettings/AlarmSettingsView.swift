@@ -159,7 +159,7 @@ class AlarmSettingsState: ObservableObject {
 }
 
 struct AlarmDateRow: View {
-    var schedule: AlarmScheduleState
+    @ObservedObject var schedule: AlarmScheduleState
     @State var tag: Int
     @Binding var subviewSelection: Int?
 
@@ -189,21 +189,30 @@ struct AlarmDateRow: View {
 
             }
 
-            Toggle("", isOn: Binding<Bool>(get: { (schedule.enabled) ?? false },
-                                             set: { schedule.enabled = $0 }))
-                .frame(maxWidth: 50, alignment: .trailing)
+            Toggle("", isOn: Binding<Bool>(
+                get: {
+                    schedule.enabled == true
+                },
+                set: {
+                    if $0 != schedule.enabled {
+                        schedule.enabled = $0
+                    }
+                }
+            ))
+            .frame(maxWidth: 50, alignment: .trailing)
 
         }
     }
 }
 
 struct AlarmLowRow: View {
-    var schedule: AlarmScheduleState
+    @ObservedObject var schedule: AlarmScheduleState
     var glucoseUnit: HKUnit
     var glucoseUnitDesc: String
 
     var errorReporter: FormErrorState
 
+    @FocusState private var isInputFocused: Bool
     var body: some View {
         HStack(alignment: .center) {
 
@@ -211,6 +220,9 @@ struct AlarmLowRow: View {
                 .frame(maxWidth: 50, alignment: .leading)
             Text("Low")
                 .frame(maxWidth: 100, alignment: .leading)
+                .onTapGesture {
+                    isInputFocused.toggle()
+                }
             Spacer()
 
 
@@ -223,6 +235,7 @@ struct AlarmLowRow: View {
                                 set: {
                                     schedule.setLowAlarm(forUnit: glucoseUnit, lowAlarm: $0)
                                 }), formErrorState: errorReporter)
+            .focused($isInputFocused)
 
             Text("\(glucoseUnitDesc)")
                 .font(.footnote)
@@ -236,12 +249,12 @@ struct AlarmLowRow: View {
 }
 
 struct AlarmHighRow: View {
-    var schedule: AlarmScheduleState
+    @ObservedObject var schedule: AlarmScheduleState
     var glucoseUnit: HKUnit
     var glucoseUnitDesc: String
 
     var errorReporter: FormErrorState
-
+    @FocusState private var isInputFocused: Bool
     var body: some View {
         HStack(alignment: .center) {
 
@@ -249,6 +262,9 @@ struct AlarmHighRow: View {
                 .frame(maxWidth: 50, alignment: .leading)
             Text("High")
                 .frame(maxWidth: 100, alignment: .leading)
+                .onTapGesture {
+                    isInputFocused.toggle()
+                }
             Spacer()
 
             NumericTextField(description: "glucose", showDescription: false,
@@ -258,7 +274,7 @@ struct AlarmHighRow: View {
                                     schedule.setHighAlarm(forUnit: glucoseUnit, highAlarm: $0)
 
                                 }), formErrorState: errorReporter)
-
+            .focused($isInputFocused)
             Text("\(glucoseUnitDesc)")
                 .font(.footnote)
                 .frame(maxWidth: 100, alignment: .trailing)
@@ -283,7 +299,11 @@ struct AlarmSettingsView: View {
     @StateObject var alarmState = AlarmSettingsState.loadState()
     @State private var subviewSelection: Int?
     
+    @State private var authSuccess = false
     
+    // Set this to true to require system authentication
+    // for accessing the alarm section
+    @State private var requiresAuthentication = false
 
     var body: some View {
         erasedWithKeyboardDismissal(list)
@@ -291,6 +311,16 @@ struct AlarmSettingsView: View {
             Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
         .navigationBarTitle("Alarm Settings")
+        .onAppear{
+            if (requiresAuthentication && !authSuccess) {
+                self.authenticate { success in
+                    print("dabear: got authentication response: \(success)")
+                    authSuccess = success
+                }
+            }
+            
+        }
+        .disabled(requiresAuthentication ? !authSuccess : false)
     }
     
     func erasedWithKeyboardDismissal(_ view: any View) -> AnyView {

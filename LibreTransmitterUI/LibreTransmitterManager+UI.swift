@@ -33,10 +33,16 @@ extension LibreTransmitterManager: CGMManagerUI {
 
         let doneNotifier = GenericObservableObject()
         let wantToTerminateNotifier = GenericObservableObject()
+        
+        let wantToResetCGMManagerNotifier = GenericObservableObject()
+        
+        let wantToRestablishConnectionNotifier = GenericObservableObject()
+        
 
         let settings = SettingsView.asHostedViewController(
             displayGlucoseUnitObservable: displayGlucoseUnitObservable,
             notifyComplete: doneNotifier, notifyDelete: wantToTerminateNotifier,
+            notifyReset: wantToResetCGMManagerNotifier, notifyReconnect:wantToRestablishConnectionNotifier,
             transmitterInfoObservable: self.transmitterInfoObservable,
             sensorInfoObervable: self.sensorInfoObservable,
             glucoseInfoObservable: self.glucoseInfoObservable,
@@ -45,7 +51,20 @@ extension LibreTransmitterManager: CGMManagerUI {
         let nav = CGMManagerSettingsNavigationViewController(rootViewController: settings)
         nav.navigationItem.largeTitleDisplayMode = .always
         nav.navigationBar.prefersLargeTitles = true
+        
+        wantToResetCGMManagerNotifier.listenOnce { [weak self] in
+            self?.logger.debug("CGM wants to reset cgmmanager")
+            self?.resetManager()
 
+        }
+        
+        wantToRestablishConnectionNotifier.listenOnce { [weak self,weak nav] in
+            self?.logger.debug("CGM wants to RestablishConnection")
+            self?.reEstablishProxy()
+            nav?.notifyComplete()
+        }
+
+        
         doneNotifier.listenOnce { [weak nav] in
             nav?.notifyComplete()
 
