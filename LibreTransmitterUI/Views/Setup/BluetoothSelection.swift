@@ -170,6 +170,9 @@ private struct DeviceItem: View {
 
             print("dabear:: tapped and set \(device.asStringIdentifier) as new identifier")
             selection.selectedStringIdentifier = device.asStringIdentifier
+            //only relevant for launch through settings, as selectionstate can be persisted
+            // we need to enforce transmitter mode by removing any selected third party transmitter
+            selection.selectedUID = nil
         }
     }
 }

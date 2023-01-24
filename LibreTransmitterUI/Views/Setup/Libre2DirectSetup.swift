@@ -66,7 +66,10 @@ struct Libre2DirectSetup: View {
         UserDefaults.standard.preSelectedSensor = sensor
 
         SelectionState.shared.selectedUID = pairingInfo.uuid
-
+        
+        //only relevant for launch through settings, as selectionstate can be persisted
+        // we need to enforce libre2 by removing any selected third party transmitter
+        SelectionState.shared.selectedStringIdentifier = nil
         print("dabear:: paried and set selected UID to: \(SelectionState.shared.selectedUID?.hex)")
         saveNotifier.notify()
 

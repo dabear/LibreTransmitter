@@ -32,6 +32,12 @@ struct GlucoseSettingsView: View {
     @AppStorage("no.bjorninge.mmBackfillFromTrend") var mmBackfillFromTrend: Bool = false
     @AppStorage("no.bjorninge.shouldPersistSensorData") var shouldPersistSensorData: Bool = false
 
+    @State private var authSuccess = false
+    
+    // Set this to true to require system authentication
+    // for accessing the glucose section
+    @State private var requiresAuthentication = false
+    
     var body: some View {
         List {
 
@@ -51,14 +57,23 @@ struct GlucoseSettingsView: View {
                         }
                     }
             }
-
+            
         }
+        .onAppear{
+            if (requiresAuthentication && !authSuccess) {
+                self.authenticate { success in
+                    print("dabear: got authentication response: \(success)")
+                    authSuccess = success
+                }
+            }
+        }
+        .disabled(requiresAuthentication ? !authSuccess : false)
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
             Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
         .navigationBarTitle("Glucose Settings")
-
+        
     }
 
 }

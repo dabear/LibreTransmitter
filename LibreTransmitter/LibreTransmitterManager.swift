@@ -217,13 +217,33 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         
         proxy?.delegate = self
     }
+    
+    public func resetManager() {
+        proxy?.activePlugin?.reset()
+        disconnect()
+        transmitterInfoObservable = TransmitterInfo()
+        sensorInfoObservable = SensorInfo()
+        glucoseInfoObservable = GlucoseInfo()
+        
+    }
 
     public func disconnect() {
         logger.debug("dabear:: LibreTransmitterManager disconnect called")
 
         proxy?.disconnectManually()
         proxy?.delegate = nil
+        proxy = nil
+        lastConnected = nil
+        lastDirectUpdate = nil
     }
+    
+    public func reEstablishProxy() {
+        logger.debug("dabear:: LibreTransmitterManager re-establish called")
+
+        proxy = LibreTransmitterProxyManager()
+        proxy?.delegate = self
+    }
+    
 
     deinit {
         logger.debug("dabear:: LibreTransmitterManager deinit called")

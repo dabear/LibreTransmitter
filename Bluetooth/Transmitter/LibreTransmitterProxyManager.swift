@@ -258,7 +258,7 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
 
     func disconnectManually() {
         dispatchPrecondition(condition: .notOnQueue(managerQueue))
-        logger.debug("Disconnect manually while state \(String(describing: self.state.rawValue))" )
+        logger.debug("Disconnect manually while state \(String(describing: self.state))" )
 
         managerQueue.sync {
             switch self.state {
