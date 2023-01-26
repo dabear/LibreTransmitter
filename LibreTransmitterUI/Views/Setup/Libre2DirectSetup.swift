@@ -8,6 +8,7 @@
 
 import SwiftUI
 import LibreTransmitter
+import LoopKitUI
 
 #if canImport(CoreNFC)
 
@@ -83,29 +84,17 @@ struct Libre2DirectSetup: View {
         }// .accentColor(.red)
     }
 
-    var pairButtonSection : some View {
-        Section {
-            Button("Pair Sensor & connect") {
-                pairSensor()
-            }.buttonStyle(BlueButtonStyle())
-        }
-    }
-
     var pairingText =
-    """
+    LocalizedString("""
     Please make sure that your Libre 2 sensor is already activated and finished warming up.
     If you have other apps connecting to the sensor via bluetooth, these need to be shut down or uninstalled.
 
     You can only have one app communicating with the sensor via bluetooth.
     Then press the \"Pair sensor & connect\" button below to start the process.
     Please note that the bluetooth connection usually takes up to a couple of minutes before it starts working.
-    """
+    """, comment: "Text describing how to connect to a libre 2 sensor via NFC for pairing")
 
-    var pairingDescriptionSection: some View {
-        Section(header: Text("About the Process")) {
-            Text(pairingText).padding()
-        }
-    }
+    
     var pairingInfoSection: some View {
         Section(header: Text("Pairinginfo")) {
             if showPairingInfo {
@@ -138,11 +127,34 @@ struct Libre2DirectSetup: View {
 
         }
     }
+    
+    var body : some View {
+        GuidePage(content: {
+            VStack {
+                getLeadingImage()
+                HStack {
+                    Text(pairingText)
+                        .minimumScaleFactor(0.9)
+                        .lineLimit(nil)
+                    Spacer()
+                }
+                .padding(.vertical)
+            }
 
-    var body: some View {
+        }) {
+            VStack(spacing: 10) {
+                Button("Pair Sensor & connect") {
+                    pairSensor()
+                }
+                .actionButtonStyle(.primary)
+            }.padding()
+        }
+    }
+
+    var body2: some View {
         List {
-            pairingDescriptionSection
-            pairButtonSection
+            
+            
 
             // pairingInfoSection
 

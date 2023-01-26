@@ -36,7 +36,7 @@ struct GlucoseSettingsView: View {
     
     // Set this to true to require system authentication
     // for accessing the glucose section
-    @State private var requiresAuthentication = false
+    @State private var requiresAuthentication = Features.glucoseSettingsRequireAuthentication
     
     var body: some View {
         List {

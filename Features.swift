@@ -15,6 +15,9 @@ import CoreNFC
 public final class Features {
 
     static public var logSubsystem = "no.bjorninge.libre"
+    
+    static public var glucoseSettingsRequireAuthentication = false
+    static public var alarmSettingsViewRequiresAuthentication = false
 
     static var phoneNFCAvailable: Bool {
         #if canImport(CoreNFC)

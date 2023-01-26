@@ -49,7 +49,7 @@ struct Divided<S: Shape>: Shape {
 private struct ListFooter: View {
     var devicesCount = 0
     var body: some View {
-        Text("Found devices: \(devicesCount)")
+        Text(LocalizedString("Found devices:", comment: "Text for discovered number of devices") + " \(devicesCount)")
     }
 }
 
@@ -263,8 +263,8 @@ struct BluetoothSelection: View {
         }
     }
 
-    var headerSection: some View {
-        Section {
+    var header: some View {
+        Group {
             Text("Select the third party transmitter you want to connect to")
                 .listRowBackground(Defaults.background)
                 .padding(.top)
@@ -276,9 +276,7 @@ struct BluetoothSelection: View {
     }
     var list : some View {
         List {
-            headerSection
-
-            Section {
+            Section(header: header) {
                 ForEach(allDevices) { device in
                     if debugMode {
                         let randomRSSI = RSSIInfo(bledeviceID: device.asStringIdentifier, signalStrength: -90 + (1...70).randomElement()!)
