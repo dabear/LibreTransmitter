@@ -20,6 +20,15 @@ extension View {
 #endif
 
 extension View {
+    func getLeadingImage() -> some View{
+        Image(uiImage: UIImage(named: "libresensor200", in: Bundle.current, compatibleWith: nil)!)
+        .resizable()
+        .aspectRatio(contentMode: ContentMode.fit)
+        .frame(height: 100)
+        .padding(.horizontal)
+    }
+    
+    
     func authenticate(success authSuccess: @escaping (Bool) -> Void) {
         let context = LAContext()
         var error: NSError?

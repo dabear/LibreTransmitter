@@ -7,8 +7,7 @@
 //
 
 import SwiftUI
-//import UIKit
-
+import LoopKitUI
 //this view should only be called when setting up a new device in an existing cgmmanager
 struct AuthView: View {
     
@@ -28,58 +27,42 @@ struct AuthView: View {
             
     }
     
-    var infoSection : some View {
-        VStack {
-            Text("You need to authenticate before you can proceed to selecting a new Transmitter or Sensor.")
-            Group {
-                Text(exclamation).foregroundColor(.yellow) +
-                Text("Note that you will loose connection to any existing sensor or transmitter")
-            }
-            .padding(.top)
-        }
-        
-     
-    }
-    
     @State var isNavigationActive = false
  
     var buttonSection : some View{
         Section {
+            
             if isAuthenticated {
-                Text("Authenticated")
+                Text(LocalizedString("Authenticated", comment: "Text confirming user is authenticated in AuthView"))
                     .padding([.top, .horizontal])
                     .transition(AnyTransition.opacity.combined(with: .move(edge: .bottom)))
                 NavigationLink(destination: ModeSelectionView(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier), isActive: $isNavigationActive) {
-                    Button("Sensor setup", action: {
+                    Button(action: {
                         self.notifyReset.notify()
                         self.isNavigationActive = true
-                    })
-                    .buttonStyle(BlueButtonStyle())
-                    .frame(idealHeight: 50, maxHeight: 100)
+                    }) {
+                        Text(LocalizedString("Sensor Setup", comment: "Text of Sensor Setup Button in AuthView"))
+                            .actionButtonStyle(.primary)
+                    }
+    
+                    
                     
                 }
                 .disabled(!isAuthenticated)
             } else {
-                Button("Authenticate") {
+                Button(action: {
                     self.authenticate { success in
-                        isAuthenticated = success
-                        
+                        self.isAuthenticated = success
                     }
+                }) {
+                    Text(LocalizedString("Authenticate", comment: "Text of Authenticate button in AuthView"))
+                        .actionButtonStyle(.primary)
                 }
-                .buttonStyle(BlueButtonStyle())
-                .frame(idealHeight: 50, maxHeight: 100)
+                
             }
             
         }
         
-    }
-    
-    private func getLeadingImage() -> some View{
-        Image(uiImage: UIImage(named: "libresensor200", in: Bundle.current, compatibleWith: nil)!)
-        .resizable()
-        .aspectRatio(contentMode: ContentMode.fit)
-        .frame(height: 100)
-        .padding(.horizontal)
     }
     
     
@@ -134,45 +117,45 @@ struct AuthView: View {
         notifyReconnect.notify()
     }
     
-    
     var body: some View {
-        VStack(spacing: 0) {
-            List {
-                VStack {
-                    getLeadingImage()
-                    HStack {
-                        infoSection
-                    }
-                    .padding(.bottom, 8)
-                }
-            }
-            .listStyle(InsetGroupedListStyle())
-            VStack {
-                VStack {
-                    buttonSection
-                }
-                .padding()
-            }
-            .padding(.bottom)
-            .background(Color(UIColor.secondarySystemGroupedBackground).shadow(radius: 5))
-        }
-        .edgesIgnoringSafeArea(.bottom)
         
+        GuidePage(content: {
+            VStack {
+                getLeadingImage()
+                HStack {
+                    Text(LocalizedString("You need to authenticate before you can proceed to selecting a new Transmitter or Sensor.", comment: "Text describing the need for authentication before changing device"))
+                    
+                    Spacer()
+                }
+                HStack {
+                    (
+                        Text(exclamation).foregroundColor(.yellow) +
+                        Text(LocalizedString("Note that you will loose connection to any existing sensor or transmitter", comment: "Text "))
+                    )
+                    .fixedSize(horizontal: false, vertical: true)
+                    
+                    Spacer()
+                }.padding(.vertical)
+            }
+
+        }) {
+            VStack(spacing: 10) {
+                buttonSection
+            }.padding()
+        }
+        .animation(.default)
+        .navigationBarTitle("New Device Setup", displayMode: .inline)
+        .navigationBarItems(trailing: cancelButton)
+        .navigationBarBackButtonHidden(true)
         .onAppear {
-            
             if !hasSetupListeners {
                 hasSetupListeners = true
                 
                 cancelNotifier.listenOnce(listener: handleCancel)
                 saveNotifier.listenOnce(listener: handleSave)
-                
             }
             
         }
-       
-        .navigationBarBackButtonHidden()
-        .navigationTitle("New device setup")
-        .navigationBarItems(leading: cancelButton)
 
     }
 }

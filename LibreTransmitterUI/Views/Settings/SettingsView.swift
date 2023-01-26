@@ -36,8 +36,11 @@ public struct SettingsItem: View {
     public var body: some View {
         HStack {
             Text(title)
-            Spacer()
-            Text(detail).font(.subheadline)
+            if !detail.isEmpty {
+                Spacer()
+                Text(detail).font(.subheadline)
+            }
+            
         }
 
     }
@@ -73,8 +76,8 @@ struct SettingsView: View {
         transmitterInfoObservable: LibreTransmitter.TransmitterInfo,
         sensorInfoObervable: LibreTransmitter.SensorInfo,
         glucoseInfoObservable: LibreTransmitter.GlucoseInfo,
-        alarmStatus: LibreTransmitter.AlarmStatus) -> UIHostingController<SettingsView> {
-        UIHostingController(rootView: self.init(
+        alarmStatus: LibreTransmitter.AlarmStatus) -> DismissibleHostingController {
+            DismissibleHostingController(rootView: self.init(
             displayGlucoseUnitObservable: displayGlucoseUnitObservable,
             transmitterInfo: transmitterInfoObservable,
             sensorInfo: sensorInfoObervable,

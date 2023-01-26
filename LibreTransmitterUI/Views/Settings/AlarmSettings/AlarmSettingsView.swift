@@ -303,7 +303,7 @@ struct AlarmSettingsView: View {
     
     // Set this to true to require system authentication
     // for accessing the alarm section
-    @State private var requiresAuthentication = false
+    @State private var requiresAuthentication = Features.alarmSettingsViewRequiresAuthentication
 
     var body: some View {
         erasedWithKeyboardDismissal(list)

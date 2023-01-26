@@ -7,29 +7,33 @@
 //
 
 import SwiftUI
+import LoopKitUI
 
 struct ModeSelectionView: View {
 
     @ObservedObject public var cancelNotifier: GenericObservableObject
     @ObservedObject public var saveNotifier: GenericObservableObject
+    
 
     var modeSelectSection : some View {
-        Section(header: Text("Modes")) {
+        Section(header: Text("Connection options")) {
             #if canImport(CoreNFC)
             ZStack {
                 NavigationLink(destination: Libre2DirectSetup(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
-                    SettingsItem(title: "Libre 2 Direct", detail: .constant(""))
-                        .padding(.top, 30)
-                        .padding(.bottom, 30)
+                    
+                    SettingsItem(title: LocalizedString("Libre 2 Direct", comment: "Libre 2 connection option"))
+                        .actionButtonStyle(.primary)
+                        .padding([.top, .bottom], 8)
+                        
                 }
             }
             #endif
 
             ZStack {
                 NavigationLink(destination: BluetoothSelection(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
-                    SettingsItem(title: "Bluetooth Transmitters", detail: .constant(""))
-                        .padding(.top, 30)
-                        .padding(.bottom, 30)
+                    SettingsItem(title: LocalizedString("Bluetooth Transmitters", comment: "Bluetooth Transmitter connection option"))
+                        .actionButtonStyle(.primary)
+                        .padding([.top, .bottom], 8)
                 }
             }
 
@@ -37,30 +41,48 @@ struct ModeSelectionView: View {
     }
 
     var cancelButton: some View {
-        Button("Cancel") {
-            print("cancel button pressed")
+        Button(LocalizedString("Cancel", comment: "Cancel button")) {
             cancelNotifier.notify()
 
         }// .accentColor(.red)
     }
+    
+    var infoText: some View {
+        Text(LocalizedString("""
+Select the type of setup you want.
 
-    var body: some View {
-        // no navview needed when embedded into a hostingcontroller
-        // NavigationView{
-        List {
-            Section("Mode selection info") {
-                Text("""
-Select the type of setup you want
+You can choose between connecting directly to a bluetooth equipped Libre sensor or connecting to a third party transmitter attached to your sensor.
 
-You can choose between connecting directly to a bluetooth equipped Libre sensor or connect to a third party transmitter attached to your sensor
-""")
+Note that the not all sensor types can be supported and that you sensor needs to be already activated and finished warming up.
+
+Fair warning: The sensor will be *not* be using the manufacturer's algorithm, and some safety mitigations present in the manufacturers algorithm might be missing when you use this.
+""", comment: "Connection Info body"))
+    }
+    
+
+
+    var body : some View {
+        GuidePage(content: {
+            VStack {
+                getLeadingImage()
+                HStack {
+                    infoText
+                        .minimumScaleFactor(0.9)
+                        .lineLimit(nil)
+                    Spacer()
+                    
+                }
             }
-            modeSelectSection
-        }
-        .listStyle(InsetGroupedListStyle())
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: cancelButton)
 
+        }) {
+            VStack(spacing: 10) {
+                modeSelectSection
+            }.padding()
+        }
+        .animation(.default)
+        .navigationBarTitle("New Device Setup", displayMode: .inline)
+        .navigationBarItems(trailing: cancelButton)
+        .navigationBarBackButtonHidden(true)
     }
 }
 
