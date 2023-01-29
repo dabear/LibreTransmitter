@@ -149,7 +149,7 @@ struct SettingsView: View {
                 Image(systemName: "pause.circle.fill")
                     .font(.system(size: 22))
                     .foregroundColor(.blue)
-                Text("Pause Glucose alarms").frame(alignment: .center)
+                Text(LocalizedString("Pause Glucose alarms", comment: "Text for pausing glucose alarms")).frame(alignment: .center)
                     .foregroundColor(.blue)
                 
             }
@@ -157,7 +157,7 @@ struct SettingsView: View {
     }
 
     var measurementSection : some View {
-        Section(header: Text("Last measurement")) {
+        Section(header: Text(LocalizedString("Last measurement", comment: "Text describing header for last measurement section"))) {
             if glucoseUnit == .millimolesPerLiter {
                     SettingsItem(title: "Glucose", detail: $glucoseMeasurement.glucoseMMOL)
             } else if glucoseUnit == .milligramsPerDeciliter {
@@ -170,7 +170,7 @@ struct SettingsView: View {
     }
 
     var predictionSection : some View {
-        Section(header: Text("Last Blood Sugar prediction")) {
+        Section(header: Text(LocalizedString("Last Blood Sugar prediction", comment: "Text describing header for Blood Sugar prediction section"))) {
             if glucoseUnit == .millimolesPerLiter {
                     SettingsItem(title: "CurrentBG", detail: $glucoseMeasurement.predictionMMOL)
             } else if glucoseUnit == .milligramsPerDeciliter {
@@ -184,7 +184,7 @@ struct SettingsView: View {
 
     var deviceInfoSection: some View {
         List {
-            Section(header: Text("Device Info")) {
+            Section(header: Text(LocalizedString("Device Info", comment: "Text describing header for device info section"))) {
                 if !transmitterInfo.battery.isEmpty {
                     SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
                 }
@@ -224,9 +224,9 @@ struct SettingsView: View {
             }.foregroundColor(.red)
             .alert(isPresented: $showingDestructQuestion) {
                 Alert(
-                    title: Text("Are you sure you want to remove this cgm from loop? "),
-                    message: Text("There is no undo. Deleting requires authentication!"),
-                    primaryButton: .destructive(Text("Delete")) {
+                    title: Text(LocalizedString("Are you sure you want to remove this cgm from loop?", comment: "Text describing question to remove the cgmmanager from loop")),
+                    message: Text(LocalizedString("There is no undo. Deleting requires authentication!", comment: "Text warning user there is no undo for deleting cgmmanager")),
+                    primaryButton: .destructive(Text(LocalizedString("Delete", comment: "Action text for deleting cgmmanager"))) {
                         
                         self.authenticate { success in
                             print("dabear: got authentication response: \(success)")
@@ -243,9 +243,9 @@ struct SettingsView: View {
         }
     }
 
-    // todo: replace sub with navigationlinks
+
     var advancedSection: some View {
-        Section(header: Text("Advanced")) {
+        Section(header: Text(LocalizedString("Advanced", comment: "Text describing header for advanced settings section"))) {
             // these subviews don't really need to be notified once glucose unit changes
             // so we just pass glucoseunit directly on init
             ZStack {
@@ -310,10 +310,10 @@ struct SettingsView: View {
         VStack(spacing: 2) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
                 if showProgress {
-                    Text("Sensor expires in ")
+                    Text(LocalizedString("Sensor expires in ", comment: "Text describing sensor expires in label in settingsview"))
                         .foregroundColor(.secondary)
                 } else {
-                    Text("No Connection: ")
+                    Text(LocalizedString("No Connection: ",comment: "Text describing no connection label in settingsview"))
                         .foregroundColor(.secondary)
                     + Text("\(transmitterInfo.connectionState)")
                         .foregroundColor(.secondary)
@@ -370,7 +370,7 @@ struct SettingsView: View {
     }
     var sensorStatus: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Sensor State")
+            Text(LocalizedString("Sensor State", comment: "Text describing Sensor state label in settingsview"))
                 .fontWeight(.heavy)
                 .fixedSize()
             Text("\(sensorStatusText)")
@@ -386,7 +386,7 @@ struct SettingsView: View {
     
     var sensorSerial : some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Sensor Serial")
+            Text(LocalizedString("Sensor Serial", comment: "Text describing Sensor serial label in settingsview"))
                 //.font(.system(size: 1))
                 .fontWeight(.heavy)
                 .fixedSize()
