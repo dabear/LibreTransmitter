@@ -114,14 +114,12 @@ struct SettingsView: View {
                 }
                 
                 NavigationLink(destination: CalibrationEditView()) {
-                    Button("Edit calibrations") {
+                    Button(Features.allowsEditingFactoryCalibrationData ? "Edit calibrations" : "View factory calibrations") {
                         print("edit calibration clicked")
                     }
                 }
                 advancedSection
-                // To be enabled once logic is wired up correctly
                 sensorChangeSection
-                    
                 destructSection
                     
                 
