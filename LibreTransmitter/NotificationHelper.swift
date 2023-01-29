@@ -119,7 +119,10 @@ public enum NotificationHelper {
         if isCritical && Self.criticalAlarmsEnabled {
             logger.debug("\(#function) critical alarm created")
             content.interruptionLevel =   .critical
-            content.sound = .defaultCriticalSound(withAudioVolume: 0.6)
+            
+            let criticalVolume = UserDefaults.standard.mmCriticalAlarmsVolume < 60 ? 60 : UserDefaults.standard.mmCriticalAlarmsVolume
+            logger.debug("\(#function) setting criticalVolume to \(criticalVolume)%")
+            content.sound = .defaultCriticalSound(withAudioVolume: Float(criticalVolume / 100))
         } else {
             logger.debug("\(#function) timesensitive alarm created")
             content.interruptionLevel = .timeSensitive

@@ -251,6 +251,14 @@ struct SettingsView: View {
                     SettingsItem(title: "Alarms")
                 }
             }
+            if NotificationHelper.criticalAlarmsEnabled {
+                ZStack {
+                    NavigationLink(destination: CriticalAlarmsVolumeView()) {
+                        SettingsItem(title: "Critical Alarms volume")
+                    }
+                }
+            }
+            
             ZStack {
                 NavigationLink(destination: GlucoseSettingsView(glucoseUnit: self.glucoseUnit)) {
                     SettingsItem(title: "Glucose Settings")

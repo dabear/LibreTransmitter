@@ -49,7 +49,10 @@ struct NotificationSettingsView: View {
 
         // handle specially:
         case mmGlucoseUnit = "no.bjorninge.mmGlucoseUnit"
+        
     }
+    
+   
 
     @AppStorage(Key.mmAlwaysDisplayGlucose.rawValue) var mmAlwaysDisplayGlucose: Bool = true
     @AppStorage(Key.mmNotifyEveryXTimes.rawValue) var mmNotifyEveryXTimes: Int = 0
