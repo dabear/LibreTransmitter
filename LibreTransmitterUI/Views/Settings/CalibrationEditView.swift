@@ -75,6 +75,7 @@ struct CalibrationEditView: View {
             NumericTextField(description: "i5", showDescription: true, numericValue: $newParams.i5, isReadOnly: isReadOnly)
             NumericTextField(description: "i6", showDescription: true, numericValue: $newParams.i6, isReadOnly: isReadOnly)
         }
+        .disabled(!Features.allowsEditingFactoryCalibrationData)
     }
 
     var validForSection : some View {
@@ -88,10 +89,13 @@ struct CalibrationEditView: View {
         List {
             calibrationInputsSection
             validForSection
-            saveButtonSection
+            if Features.allowsEditingFactoryCalibrationData {
+                saveButtonSection
+            }
+            
         }
         .listStyle(InsetGroupedListStyle())
-        .navigationBarTitle("Calibration Edit")
+        .navigationBarTitle(Features.allowsEditingFactoryCalibrationData ? "Calibration Edit" : "Factory calibration details")
     }
 
     @ObservedObject private var newParams: Params

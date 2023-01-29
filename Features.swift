@@ -18,6 +18,8 @@ public final class Features {
     
     static public var glucoseSettingsRequireAuthentication = false
     static public var alarmSettingsViewRequiresAuthentication = false
+    
+    static public var allowsEditingFactoryCalibrationData = false
 
     static var phoneNFCAvailable: Bool {
         #if canImport(CoreNFC)
