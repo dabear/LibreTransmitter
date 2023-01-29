@@ -211,14 +211,14 @@ struct AlarmLowRow: View {
     var glucoseUnitDesc: String
 
     var errorReporter: FormErrorState
-
+    
     @FocusState private var isInputFocused: Bool
     var body: some View {
         HStack(alignment: .center) {
 
             systemImage("arrowtriangle.down.circle")
                 .frame(maxWidth: 50, alignment: .leading)
-            Text("Low")
+            Text(LocalizedString("Low", comment: "Text describing Low glucose label in alarmsettingsview"))
                 .frame(maxWidth: 100, alignment: .leading)
                 .onTapGesture {
                     isInputFocused.toggle()
@@ -260,7 +260,7 @@ struct AlarmHighRow: View {
 
             systemImage( "arrowtriangle.up.circle")
                 .frame(maxWidth: 50, alignment: .leading)
-            Text("High")
+            Text(LocalizedString("High", comment: "Text describing High glucose label in alarmsettingsview"))
                 .frame(maxWidth: 100, alignment: .leading)
                 .onTapGesture {
                     isInputFocused.toggle()
@@ -337,7 +337,7 @@ struct AlarmSettingsView: View {
 
         List {
             ForEach(Array(alarmState.schedules.enumerated()), id: \.1) { i, schedule in
-                Section(header: Text("Schedule \(i+1)")) {
+                Section(header: Text(LocalizedString("Schedule ", comment: "Text describing schedule in alarmsettingsview") +  "\(i+1)")) {
                     AlarmDateRow(schedule: schedule, tag: i, subviewSelection: $subviewSelection)
                     AlarmLowRow(schedule: schedule, glucoseUnit: glucoseUnit, glucoseUnitDesc: glucoseUnitDesc, errorReporter: errorReporter)
                     AlarmHighRow(schedule: schedule, glucoseUnit: glucoseUnit, glucoseUnitDesc: glucoseUnitDesc, errorReporter: errorReporter)

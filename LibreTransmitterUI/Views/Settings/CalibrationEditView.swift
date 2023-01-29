@@ -56,7 +56,7 @@ struct CalibrationEditView: View {
                 }
 
             }, label: {
-                Text("Save")
+                Text(LocalizedString("Save", comment: "Text describing Save button in calibrationeditview"))
 
             }).buttonStyle(BlueButtonStyle())
             .alert(item: $presentableStatus) { status in
@@ -79,7 +79,7 @@ struct CalibrationEditView: View {
 
     var validForSection : some View {
         Section {
-            Text("Valid for footer: \(newParams.isValidForFooterWithReverseCRCs)")
+            Text(LocalizedString("Valid for footer:", comment: "Text describing technical details about the validity of calibrations ") +  "\(newParams.isValidForFooterWithReverseCRCs)")
 
         }
     }

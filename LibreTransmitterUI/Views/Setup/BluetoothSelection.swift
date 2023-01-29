@@ -265,12 +265,12 @@ struct BluetoothSelection: View {
 
     var header: some View {
         Group {
-            Text("Select the third party transmitter you want to connect to")
+            Text(LocalizedString("Select the third party transmitter you want to connect to", comment: "Text describing user choice of selecting which transmitter to connect to"))
                 .listRowBackground(Defaults.background)
                 .padding(.top)
             HStack {
                 Image(systemName: "link.circle")
-                Text("Libre Transmitters")
+                Text(LocalizedString("Libre Transmitters", comment: "Text header for Libre Transmitters choice"))
             }
         }
     }

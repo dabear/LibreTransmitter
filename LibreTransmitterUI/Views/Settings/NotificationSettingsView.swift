@@ -74,11 +74,11 @@ struct NotificationSettingsView: View {
     static let formatter = NumberFormatter()
 
     var glucoseVisibilitySection : some View {
-        Section(header: Text("Glucose Notification visibility") ) {
-            Toggle("Always Notify Glucose", isOn: $mmAlwaysDisplayGlucose)
+        Section(header: Text(LocalizedString("Glucose Notification visibility", comment: "Text describing header for notification visibility in notificationsettingsview")) ) {
+            Toggle(LocalizedString("Always Notify Glucose", comment: "Text describing always notify glucose option in notificationsettingsview"), isOn: $mmAlwaysDisplayGlucose)
 
             HStack {
-                Text("Notify per reading")
+                Text(LocalizedString("Notify per reading", comment: "Text describing option for letting user choose notifying for every reading, every second reading etc"))
                 TextField("", value: $mmNotifyEveryXTimes, formatter: Self.formatter)
                     .multilineTextAlignment(.center)
                     .disabled(true)
@@ -89,7 +89,7 @@ struct NotificationSettingsView: View {
 
             }.clipped()
 
-            Toggle("Adds Phone Battery", isOn: $mmShowPhoneBattery)
+            //Toggle("Adds Phone Battery", isOn: $mmShowPhoneBattery)
             Toggle("Adds Transmitter Battery", isOn: $mmShowTransmitterBattery)
             Toggle("Also vibrate", isOn: $mmGlucoseAlarmsVibrate)
 
@@ -97,7 +97,7 @@ struct NotificationSettingsView: View {
     }
 
     var additionalNotificationsSection : some View {
-        Section(header: Text("Additional notification types")) {
+        Section(header: Text(LocalizedString("Additional notification types", comment: "Text describing heading for additional notification types for third party transmitters"))) {
             Toggle("Low battery", isOn: $mmAlertLowBatteryWarning)
             Toggle("Invalid sensor", isOn: $mmAlertInvalidSensorDetected)
             Toggle("Sensor change", isOn: $mmAlertNewSensorDetected)
@@ -107,7 +107,7 @@ struct NotificationSettingsView: View {
         }
     }
 
-    var miscSection : some View {
+    /*var miscSection : some View {
         Section(header: Text("Misc")) {
             HStack {
                 Text("Unit override")
@@ -119,7 +119,7 @@ struct NotificationSettingsView: View {
                 .clipped()
             }
         }
-    }
+    }*/
 
     var body: some View {
         List {
@@ -127,7 +127,7 @@ struct NotificationSettingsView: View {
             glucoseVisibilitySection
             additionalNotificationsSection
 
-            miscSection
+            /* miscSection
             .onAppear {
                 favoriteGlucoseUnit = glucoseSegments.firstIndex(of: glucoseUnit) ?? 0
             }
@@ -138,7 +138,7 @@ struct NotificationSettingsView: View {
                 } else if newUnit == HKUnit.millimolesPerLiter {
                     mmGlucoseUnit = "mmol"
                 }
-            }
+            }*/
 
         }
         .listStyle(InsetGroupedListStyle())

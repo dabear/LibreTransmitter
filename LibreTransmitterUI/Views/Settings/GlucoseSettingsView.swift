@@ -41,15 +41,15 @@ struct GlucoseSettingsView: View {
     var body: some View {
         List {
 
-            Section(header: Text("Backfill options"), footer: Text("Backfilling from trend is currently not well supported by Loop") ) {
+            Section(header: Text(LocalizedString("Backfill options", comment: "Text describing header for backfill options in glucosesettingsview"))) {
                 Toggle("Backfill from history", isOn: $mmBackfillFromHistory)
-                Toggle("Backfill from trend", isOn: $mmBackfillFromTrend)
+                //Toggle("Backfill from trend", isOn: $mmBackfillFromTrend).disabled(true) // consider removing this option, as it is not well supported by loop
             }
-            Section(header: Text("Remote data storage")) {
+            Section(header: Text(LocalizedString("Remote data storage", comment: "Text describing header for remote data storage"))) {
                 Toggle("Upload to nightscout", isOn: $mmSyncToNS)
 
             }
-            Section(header: Text("Debug options"), footer: Text("Adds a lot of data to the Issue Report ")) {
+            Section(header: Text(LocalizedString("Debug options", comment: "Text describing header for debug options in glucosesettingsview")), footer: Text(LocalizedString("Adds a lot of data to the Issue Report ", comment: "Text informing user of potentially large reports"))) {
                 Toggle("Persist sensordata", isOn: $shouldPersistSensorData)
                     .onChange(of: shouldPersistSensorData) {newValue in
                         if !newValue {

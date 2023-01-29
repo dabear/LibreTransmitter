@@ -118,7 +118,7 @@ struct CustomDataPickerView: View {
         .clipped()
         .labelsHidden()
 
-        Text("To ")
+        Text(LocalizedString("To ", comment: "Very short text describing separation between start and end datetimes"))
 
         Picker("", selection: $externalState.end,
           content: {

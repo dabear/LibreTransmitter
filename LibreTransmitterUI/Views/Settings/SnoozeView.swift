@@ -93,7 +93,7 @@ struct SnoozeView: View {
                 print("will snooze for \(snoozeFor) until \(untilDate.description(with: .current))")
                 snoozeDescription = getSnoozeDescription()
             }, label:  {
-                Text("Click to Snooze Alerts")
+                Text(LocalizedString("Click to Snooze Alerts", comment: "Text describing click to snooze label in snoozeview"))
                     .padding()
             })
         }
