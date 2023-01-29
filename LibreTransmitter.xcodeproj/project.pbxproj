@@ -23,6 +23,7 @@
 		2746C74526DF636900E31BD9 /* SensorPairingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C74426DF636900E31BD9 /* SensorPairingService.swift */; };
 		2746C74726DF63C800E31BD9 /* SensorPairing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2746C74626DF63C800E31BD9 /* SensorPairing.swift */; };
 		274E71D3297ED77300FCFECD /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274E71D2297ED77300FCFECD /* AuthView.swift */; };
+		274E71D52986D4A600FCFECD /* CriticalAlarmsVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274E71D42986D4A600FCFECD /* CriticalAlarmsVolumeView.swift */; };
 		275786AB26753CC400845D0E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275786AA26753CC400845D0E /* SettingsView.swift */; };
 		275EC993265AEE970043210E /* NumericTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC992265AEE970043210E /* NumericTextField.swift */; };
 		275EC998265AF64E0043210E /* StatusMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EC997265AF64E0043210E /* StatusMessage.swift */; };
@@ -172,6 +173,7 @@
 		2746C74426DF636900E31BD9 /* SensorPairingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorPairingService.swift; sourceTree = "<group>"; };
 		2746C74626DF63C800E31BD9 /* SensorPairing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorPairing.swift; sourceTree = "<group>"; };
 		274E71D2297ED77300FCFECD /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		274E71D42986D4A600FCFECD /* CriticalAlarmsVolumeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriticalAlarmsVolumeView.swift; sourceTree = "<group>"; };
 		275786AA26753CC400845D0E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		275EC992265AEE970043210E /* NumericTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumericTextField.swift; sourceTree = "<group>"; };
 		275EC997265AF64E0043210E /* StatusMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusMessage.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 			children = (
 				277773B52639F51300431547 /* CustomDataPickerView.swift */,
 				276EF5E6264B1FCE00571021 /* AlarmSettingsView.swift */,
+				274E71D42986D4A600FCFECD /* CriticalAlarmsVolumeView.swift */,
 			);
 			path = AlarmSettings;
 			sourceTree = "<group>";
@@ -913,6 +916,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				274E71D52986D4A600FCFECD /* CriticalAlarmsVolumeView.swift in Sources */,
 				2746C74226DD0F8800E31BD9 /* Libre2DirectSetup.swift in Sources */,
 				27ED67BA26990D6B003E5DAB /* GenericObservableObject.swift in Sources */,
 				27850CFE25672C0C0020D109 /* HKUnit.swift in Sources */,

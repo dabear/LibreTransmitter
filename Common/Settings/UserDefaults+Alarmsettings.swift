@@ -27,16 +27,9 @@ extension UserDefaults {
         case mmDangerMode = "no.bjorninge.mmDangerModeActivated"
         case mmShowPhoneBattery = "no.bjorninge.mmShowPhoneBattery"
         case mmShowTransmitterBattery = "no.bjorninge.mmShowTransmitterBattery"
+        case mmCriticalAlarmsVolume = "no.bjorninge.mmCriticalAlarmsVolume"
     }
-    /*
-     case always
-     case lowBattery
-     case invalidSensorDetected
-     //case alarmNotifications
-     case newSensorDetected
-     case noSensorDetected
-     case unit
-     */
+   
     public func optionalBool(forKey defaultName: String) -> Bool? {
         if let value = value(forKey: defaultName) {
             return value as? Bool
@@ -202,6 +195,15 @@ extension UserDefaults {
             if let val = newValue, let encoded = try? encoder.encode(val) {
                 set(encoded, forKey: Key.glucoseSchedules.rawValue)
             }
+        }
+    }
+    
+    var mmCriticalAlarmsVolume: Double {
+        get {
+            double(forKey: Key.mmCriticalAlarmsVolume.rawValue)
+        }
+        set {
+            set(newValue, forKey: Key.mmCriticalAlarmsVolume.rawValue)
         }
     }
 }
