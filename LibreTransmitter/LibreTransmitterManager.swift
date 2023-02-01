@@ -457,9 +457,7 @@ extension LibreTransmitterManager {
         // but that might not be available when loop is restarted for example
         //
         if startDate == nil {
-            self.delegateQueue.sync {
-                startDate = self.cgmManagerDelegate?.startDateToFilterNewData(for: self)
-            }
+            startDate = self.delegate.call{ $0?.startDateToFilterNewData(for: self) }
         }
 
         // add one second to startdate to make this an exclusive (non overlapping) match
