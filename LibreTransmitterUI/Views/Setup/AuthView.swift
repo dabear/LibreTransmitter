@@ -33,6 +33,7 @@ struct AuthView: View {
         Section {
             
             if isAuthenticated {
+                ProgressIndicatorView(state: .completed)
                 Text(LocalizedString("Authenticated", comment: "Text confirming user is authenticated in AuthView"))
                     .padding([.top, .horizontal])
                     .transition(AnyTransition.opacity.combined(with: .move(edge: .bottom)))
@@ -41,8 +42,8 @@ struct AuthView: View {
                         self.notifyReset.notify()
                         self.isNavigationActive = true
                     }) {
-                        Text(LocalizedString("Sensor Setup", comment: "Text of Sensor Setup Button in AuthView"))
-                            .actionButtonStyle(.primary)
+                        Text(LocalizedString("Disconnect & Continue Setup", comment: "Text of Sensor Setup Button in AuthView"))
+                            .actionButtonStyle(.destructive)
                     }
     
                     
@@ -122,20 +123,16 @@ struct AuthView: View {
         GuidePage(content: {
             VStack {
                 getLeadingImage()
+                
                 HStack {
-                    Text(LocalizedString("You need to authenticate before you can proceed to selecting a new Transmitter or Sensor.", comment: "Text describing the need for authentication before changing device"))
-                    
-                    Spacer()
+                    InstructionList(instructions: [
+                        LocalizedString("Activate and finish warming up a new sensor with another app or physical reader", comment: "Label text for step 1 of AuthView"),
+                        LocalizedString("Press the Authenticate Button", comment: "Label text for step 2 of AuthView"),
+                        LocalizedString("Proceed to pair new sensor in the next screens. Note that you will loose connection to any existing sensor or transmitter", comment: "Label text for step 3 of AuthView")
+                    ])
                 }
-                HStack {
-                    (
-                        Text(exclamation).foregroundColor(.yellow) +
-                        Text(LocalizedString("Note that you will loose connection to any existing sensor or transmitter", comment: "Text "))
-                    )
-                    .fixedSize(horizontal: false, vertical: true)
                     
-                    Spacer()
-                }.padding(.vertical)
+  
             }
 
         }) {

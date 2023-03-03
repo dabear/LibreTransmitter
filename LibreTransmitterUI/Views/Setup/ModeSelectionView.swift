@@ -47,31 +47,22 @@ struct ModeSelectionView: View {
         }// .accentColor(.red)
     }
     
-    var infoText: some View {
-        Text(LocalizedString("""
-Select the type of setup you want.
-
-You can choose between connecting directly to a bluetooth equipped Libre sensor or connecting to a third party transmitter attached to your sensor.
-
-Note that the not all sensor types can be supported and that you sensor needs to be already activated and finished warming up.
-
-Fair warning: The sensor will be *not* be using the manufacturer's algorithm, and some safety mitigations present in the manufacturers algorithm might be missing when you use this.
-""", comment: "Connection Info body"))
-    }
-    
-
 
     var body : some View {
         GuidePage(content: {
             VStack {
                 getLeadingImage()
+                
                 HStack {
-                    infoText
-                        .minimumScaleFactor(0.9)
-                        .lineLimit(nil)
-                    Spacer()
-                    
+                    InstructionList(instructions: [
+                        LocalizedString("Sensor should be activated and fully warmed up", comment: "Label text for step 1 of connection setup"),
+                        LocalizedString("Select the type of setup you want.", comment: "Label text for step 2 of connection setup"),
+                        LocalizedString("Not all sensor types can be supported, see readme.md", comment: "Label text for step 3 of connection setup"),
+                        LocalizedString("Fair warning: The sensor will be not be using the manufacturer's algorithm, and some safety mitigations present in the manufacturers algorithm might be missing when you use this.", comment: "Label text for step 4 of connection setup")
+                    ])
                 }
+                    
+  
             }
 
         }) {
