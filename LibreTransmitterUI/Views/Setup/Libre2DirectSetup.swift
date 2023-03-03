@@ -83,17 +83,6 @@ struct Libre2DirectSetup: View {
 
         }// .accentColor(.red)
     }
-
-    var pairingText =
-    LocalizedString("""
-    Please make sure that your Libre 2 sensor is already activated and finished warming up.
-    If you have other apps connecting to the sensor via bluetooth, these need to be shut down or uninstalled.
-
-    You can only have one app communicating with the sensor via bluetooth.
-    Then press the \"Pair sensor & connect\" button below to start the process.
-    Please note that the bluetooth connection usually takes up to a couple of minutes before it starts working.
-    """, comment: "Text describing how to connect to a libre 2 sensor via NFC for pairing")
-
     
     var pairingInfoSection: some View {
         Section(header: Text("Pairinginfo")) {
@@ -130,15 +119,18 @@ struct Libre2DirectSetup: View {
     
     var body : some View {
         GuidePage(content: {
+            
+            
             VStack {
                 getLeadingImage()
                 HStack {
-                    Text(pairingText)
-                        .minimumScaleFactor(0.9)
-                        .lineLimit(nil)
-                    Spacer()
+                    InstructionList(instructions: [
+                        LocalizedString("Your sensor must be activated and fully warmed up", comment: "Label text for step 1 of libre2 setup"),
+                        LocalizedString("Disconnect and unpair any other app or device communicating with the sensor via bluetooth", comment: "Label text for step 2 of libre2 setup"),
+                        LocalizedString("Keep phone unlocked and your Loop app in the foreground", comment: "Label text for step 3 of libre2 setup"),
+                        LocalizedString("The Bluetooth connection will take up to four minutes before it starts working", comment: "Label text for step 3 of libre2 setup")
+                    ])
                 }
-                .padding(.vertical)
             }
 
         }) {

@@ -231,6 +231,7 @@ public struct SensorData: Codable {
         self.uuid = uuid
 
         self.serialNumber = SensorSerialNumber(withUID: uuid)?.serialNumber ?? "-"
+        print("sensor uuid: \(uuid)")
 
         // we disable this check as we might be dealing with an encrypted libre2 sensor
         /*

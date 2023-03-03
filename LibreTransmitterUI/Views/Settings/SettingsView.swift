@@ -387,6 +387,7 @@ struct SettingsView: View {
     
     var sensorSerialText : String {
         let ret = sensorInfo.sensorSerial
+        print ("got serial: \(ret)")
         return ret.isEmpty ? " - " : ret
     }
     
