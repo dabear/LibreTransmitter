@@ -18,6 +18,9 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
     @Published public var sensorMinutesSinceStart : Int = 0
     @Published public var sensorMaxMinutesWearTime : Int = 0
     
+    @Published public var sensorStartDate : Date = .distantPast
+    @Published public var sensorEndDate : Date = .distantPast
+    
     public func calculateProgress() -> Double{
         let minutesLeft = Double(self.sensorMinutesLeft)
         let minutesSinceStart = Double(self.sensorMinutesSinceStart)
@@ -31,9 +34,7 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
             return 0
         }
         
-        let progress = 1-(minutesSinceStart / maxWearTime)
-        
-        return progress
+        return Date.now.getProgress(range: sensorStartDate...sensorEndDate)
     }
     
     
