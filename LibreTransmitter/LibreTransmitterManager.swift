@@ -334,8 +334,8 @@ extension LibreTransmitterManager {
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
                 self.sensorInfoObservable.sensorMinutesLeft = sensorData.minutesLeft
-                self.sensorInfoObservable.sensorStartDate = now - TimeInterval(minutes: Double(sensorData.minutesSinceStart))
-                self.sensorInfoObservable.sensorEndDate = now + TimeInterval(minutes: Double(sensorData.minutesLeft))
+                self.sensorInfoObservable.activatedAt = now - TimeInterval(minutes: Double(sensorData.minutesSinceStart))
+                self.sensorInfoObservable.expiresAt = now + TimeInterval(minutes: Double(sensorData.minutesLeft))
                 
                 
                 self.sensorInfoObservable.sensorMinutesSinceStart = sensorData.minutesSinceStart
@@ -392,10 +392,10 @@ extension LibreTransmitterManager {
                 self.sensorInfoObservable.sensorMinutesLeft = minutesLeft
                 self.sensorInfoObservable.sensorMinutesSinceStart = minutesLeft
                 
-                self.sensorInfoObservable.sensorStartDate = now - TimeInterval(minutes: Double(minutesSinceStart))
+                self.sensorInfoObservable.activatedAt = now - TimeInterval(minutes: Double(minutesSinceStart))
                 
                 if minutesLeft > 0 {
-                    self.sensorInfoObservable.sensorEndDate = now + TimeInterval(minutes: Double(minutesLeft))
+                    self.sensorInfoObservable.expiresAt = now + TimeInterval(minutes: Double(minutesLeft))
                 }
                 
                 

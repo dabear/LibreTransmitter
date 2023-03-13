@@ -179,6 +179,8 @@ struct SettingsView: View {
 
         }
     }
+    
+    
 
     var deviceInfoSection: some View {
         List {
@@ -192,6 +194,9 @@ struct SettingsView: View {
                 SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
                 SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
                 SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
+                
+                SettingsItem(title: "Sensor Start", detail: sensorInfo.activatedAtString )
+                SettingsItem(title: "Sensor End", detail: sensorInfo.expiresAtString )
             }
         }
         .textSelection(.enabled)
