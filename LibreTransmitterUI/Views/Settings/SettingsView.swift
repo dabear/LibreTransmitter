@@ -179,6 +179,8 @@ struct SettingsView: View {
 
         }
     }
+    
+    
 
     var deviceInfoSection: some View {
         List {
@@ -192,6 +194,9 @@ struct SettingsView: View {
                 SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
                 SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
                 SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
+                
+                SettingsItem(title: "Sensor Start", detail: sensorInfo.activatedAtString )
+                SettingsItem(title: "Sensor End", detail: sensorInfo.expiresAtString )
             }
         }
         .textSelection(.enabled)
@@ -308,7 +313,7 @@ struct SettingsView: View {
     }
     
     var showProgress : Bool {
-        return ["Notifying"].contains(transmitterInfo.connectionState)
+        return sensorInfo.expiresAt != nil && sensorInfo.activatedAt != nil
     }
     
     
@@ -324,11 +329,7 @@ struct SettingsView: View {
                     + Text("\(transmitterInfo.connectionState)")
                         .foregroundColor(.secondary)
                 }
-                /*Text("Sensor Status: ")
-                    .foregroundColor(.primary)
-                + Text("\(transmitterInfo.connectionState)")
-                    .foregroundColor(.secondary)
-                 */
+                
                 Spacer()
                 if showProgress {
                     daysRemaining.map { (days) in

@@ -92,11 +92,7 @@ extension LibreTransmitterManager: CGMManagerUI {
     }
 
     public var cgmLifecycleProgress: DeviceLifecycleProgress? {
-        let isConnected = [.Connected,.Notifying].contains(self.proxy?.state)
         
-        guard isConnected else {
-            return nil
-        }
         let minutesLeft = Double(self.sensorInfoObservable.sensorMinutesLeft)
         
         let progress = self.sensorInfoObservable.calculateProgress()

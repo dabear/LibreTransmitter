@@ -324,6 +324,7 @@ extension LibreTransmitterManager {
                 self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
 
             }
+            let now = Date.now
 
             self.transmitterInfoObservable.connectionState = self.proxy?.connectionStateString ?? "n/a"
             self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
@@ -333,6 +334,10 @@ extension LibreTransmitterManager {
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
                 self.sensorInfoObservable.sensorMinutesLeft = sensorData.minutesLeft
+                self.sensorInfoObservable.activatedAt = now - TimeInterval(minutes: Double(sensorData.minutesSinceStart))
+                self.sensorInfoObservable.expiresAt = now + TimeInterval(minutes: Double(sensorData.minutesLeft))
+                
+                
                 self.sensorInfoObservable.sensorMinutesSinceStart = sensorData.minutesSinceStart
                 self.sensorInfoObservable.sensorMaxMinutesWearTime = sensorData.maxMinutesWearTime
 
@@ -359,6 +364,10 @@ extension LibreTransmitterManager {
                 var maxMinutesWearTime: Int {
                     sensor.maxAge
                 }
+                
+                var minutesSinceStart: Int {
+                    bleData.age
+                }
 
                 var minutesLeft: Int {
                     maxMinutesWearTime - bleData.age
@@ -382,6 +391,15 @@ extension LibreTransmitterManager {
                 
                 self.sensorInfoObservable.sensorMinutesLeft = minutesLeft
                 self.sensorInfoObservable.sensorMinutesSinceStart = minutesLeft
+                
+                self.sensorInfoObservable.activatedAt = now - TimeInterval(minutes: Double(minutesSinceStart))
+                
+                if minutesLeft > 0 {
+                    self.sensorInfoObservable.expiresAt = now + TimeInterval(minutes: Double(minutesLeft))
+                }
+                
+                
+                
                 self.sensorInfoObservable.sensorMaxMinutesWearTime = maxMinutesWearTime
                 
 

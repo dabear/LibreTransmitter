@@ -18,6 +18,9 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
     @Published public var sensorMinutesSinceStart : Int = 0
     @Published public var sensorMaxMinutesWearTime : Int = 0
     
+    @Published public var activatedAt : Date? = nil
+    @Published public var expiresAt : Date? = nil
+    
     public func calculateProgress() -> Double{
         let minutesLeft = Double(self.sensorMinutesLeft)
         let minutesSinceStart = Double(self.sensorMinutesSinceStart)
@@ -30,10 +33,35 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
             //shouldn't really happen, but if it does we don't want to crash because of a minor UI issue
             return 0
         }
+        guard let activatedAt, let expiresAt else {
+            return 0
+        }
+        let progress = Date.now.getProgress(range: activatedAt...expiresAt)
         
-        let progress = 1-(minutesSinceStart / maxWearTime)
-        
-        return progress
+        return progress == 0 ? progress : progress / 100
+    }
+    
+    
+    public var activatedAtString: String {
+        if let activatedAt = activatedAt {
+            return dateFormatter.string(from: activatedAt)
+        } else {
+            return "—"
+        }
+    }
+    private let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .medium
+        dateFormatter.doesRelativeDateFormatting = true
+        return dateFormatter
+    }()
+    public var expiresAtString: String {
+        if let expiresAt = expiresAt {
+            return dateFormatter.string(from: expiresAt)
+        } else {
+            return "—"
+        }
     }
     
     
