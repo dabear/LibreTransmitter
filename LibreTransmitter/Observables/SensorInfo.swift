@@ -36,8 +36,9 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
         guard let activatedAt, let expiresAt else {
             return 0
         }
-
-        return Date.now.getProgress(range: activatedAt...expiresAt)
+        let progress = Date.now.getProgress(range: activatedAt...expiresAt)
+        
+        return progress == 0 ? progress : progress / 100
     }
     
     
