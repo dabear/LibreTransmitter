@@ -313,7 +313,7 @@ struct SettingsView: View {
     }
     
     var showProgress : Bool {
-        return ["Notifying"].contains(transmitterInfo.connectionState)
+        return sensorInfo.expiresAt != nil && sensorInfo.activatedAt != nil
     }
     
     
@@ -329,11 +329,7 @@ struct SettingsView: View {
                     + Text("\(transmitterInfo.connectionState)")
                         .foregroundColor(.secondary)
                 }
-                /*Text("Sensor Status: ")
-                    .foregroundColor(.primary)
-                + Text("\(transmitterInfo.connectionState)")
-                    .foregroundColor(.secondary)
-                 */
+                
                 Spacer()
                 if showProgress {
                     daysRemaining.map { (days) in
