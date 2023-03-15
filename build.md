@@ -16,7 +16,7 @@ git submodule add -b main git@github.com:dabear/LibreTransmitter.git LibreTransm
 ```
 
 * Add Glucose algorithm (GetGlucoseFromRaw.swift)
-  * First Download GetGlucoseFromRaw.swift from where ever you want (don't ask, out of scope for this guide) and place it into the Downloads folder on your mac
+  * First Download GetGlucoseFromRaw.swift from this external repo and put it in the Download folder on your mac: https://raw.githubusercontent.com/gui-dos/DiaBLE/main/Reversing/GlucoseFromRaw.swift
   * Add GetGlucoseFromRaw.swift into project. For example:
 ```
 cd ~/Downloads
