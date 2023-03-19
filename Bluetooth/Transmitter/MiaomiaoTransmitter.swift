@@ -315,8 +315,11 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
         sensorData = SensorData(uuid: Data(rxBuffer.subdata(in: 5..<13)), bytes: [UInt8](rxBuffer.subdata(in: 18..<362)), date: Date())
 
-       if let sensorData, let metadata {
-            delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
+       if var sensorData, let metadata {
+           if let patchInfo = metadata.patchInfo {
+               sensorData.patchInfo = patchInfo
+           }
+           delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
         }
     }
 

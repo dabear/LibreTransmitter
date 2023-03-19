@@ -205,7 +205,10 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
 
         bLogger.debug("dabear:: bubble got sensordata \(self.sensorData.debugDescription) and metadata \(self.metadata.debugDescription), delegate is \(self.delegate.debugDescription)")
 
-        if let sensorData, let metadata {
+        if var sensorData, let metadata {
+            if let patchInfo = metadata.patchInfo {
+                sensorData.patchInfo = patchInfo
+            }
             delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
         }
     }

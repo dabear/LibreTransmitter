@@ -197,6 +197,9 @@ public struct SensorData: Codable {
         return CalibrationInfo(i1: i1, i2: i2, i3: negativei3 ? -i3 : i3, i4: i4, i5: i5, i6: i6, isValidForFooterWithReverseCRCs: Int(self.footerCrc.byteSwapped))
     }
 
+    //strictly only needed for decryption and calculating serial numbers properly
+    public var patchInfo : String? = nil
+    
     fileprivate let aday = 86_400.0 // in seconds
 
     var humanReadableSensorAge: String {
