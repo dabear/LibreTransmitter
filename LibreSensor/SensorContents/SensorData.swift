@@ -21,7 +21,16 @@ public struct SensorData: Codable {
     /// The uid of the sensor
     let uuid: Data
     /// The serial number of the sensor
-    let serialNumber: String
+    var serialNumber: String {
+        guard let patchInfo,
+              patchInfo.count >= 6,
+              let family = SensorFamily(rawValue: Int(patchInfo[2] >> 4))
+        else {
+            return "-"
+        }
+        
+        return SensorSerialNumber(withUID: uuid, sensorFamily:family )?.serialNumber ?? "-"
+    }
     /// Number of bytes of sensor data to be used (read only), i.e. 344 bytes (24 for header, 296 for body and 24 for footer)
     private let numberOfBytes = 344 // Header and body and footer of Freestyle Libre data (i.e. 40 blocks of 8 bytes)
     /// Array of 344 bytes as read via nfc
@@ -111,15 +120,13 @@ public struct SensorData: Codable {
         return (b0 << 8) | UInt16(b1)
     }
 
-    mutating func decrypt(patchInfo: String, uid: [UInt8]) {
-        guard let info = patchInfo.hexadecimal(), let sensorType = SensorType(patchInfo: patchInfo)  else {
-            return
-        }
-
-        // var decrypted2 = Libre2.decryptFRAM(sensorId: uid, sensorInfo: [UInt8](info), FRAMData: self.bytes)
+    mutating func decrypt(patchInfo: Data, uid: [UInt8]) {
+        
+        let sensorType = SensorType(patchInfo: patchInfo)
+    
 
         do {
-            self.bytes = try Libre2.decryptFRAM(type: sensorType, id: uid, info: [UInt8](info), data: self.bytes)
+            self.bytes = try Libre2.decryptFRAM(type: sensorType, id: uid, info: patchInfo, data: self.bytes)
         } catch {
             return
         }
@@ -198,7 +205,7 @@ public struct SensorData: Codable {
     }
 
     //strictly only needed for decryption and calculating serial numbers properly
-    public var patchInfo : String? = nil
+    public var patchInfo : Data? = nil
     
     fileprivate let aday = 86_400.0 // in seconds
 
@@ -233,7 +240,7 @@ public struct SensorData: Codable {
 
         self.uuid = uuid
 
-        self.serialNumber = SensorSerialNumber(withUID: uuid)?.serialNumber ?? "-"
+        
         print("sensor uuid: \(uuid)")
 
         // we disable this check as we might be dealing with an encrypted libre2 sensor

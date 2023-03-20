@@ -296,10 +296,10 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
             return
         }
 
-        var patchInfo: String?
+        var patchInfo: Data?
 
         if rxBuffer.count >= 369 {
-            patchInfo = Data(rxBuffer[363...368]).hexEncodedString().uppercased()
+            patchInfo = Data(rxBuffer[363...368])
         }
 
         logger.debug("rxbuffer length: \(self.rxBuffer.count ), patchinfo: \(String(describing: patchInfo))")

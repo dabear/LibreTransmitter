@@ -8,13 +8,17 @@
 
 import Foundation
 
+
+
 public struct SensorSerialNumber: CustomStringConvertible {
     let uid: Data
+    let family: SensorFamily
 
     fileprivate let lookupTable = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "T", "U", "V", "W", "X", "Y", "Z"]
 
-    init?(withUID uid: Data) {
+    init?(withUID uid: Data, sensorFamily: SensorFamily ) {
         guard uid.count == 8 else { return nil }
+        self.family = sensorFamily
         self.uid = uid
     }
 
@@ -85,7 +89,7 @@ public struct SensorSerialNumber: CustomStringConvertible {
         fiveBitsArray.append( bytes[5] >> 3 )
         fiveBitsArray.append( bytes[5] << 2 )
 
-        let serialNumber = fiveBitsArray.reduce("0", { // prepend with "0" according to step 3.)
+        let serialNumber = fiveBitsArray.reduce("\(family.rawValue)", {
             $0 + lookupTable[ Int(0x1F & $1) ]  // Mask with 0x1F to only take the five relevant bits
         })
         return serialNumber

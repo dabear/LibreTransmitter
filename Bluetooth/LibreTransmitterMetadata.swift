@@ -22,10 +22,10 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
 
     public let name: String
 
-    public let patchInfo: String?
+    public let patchInfo: Data?
     public let uid: [UInt8]?
 
-    init(hardware: String, firmware: String, battery: Int?, name: String, macAddress: String?, patchInfo: String?, uid: [UInt8]?) {
+    init(hardware: String, firmware: String, battery: Int?, name: String, macAddress: String?, patchInfo: Data?, uid: [UInt8]?) {
         self.hardware = hardware
         self.firmware = firmware
         self.battery = battery
@@ -76,42 +76,51 @@ extension String {
     }
 }
 
-public enum SensorType: String, CustomStringConvertible {
-    case libre1    = "DF"
-    case libre1A2 =  "A2"
-    case libre2    = "9D"
-    case libreUS14day   = "E5"
-    case libreProH = "70"
+
+public enum SensorFamily: Int, CustomStringConvertible {
+    case libre      = 0
+    case librePro   = 1
+    case libre2     = 3
+    case libreSense = 7
 
     public var description: String {
         switch self {
-        case .libre1:
-            return "Libre 1"
-        case .libre1A2:
-            return "Libre 1 A2"
-        case .libre2:
-            return "Libre 2"
-        case .libreUS14day:
-            return "Libre US"
-        case .libreProH:
-            return "Libre PRO H"
+        case .libre:      return "Libre"
+        case .librePro:   return "Libre Pro"
+        case .libre2:     return "Libre 2"
+        case .libreSense: return "Libre Sense"
         }
     }
 }
 
-public extension SensorType {
-    init?(patchInfo: String) {
-        guard patchInfo.count > 1 else { return nil }
+public enum SensorType: String, CustomStringConvertible {
+    case libre1       = "Libre 1"
+    case libreUS14day = "Libre US 14d"
+    case libreProH    = "Libre Pro/H"
+    case libre2       = "Libre 2"
+    case libre2US     = "Libre 2 US"
+    case libre2CA     = "Libre 2 CA"
+    case libreSense   = "Libre Sense"
+    case libre3       = "Libre 3"
+    case dexcomOne    = "Dexcom ONE"
+    case dexcomG7     = "Dexcom G7"
+    case unknown      = "Libre"
 
-        let start = patchInfo[0..<2].uppercased()
-
-        let choices: [String: SensorType] = ["DF": .libre1, "A2": .libre1A2, "9D": .libre2, "E5": .libreUS14day, "E6": .libreUS14day, "70": .libreProH]
-
-        if let res = choices[start] {
-            self = res
-            return
+    public init(patchInfo: Data) {
+        switch patchInfo[0] {
+        case 0xDF, 0xA2: self = .libre1
+        case 0xE5, 0xE6: self = .libreUS14day
+        case 0x70: self = .libreProH
+        case 0x9D: self = .libre2
+        case 0x76: self = patchInfo[3] == 0x02 ? .libre2US : patchInfo[3] == 0x04 ? .libre2CA : patchInfo[2] >> 4 == 7 ? .libreSense : .unknown
+        default:
+            if patchInfo.count == 24 {
+                self = .libre3
+            } else {
+                self = .unknown
+            }
         }
-
-        return nil
     }
+
+    public var description: String { self.rawValue }
 }

@@ -407,7 +407,8 @@ extension LibreTransmitterManager {
                 self.sensorInfoObservable.sensorAgeLeft = humanReadableTimeLeft
                 self.sensorInfoObservable.sensorState = "Operational"
                 self.sensorInfoObservable.sensorState = "Operational"
-                self.sensorInfoObservable.sensorSerial = SensorSerialNumber(withUID: sensor.uuid)?.serialNumber ?? "-"
+                let family = SensorFamily.libre2
+                self.sensorInfoObservable.sensorSerial = SensorSerialNumber(withUID: sensor.uuid, sensorFamily: family)?.serialNumber ?? "-"
 
                 if let mapping = UserDefaults.standard.calibrationMapping,
                    let calibration = self.calibrationData ,

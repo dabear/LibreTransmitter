@@ -74,7 +74,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     private var firmware: String? = ""
     private var mac: String? = ""
 
-    private var patchInfo: String?
+    private var patchInfo: Data?
     private var uid: [UInt8]?
 
     private var battery: Int?
@@ -177,7 +177,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
                 bLogger.debug("not able to extract patchinfo")
                 return
             }
-            patchInfo = value.subdata(in: 5 ..< 11).hexEncodedString().uppercased()
+            patchInfo = value.subdata(in: 5 ..< 11)
         }
     }
 

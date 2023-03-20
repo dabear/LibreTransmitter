@@ -142,34 +142,5 @@ private enum Key: String, CaseIterable {
     case sensorUnlockCount = "libre-direct.settings.sensor.unlockCount"
 }
 
-/*
-fileprivate func sensorSerialNumber(sensorUID: Data, sensorFamily: SensorFamily) -> String? {
-    let lookupTable = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "T", "U", "V", "W", "X", "Y", "Z"]
 
-    guard sensorUID.count == 8 else {
-        return nil
-    }
 
-    let bytes = Array(sensorUID.reversed().suffix(6))
-    var fiveBitsArray = [UInt8]()
-    fiveBitsArray.append(bytes[0] >> 3)
-    fiveBitsArray.append(bytes[0] << 2 + bytes[1] >> 6)
-
-    fiveBitsArray.append(bytes[1] >> 1)
-    fiveBitsArray.append(bytes[1] << 4 + bytes[2] >> 4)
-
-    fiveBitsArray.append(bytes[2] << 1 + bytes[3] >> 7)
-
-    fiveBitsArray.append(bytes[3] >> 2)
-    fiveBitsArray.append(bytes[3] << 3 + bytes[4] >> 5)
-
-    fiveBitsArray.append(bytes[4])
-
-    fiveBitsArray.append(bytes[5] >> 3)
-    fiveBitsArray.append(bytes[5] << 2)
-
-    return fiveBitsArray.reduce("\(sensorFamily.rawValue)", {
-        $0 + lookupTable[Int(0x1F & $1)]
-    })
-}
- */
