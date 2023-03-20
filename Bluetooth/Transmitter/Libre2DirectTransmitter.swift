@@ -138,7 +138,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
             metadata = LibreTransmitterMetadata(hardware: "-", firmware: "-", battery: 100,
                                                 name: Self.shortTransmitterName,
                                                 macAddress: nil,
-                                                patchInfo: sensor.patchInfo.hexEncodedString().uppercased(),
+                                                patchInfo: sensor.patchInfo,
                                                 uid: [UInt8](sensor.uuid))
 
             // When end user has changed sensor we cannot trust the current(new) calibrationdata

@@ -74,7 +74,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     private var firmware: String? = ""
     private var mac: String? = ""
 
-    private var patchInfo: String?
+    private var patchInfo: Data?
     private var uid: [UInt8]?
 
     private var battery: Int?
@@ -177,7 +177,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
                 bLogger.debug("not able to extract patchinfo")
                 return
             }
-            patchInfo = value.subdata(in: 5 ..< 11).hexEncodedString().uppercased()
+            patchInfo = value.subdata(in: 5 ..< 11)
         }
     }
 
@@ -205,7 +205,10 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
 
         bLogger.debug("dabear:: bubble got sensordata \(self.sensorData.debugDescription) and metadata \(self.metadata.debugDescription), delegate is \(self.delegate.debugDescription)")
 
-        if let sensorData, let metadata {
+        if var sensorData, let metadata {
+            if let patchInfo = metadata.patchInfo {
+                sensorData.patchInfo = patchInfo
+            }
             delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
         }
     }

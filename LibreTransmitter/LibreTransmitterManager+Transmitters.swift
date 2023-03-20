@@ -26,7 +26,8 @@ extension LibreTransmitterManager {
         self.setObservables(sensorData: nil, bleData: nil, metaData: Device)
 
          if !sensorData.isLikelyLibre1FRAM {
-            if let patchInfo = Device.patchInfo, let sensorType = SensorType(patchInfo: patchInfo) {
+            if let patchInfo = sensorData.patchInfo {
+                let sensorType = SensorType(patchInfo: patchInfo)
                 let needsDecryption = [SensorType.libre2, .libreUS14day].contains(sensorType)
                 if needsDecryption, let uid = Device.uid {
                     sensorData.decrypt(patchInfo: patchInfo, uid: uid)

@@ -8,7 +8,7 @@ public enum Libre2 {
     ///   - info: Sensor info. Retrieved by sending command '0xa1' via NFC.
     ///   - data: Encrypted FRAM data
     /// - Returns: Decrypted FRAM data
-    static public func decryptFRAM(type: SensorType, id: [UInt8], info: [UInt8], data: [UInt8]) throws -> [UInt8] {
+    static public func decryptFRAM(type: SensorType, id: [UInt8], info: Data, data: [UInt8]) throws -> [UInt8] {
         guard type == .libre2 || type == .libreUS14day else {
             struct DecryptFRAMError: Error {
                 let errorDescription = "Unsupported sensor type"

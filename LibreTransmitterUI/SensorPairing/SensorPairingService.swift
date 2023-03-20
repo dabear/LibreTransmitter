@@ -117,7 +117,7 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                                         session.invalidate()
 
                                         let patchHex = patchInfo.hexEncodedString()
-                                        let sensorType = SensorType(patchInfo: patchHex)
+                                        let sensorType = SensorType(patchInfo: patchInfo)
 
                                         print("got patchhex: \(patchHex) and sensorType: \(sensorType)")
 
@@ -126,9 +126,9 @@ class SensorPairingService: NSObject, NFCTagReaderSessionDelegate, SensorPairing
                                             return
                                         }
 
-                                        if let sensorType {
+                                        if sensorType == .libre2 {
                                             do {
-                                                let decryptedBytes = try Libre2.decryptFRAM(type: sensorType, id: [UInt8](sensorUID), info: [UInt8](patchInfo), data: [UInt8](fram))
+                                                let decryptedBytes = try Libre2.decryptFRAM(type: sensorType, id: [UInt8](sensorUID), info: patchInfo, data: [UInt8](fram))
 
                                                 self.sendUpdate(SensorPairingInfo(uuid: sensorUID, patchInfo: patchInfo, fram: Data(decryptedBytes), streamingEnabled: streamingEnabled))
 

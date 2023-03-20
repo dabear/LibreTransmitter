@@ -296,10 +296,10 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
             return
         }
 
-        var patchInfo: String?
+        var patchInfo: Data?
 
         if rxBuffer.count >= 369 {
-            patchInfo = Data(rxBuffer[363...368]).hexEncodedString().uppercased()
+            patchInfo = Data(rxBuffer[363...368])
         }
 
         logger.debug("rxbuffer length: \(self.rxBuffer.count ), patchinfo: \(String(describing: patchInfo))")
@@ -315,8 +315,11 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
 
         sensorData = SensorData(uuid: Data(rxBuffer.subdata(in: 5..<13)), bytes: [UInt8](rxBuffer.subdata(in: 18..<362)), date: Date())
 
-       if let sensorData, let metadata {
-            delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
+       if var sensorData, let metadata {
+           if let patchInfo = metadata.patchInfo {
+               sensorData.patchInfo = patchInfo
+           }
+           delegate?.libreTransmitterDidUpdate(with: sensorData, and: metadata)
         }
     }
 
