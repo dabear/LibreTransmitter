@@ -17,7 +17,7 @@ import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
 
-    public typealias GlucoseArrayWithPrediction = (glucose: [LibreGlucose], prediction: [LibreGlucose])
+    public typealias GlucoseArrayWithPrediction = (trends: [LibreGlucose], historical: [LibreGlucose], prediction: [LibreGlucose])
     public lazy var logger = Logger(forType: Self.self)
 
     public let isOnboarded = true   // No distinction between created and onboarded
@@ -483,17 +483,32 @@ extension LibreTransmitterManager {
         return startDate?.addingTimeInterval(1)
     }
 
-    func glucosesToSamplesFilter(_ array: [LibreGlucose], startDate: Date?) -> [NewGlucoseSample] {
-
-        array
+    func glucosesToSamplesFilter(_ array: [LibreGlucose], startDate: Date?, calculateTrends: Bool = true) -> [NewGlucoseSample] {
+        let glucoses = array.filter { $0.isStateValid }
+        
+        let newest = glucoses.first
+        let oldest = glucoses.last
+        
+        var trend: GlucoseTrend? = nil
+        
+        if calculateTrends, let newest, let oldest, oldest != newest {
+            trend = newest.GetGlucoseTrend(last: oldest)
+            logger.debug("dabear: creating trendarrow from glucoses: newest: \(String(describing:newest)) oldest: \(String(describing: oldest)) ")
+        } else {
+            logger.debug("dabear: Not creating trendarrow for remote uploada")
+            trend = .none
+        }
+        logger.debug("dabear: tried creating trendarrow using \(glucoses.count) elements for trend calc")
+        
+        return
+        glucoses
         .filterDateRange(startDate, nil)
-        .filter { $0.isStateValid }
         .compactMap {
             return NewGlucoseSample(
                 date: $0.startDate,
                 quantity: $0.quantity,
                 condition: nil,
-                trend: nil,
+                trend: trend,
                 trendRate: nil,
                 isDisplayOnly: false,
                 wasUserEntered: false,

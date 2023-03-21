@@ -177,7 +177,7 @@ extension LibreGlucose {
         return arr
     }
 
-    static func fromTrendMeasurements(_ measurements: [Measurement], nativeCalibrationData: SensorData.CalibrationInfo, returnAll: Bool) -> [LibreGlucose] {
+    static func fromTrendMeasurements(_ measurements: [Measurement], nativeCalibrationData: SensorData.CalibrationInfo) -> [LibreGlucose] {
         var arr = [LibreGlucose]()
 
         var shouldSmoothGlucose = true
@@ -210,10 +210,6 @@ extension LibreGlucose {
             for i in 0 ..< arr.count {
                 arr[i].glucoseDouble = arr[i].unsmoothedGlucose
             }
-        }
-
-        if !returnAll, let first = arr.first {
-            return [first]
         }
 
         return arr
