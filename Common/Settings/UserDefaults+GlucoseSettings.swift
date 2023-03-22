@@ -13,7 +13,7 @@ extension UserDefaults {
     private enum Key: String {
         case mmSyncToNS = "no.bjorninge.mmSyncToNs"
         case mmBackfillFromHistory = "no.bjorninge.mmBackfillFromHistory"
-        case mmBackfillFromTrend = "no.bjorninge.mmBackfillFromTrend"
+       
     }
 
     var mmSyncToNs: Bool {
@@ -34,12 +34,4 @@ extension UserDefaults {
         }
     }
 
-    var mmBackfillFromTrend: Bool {
-        get {
-            optionalBool(forKey: Key.mmBackfillFromTrend.rawValue) ?? false
-        }
-        set {
-            set(newValue, forKey: Key.mmBackfillFromTrend.rawValue)
-        }
-    }
 }

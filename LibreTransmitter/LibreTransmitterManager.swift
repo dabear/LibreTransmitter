@@ -17,7 +17,7 @@ import os.log
 
 public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
 
-    public typealias GlucoseArrayWithPrediction = (glucose: [LibreGlucose], prediction: [LibreGlucose])
+    public typealias GlucoseArrayWithPrediction = (trends: [LibreGlucose], historical: [LibreGlucose], prediction: [LibreGlucose])
     public lazy var logger = Logger(forType: Self.self)
 
     public let isOnboarded = true   // No distinction between created and onboarded
@@ -107,9 +107,9 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             "## LibreTransmitterManager",
             "Testdata: foo",
             "lastConnected: \(String(describing: lastConnected))",
-            "Connection state: \(connectionState)",
-            "Sensor state: \(sensorStateDescription)",
-            "transmitterbattery: \(batteryString)",
+            "Connection state: \(self.proxy?.connectionStateString)",
+            "Sensor state: \(proxy?.sensorData?.state.description)",
+            "transmitterbattery: \(proxy?.metadata?.batteryString)",
             "SensorData: \(getPersistedSensorDataForDebug())",
             "providesBLEHeartbeat: \(providesBLEHeartbeat)",
             "Metainfo::\n\(AppMetaData.allProperties)",
@@ -145,7 +145,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
                 NotificationHelper.sendGlucoseNotitifcationIfNeeded(glucose: newValue,
                                                                     oldValue: oldValue,
                                                                     trend: trend,
-                                                                    battery: batteryString)
+                                                                    battery: proxy?.metadata?.batteryString ?? "n/a")
 
                 // once we have a new glucose value, we can update the isalarming property
                 if let activeAlarms = UserDefaults.standard.glucoseSchedules?.getActiveAlarms(newValue.glucoseDouble) {
@@ -173,12 +173,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
                 trend = oldIsRecentEnough ? newValue.GetGlucoseTrend(last: oldValue) : nil
 
-                var batteries : [(name: String, percentage: Int)]?
-                if let metaData, let battery {
-                    batteries = [(name: metaData.name, percentage: battery)]
-                }
-
-                self.glucoseDisplay = ConcreteGlucoseDisplayable(isStateValid: newValue.isStateValid, trendType: trend, isLocal: true, batteries: batteries)
+                self.glucoseDisplay = ConcreteGlucoseDisplayable(isStateValid: newValue.isStateValid, trendType: trend, isLocal: true)
             } else {
                 // could consider setting this to ConcreteSensorDisplayable with trendtype GlucoseTrend.flat, but that would be kinda lying
                 self.glucoseDisplay = nil
@@ -483,22 +478,37 @@ extension LibreTransmitterManager {
         return startDate?.addingTimeInterval(1)
     }
 
-    func glucosesToSamplesFilter(_ array: [LibreGlucose], startDate: Date?) -> [NewGlucoseSample] {
-
-        array
+    func glucosesToSamplesFilter(_ array: [LibreGlucose], startDate: Date?, calculateTrends: Bool = true) -> [NewGlucoseSample] {
+        let glucoses = array.filter { $0.isStateValid }
+        
+        let newest = glucoses.first
+        let oldest = glucoses.last
+        
+        var trend: GlucoseTrend? = nil
+        
+        if calculateTrends, let newest, let oldest, oldest != newest {
+            trend = newest.GetGlucoseTrend(last: oldest)
+            logger.debug("dabear: creating trendarrow from glucoses: newest: \(String(describing:newest)) oldest: \(String(describing: oldest)) ")
+        } else {
+            logger.debug("dabear: Not creating trendarrow for remote uploada")
+            trend = .none
+        }
+        logger.debug("dabear: tried creating trendarrow using \(glucoses.count) elements for trend calc")
+        
+        return
+        glucoses
         .filterDateRange(startDate, nil)
-        .filter { $0.isStateValid }
         .compactMap {
             return NewGlucoseSample(
                 date: $0.startDate,
                 quantity: $0.quantity,
                 condition: nil,
-                trend: nil,
+                trend: trend,
                 trendRate: nil,
                 isDisplayOnly: false,
                 wasUserEntered: false,
                 syncIdentifier: $0.syncId,
-                device: device)
+                device: self.proxy?.device)
         }
 
     }
@@ -506,101 +516,7 @@ extension LibreTransmitterManager {
     public var calibrationData: SensorData.CalibrationInfo? {
         KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
     }
-}
-
-
-
-
-// MARK: - conventience properties to access the enclosed proxy's properties
-
-extension LibreTransmitterManager {
-    public var device: HKDevice? {
-         // proxy?.OnQueue_device
-        proxy?.device
-    }
-
-    static var className: String {
-        String(describing: Self.self)
-    }
-    // cannot be called from managerQueue
-    public var identifier: String {
-        // proxy?.OnQueue_identifer?.uuidString ?? "n/a"
-        proxy?.identifier?.uuidString ?? "n/a"
-    }
-
-    public var metaData: LibreTransmitterMetadata? {
-        // proxy?.OnQueue_metadata
-         proxy?.metadata
-    }
-
-    // cannot be called from managerQueue
-    public var connectionState: String {
-        // proxy?.connectionStateString ?? "n/a"
-        proxy?.connectionStateString ?? "n/a"
-    }
-    // cannot be called from managerQueue
-    public var sensorSerialNumber: String {
-        // proxy?.OnQueue_sensorData?.serialNumber ?? "n/a"
-        proxy?.sensorData?.serialNumber ?? "n/a"
-    }
-
-    // cannot be called from managerQueue
-    public var sensorAge: String {
-        // proxy?.OnQueue_sensorData?.humanReadableSensorAge ?? "n/a"
-        proxy?.sensorData?.humanReadableSensorAge ?? "n/a"
-    }
-
-    public var sensorEndTime: String {
-        if let endtime = proxy?.sensorData?.sensorEndTime {
-            let mydf = DateFormatter()
-            mydf.dateStyle = .long
-            mydf.timeStyle = .full
-            mydf.locale = Locale.current
-            return mydf.string(from: endtime)
-        }
-        return "Unknown or Ended"
-    }
-
-    public var sensorTimeLeft: String {
-        // proxy?.OnQueue_sensorData?.humanReadableSensorAge ?? "n/a"
-        proxy?.sensorData?.humanReadableTimeLeft ?? "n/a"
-    }
-
-    // cannot be called from managerQueue
-    public var sensorFooterChecksums: String {
-        // (proxy?.OnQueue_sensorData?.footerCrc.byteSwapped).map(String.init)
-        (proxy?.sensorData?.footerCrc.byteSwapped).map(String.init)
-
-            ?? "n/a"
-    }
-
-    // cannot be called from managerQueue
-    public var sensorStateDescription: String {
-        // proxy?.OnQueue_sensorData?.state.description ?? "n/a"
-        proxy?.sensorData?.state.description ?? "n/a"
-    }
-    // cannot be called from managerQueue
-    public var firmwareVersion: String {
-        proxy?.metadata?.firmware ?? "n/a"
-    }
-
-    // cannot be called from managerQueue
-    public var hardwareVersion: String {
-        proxy?.metadata?.hardware ?? "n/a"
-    }
-
-    // cannot be called from managerQueue
-    public var batteryString: String {
-        proxy?.metadata?.batteryString ?? "n/a"
-    }
-
-    public var battery: Int? {
-        proxy?.metadata?.battery
-    }
-
-    public func getDeviceType() -> String {
-        proxy?.shortTransmitterName ?? "Unknown"
-    }
+    
     public func getSmallImage() -> UIImage {
         proxy?.activePluginType?.smallImage ?? UIImage(named: "libresensor", in: Bundle.current, compatibleWith: nil)!
     }

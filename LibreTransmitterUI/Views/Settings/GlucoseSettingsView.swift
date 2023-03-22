@@ -29,7 +29,6 @@ struct GlucoseSettingsView: View {
 
     @AppStorage("no.bjorninge.mmSyncToNs") var mmSyncToNS: Bool = true
     @AppStorage("no.bjorninge.mmBackfillFromHistory") var mmBackfillFromHistory: Bool = true
-    @AppStorage("no.bjorninge.mmBackfillFromTrend") var mmBackfillFromTrend: Bool = false
     @AppStorage("no.bjorninge.shouldPersistSensorData") var shouldPersistSensorData: Bool = false
 
     @State private var authSuccess = false
@@ -43,7 +42,6 @@ struct GlucoseSettingsView: View {
 
             Section(header: Text(LocalizedString("Backfill options", comment: "Text describing header for backfill options in glucosesettingsview"))) {
                 Toggle("Backfill from history", isOn: $mmBackfillFromHistory)
-                //Toggle("Backfill from trend", isOn: $mmBackfillFromTrend).disabled(true) // consider removing this option, as it is not well supported by loop
             }
             Section(header: Text(LocalizedString("Remote data storage", comment: "Text describing header for remote data storage"))) {
                 Toggle("Upload to nightscout", isOn: $mmSyncToNS)
