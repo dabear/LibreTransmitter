@@ -151,24 +151,24 @@ private struct DeviceItem: View {
         }
         .listRowBackground(getRowBackground(device: device))
         .onTapGesture {
-            print("dabear:: tapped \(device.asStringIdentifier)")
+            print(" tapped \(device.asStringIdentifier)")
 
             if requiresPhoneNFC && !Features.phoneNFCAvailable {
                 // cannot select, show gui somehow
                 presentableStatus = StatusMessage(title: "Not availble", message: "The device selected is not available due to lack of NFC support on your phone")
                 isShowingSetup = false
-                print("dabear:: tapped  \(device.asStringIdentifier) but it requires nfc, not available")
+                print(" tapped  \(device.asStringIdentifier) but it requires nfc, not available")
                 return
             }
 
             if requiresSetup {
-                print("dabear:: tapped  \(device.asStringIdentifier) but it requires setup, so aborting")
+                print(" tapped  \(device.asStringIdentifier) but it requires setup, so aborting")
                 isShowingSetup = true
 
                 return
             }
 
-            print("dabear:: tapped and set \(device.asStringIdentifier) as new identifier")
+            print(" tapped and set \(device.asStringIdentifier) as new identifier")
             selection.selectedStringIdentifier = device.asStringIdentifier
             //only relevant for launch through settings, as selectionstate can be persisted
             // we need to enforce transmitter mode by removing any selected third party transmitter
@@ -306,13 +306,13 @@ struct BluetoothSelection: View {
             if debugMode {
                 allDevices = Self.getMockData()
             } else {
-                print("dabear:: asking searcher to search!")
+                print(" asking searcher to search!")
                 self.searcher?.scanForCompatibleDevices()
             }
         }
         .onDisappear {
             if !self.debugMode {
-                print("dabear:: asking searcher to stop searching!")
+                print(" asking searcher to stop searching!")
                 self.searcher?.stopTimer()
                 self.searcher?.disconnectManually()
 

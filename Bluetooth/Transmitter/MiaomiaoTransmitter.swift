@@ -231,7 +231,7 @@ class MiaoMiaoTransmitter: LibreTransmitterProxyProtocol {
     func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral) {
         confirmSensor(peripheral: peripheral, writeCharacteristics: writeCharacteristics)
         reset()
-        logger.debug("dabear: miaomiaoRequestData")
+        logger.debug("miaomiaoRequestData")
 
         peripheral.writeValue(Data([0xF0]), for: writeCharacteristics, type: .withResponse)
     }

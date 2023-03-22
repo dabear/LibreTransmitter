@@ -314,7 +314,7 @@ struct AlarmSettingsView: View {
         .onAppear{
             if (requiresAuthentication && !authSuccess) {
                 self.authenticate { success in
-                    print("dabear: got authentication response: \(success)")
+                    print("got authentication response: \(success)")
                     authSuccess = success
                 }
             }

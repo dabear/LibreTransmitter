@@ -178,10 +178,10 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
 
                 }
 
-                logger.debug("dabear: sensor updated with trends: \((sensorUpdate.trend.count)): \(sensorUpdate.trend)")
+                logger.debug("sensor updated with trends: \((sensorUpdate.trend.count)): \(sensorUpdate.trend)")
 
                 if !filtered.isEmpty {
-                    logger.debug("dabear: Adding previously captured trends \((filtered.count)): \(filtered)")
+                    logger.debug("Adding previously captured trends \((filtered.count)): \(filtered)")
                     sensorUpdate.trend += filtered
                 }
             }

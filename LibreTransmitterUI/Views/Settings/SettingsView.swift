@@ -255,7 +255,7 @@ struct SettingsView: View {
                     primaryButton: .destructive(Text(LocalizedString("Delete", comment: "Action text for deleting cgmmanager"))) {
                         
                         self.authenticate { success in
-                            print("dabear: got authentication response: \(success)")
+                            print("got authentication response: \(success)")
                             if success {
                                 notifyDelete.notify()
                             }

@@ -21,7 +21,7 @@ extension LibreTransmitterManager {
     }
 
     public func libreSensorDidUpdate(with bleData: Libre2.LibreBLEResponse, and Device: LibreTransmitterMetadata) {
-        self.logger.debug("dabear:: got sensordata: \(String(describing: bleData))")
+        self.logger.debug("got sensordata: \(String(describing: bleData))")
         let typeDesc = Device.sensorType().debugDescription
 
         let now = Date()
@@ -76,13 +76,13 @@ extension LibreTransmitterManager {
         } else {
             self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
             self.latestPrediction =  self.createBloodSugarPrediction(bleData.trend, calibration: calibrationData)
-            self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
+            self.logger.debug("latestbackfill set to \(self.latestBackfill.debugDescription)")
             self.countTimesWithoutData = 0
         }
 
         self.setObservables(sensorData: nil, bleData: bleData, metaData: Device)
 
-        self.logger.debug("dabear:: handleGoodReading returned with \(newGlucose.count) entries")
+        self.logger.debug("handleGoodReading returned with \(newGlucose.count) entries")
         self.delegateQueue.async {
             var result: CGMReadingResult
             // If several readings from a valid and running sensor come out empty,

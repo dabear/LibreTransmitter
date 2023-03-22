@@ -94,7 +94,7 @@ struct AuthView: View {
         
         let hasNewDevice = SelectionState.shared.selectedStringIdentifier != UserDefaults.standard.preSelectedDevice
         if hasNewDevice, let newDevice = SelectionState.shared.selectedStringIdentifier {
-            print("dabear: authview will set new device to \(newDevice)")
+            print("authview will set new device to \(newDevice)")
             UserDefaults.standard.preSelectedDevice = newDevice
             SelectionState.shared.selectedUID = nil
             UserDefaults.standard.preSelectedUid = nil
@@ -102,7 +102,7 @@ struct AuthView: View {
         } else if let newUID = SelectionState.shared.selectedUID {
             // this one is only temporary,
             // as we don't know the bluetooth identifier during nfc setup
-            print("dabear: authview will set new libre2 device  to \(newUID)")
+            print("authview will set new libre2 device  to \(newUID)")
 
             UserDefaults.standard.preSelectedUid = newUID
             SelectionState.shared.selectedUID = nil

@@ -129,18 +129,18 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     }
 
     override func requestData(writeCharacteristics: CBCharacteristic, peripheral: CBPeripheral) {
-        bLogger.debug("dabear:: bubbleRequestData")
+        bLogger.debug("bubbleRequestData")
         reset()
 
         peripheral.writeValue(Data([0x00, 0x00, 0x05]), for: writeCharacteristics, type: .withResponse)
     }
     override func updateValueForNotifyCharacteristics(_ value: Data, peripheral: CBPeripheral, writeCharacteristic: CBCharacteristic?) {
-        bLogger.debug("dabear:: bubbleDidUpdateValueForNotifyCharacteristics, firstbyte is: \(value.first.debugDescription)")
+        bLogger.debug("bubbleDidUpdateValueForNotifyCharacteristics, firstbyte is: \(value.first.debugDescription)")
         guard let firstByte = value.first, let bubbleResponseState = BubbleResponseType(rawValue: firstByte) else {
            return
         }
-        bLogger.debug("dabear:: bubble responsestate is of type \(bubbleResponseState.description)")
-        bLogger.debug("dabear:: bubble value is: \(value.toDebugString())")
+        bLogger.debug("bubble responsestate is of type \(bubbleResponseState.description)")
+        bLogger.debug("bubble value is: \(value.toDebugString())")
         switch bubbleResponseState {
         case .bubbleInfo:
             // let hardware = value[value.count-2].description + "." + value[value.count-1].description
@@ -148,14 +148,14 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
            // let patchInfo = Data(Double(firmware)! < 1.35 ? value[3...8] : value[5...10])
             battery = Int(value[4])
 
-            bLogger.debug("dabear:: Got bubbledevice: \(self.metadata.debugDescription)")
+            bLogger.debug("Got bubbledevice: \(self.metadata.debugDescription)")
            if let writeCharacteristic {
 
                peripheral.writeValue(Data([0x02, 0x00, 0x00, 0x00, 0x00, 0x2B]), for: writeCharacteristic, type: .withResponse)
            }
         case .dataPacket:// , .decryptedDataPacket:
            rxBuffer.append(value.suffix(from: 4))
-            bLogger.debug("dabear:: aggregated datapacket is now of length: \(self.rxBuffer.count)")
+            bLogger.debug("aggregated datapacket is now of length: \(self.rxBuffer.count)")
            if rxBuffer.count >= 352 {
                handleCompleteMessage()
                reset()
@@ -186,7 +186,7 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
     private var metadata: LibreTransmitterMetadata?
 
     override func handleCompleteMessage() {
-        bLogger.debug("dabear:: bubbleHandleCompleteMessage")
+        bLogger.debug("bubbleHandleCompleteMessage")
 
         guard rxBuffer.count >= 352 else {
             return
@@ -200,10 +200,10 @@ class BubbleTransmitter: MiaoMiaoTransmitter {
                          patchInfo: patchInfo, uid: self.uid)
 
         let data = rxBuffer.subdata(in: 8..<352)
-        bLogger.debug("dabear:: bubbleHandleCompleteMessage raw data: \([UInt8](self.rxBuffer))")
+        bLogger.debug("bubbleHandleCompleteMessage raw data: \([UInt8](self.rxBuffer))")
         sensorData = SensorData(uuid: rxBuffer.subdata(in: 0..<8), bytes: [UInt8](data), date: Date())
 
-        bLogger.debug("dabear:: bubble got sensordata \(self.sensorData.debugDescription) and metadata \(self.metadata.debugDescription), delegate is \(self.delegate.debugDescription)")
+        bLogger.debug("bubble got sensordata \(self.sensorData.debugDescription) and metadata \(self.metadata.debugDescription), delegate is \(self.delegate.debugDescription)")
 
         if var sensorData, let metadata {
             if let patchInfo = metadata.patchInfo {

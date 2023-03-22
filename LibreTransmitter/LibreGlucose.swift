@@ -54,7 +54,7 @@ extension LibreGlucose: GlucoseValue {
 extension LibreGlucose {
     public var description: String {
         guard let glucoseUnit = UserDefaults.standard.mmGlucoseUnit, let formatter = LibreGlucose.dynamicFormatter, let formatted = formatter.string(from: self.quantity, for: glucoseUnit) else {
-            logger.debug("dabear:: glucose unit was not recognized, aborting")
+            logger.debug("glucose unit was not recognized, aborting")
             return "Unknown"
         }
 
@@ -74,7 +74,7 @@ extension LibreGlucose {
 
     public static var dynamicFormatter: QuantityFormatter? {
         guard let glucoseUnit = UserDefaults.standard.mmGlucoseUnit else {
-            logger.debug("dabear:: glucose unit was not recognized, aborting")
+            logger.debug("glucose unit was not recognized, aborting")
             return nil
         }
 
@@ -83,7 +83,7 @@ extension LibreGlucose {
 
     public static func glucoseDiffDesc(oldValue: Self, newValue: Self) -> String {
         guard let glucoseUnit = UserDefaults.standard.mmGlucoseUnit else {
-            logger.debug("dabear:: glucose unit was not recognized, aborting")
+            logger.debug("glucose unit was not recognized, aborting")
             return "Unknown"
         }
 
