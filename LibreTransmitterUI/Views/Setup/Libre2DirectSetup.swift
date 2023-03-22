@@ -9,6 +9,7 @@
 import SwiftUI
 import LibreTransmitter
 import LoopKitUI
+import LoopKit
 
 #if canImport(CoreNFC)
 
@@ -47,7 +48,7 @@ struct Libre2DirectSetup: View {
         // calibrationdata must always be extracted from the full nfc scan
         if let calibrationData = info.calibrationData {
             do {
-                try KeychainManagerWrapper.standard.setLibreNativeCalibrationData(calibrationData)
+                try KeychainManager.standard.setLibreNativeCalibrationData(calibrationData)
             } catch {
                 NotificationHelper.sendCalibrationNotification(.invalidCalibrationData)
                 return

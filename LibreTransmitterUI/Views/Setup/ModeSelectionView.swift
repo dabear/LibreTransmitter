@@ -71,6 +71,7 @@ struct ModeSelectionView: View {
             }.padding()
         }
         .animation(.default)
+        //TODO: make this non-inline. Be warned that non-inline here for some reason creates overlapping UI elements and unresponsive ui :/
         .navigationBarTitle("New Device Setup", displayMode: .inline)
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)

@@ -138,9 +138,11 @@ struct AuthView: View {
         }) {
             VStack(spacing: 10) {
                 buttonSection
-            }.padding()
+                .padding()
+            }
         }
         .animation(.default)
+        //TODO: make this non-inline. Be warned that non-inline here for some reason creates overlapping UI elements and unresponsive ui :/
         .navigationBarTitle("New Device Setup", displayMode: .inline)
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)

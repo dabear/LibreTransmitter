@@ -313,10 +313,10 @@ extension LibreTransmitterManager {
             if let metaData=metaData {
                 self.logger.debug("dabear::will set transmitterInfoObservable")
                 self.transmitterInfoObservable.battery = metaData.batteryString
-                self.transmitterInfoObservable.hardware = metaData.hardware
-                self.transmitterInfoObservable.firmware = metaData.firmware
+                self.transmitterInfoObservable.hardware = metaData.hardware ?? ""
+                self.transmitterInfoObservable.firmware = metaData.firmware ?? ""
                 self.transmitterInfoObservable.sensorType = metaData.sensorType()?.description ?? "Unknown"
-                self.transmitterInfoObservable.transmitterIdentifier = metaData.macAddress ??  UserDefaults.standard.preSelectedDevice ?? "Unknown"
+                self.transmitterInfoObservable.transmitterMacAddress = metaData.macAddress ?? ""
 
             }
             let now = Date.now
@@ -514,7 +514,7 @@ extension LibreTransmitterManager {
     }
 
     public var calibrationData: SensorData.CalibrationInfo? {
-        KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
+        KeychainManager.standard.getLibreNativeCalibrationData()
     }
     
     public func getSmallImage() -> UIImage {

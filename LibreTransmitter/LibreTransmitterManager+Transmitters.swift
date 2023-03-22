@@ -200,7 +200,7 @@ extension LibreTransmitterManager {
 
         calibrateSensor(sensordata: data) { [weak self] calibrationparams  in
             do {
-                try KeychainManagerWrapper.standard.setLibreNativeCalibrationData(calibrationparams)
+                try KeychainManager.standard.setLibreNativeCalibrationData(calibrationparams)
             } catch {
                 NotificationHelper.sendCalibrationNotification(.invalidCalibrationData)
                 callback(.invalidCalibrationData, nil)

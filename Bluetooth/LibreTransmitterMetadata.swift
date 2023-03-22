@@ -10,9 +10,9 @@ import Foundation
 
 public struct LibreTransmitterMetadata: CustomStringConvertible {
     // hardware number
-    public let hardware: String
+    public let hardware: String?
     // software number
-    public let firmware: String
+    public let firmware: String?
     // battery level, percentage between 0 % and 100 %
     public let battery: Int?
     // battery level String
@@ -25,7 +25,7 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
     public let patchInfo: Data?
     public let uid: [UInt8]?
 
-    init(hardware: String, firmware: String, battery: Int?, name: String, macAddress: String?, patchInfo: Data?, uid: [UInt8]?) {
+    init(hardware: String?, firmware: String?, battery: Int?, name: String, macAddress: String?, patchInfo: Data?, uid: [UInt8]?) {
         self.hardware = hardware
         self.firmware = firmware
         self.battery = battery
