@@ -121,7 +121,7 @@ struct AuthView: View {
     var body: some View {
         
         GuidePage(content: {
-            VStack {
+            VStack(alignment: .center, spacing: 30)  {
                 getLeadingImage()
                 
                 HStack {
@@ -131,9 +131,11 @@ struct AuthView: View {
                         LocalizedString("Proceed to pair new sensor in the next screens. Note that you will loose connection to any existing sensor or transmitter", comment: "Label text for step 3 of AuthView")
                     ])
                 }
-                    
+                Spacer()
+                
   
             }
+            .padding(.vertical, 16)
 
         }) {
             VStack(spacing: 10) {
@@ -141,6 +143,7 @@ struct AuthView: View {
                 .padding()
             }
         }
+        
         .navigationBarTitle("New Device Setup")
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)
