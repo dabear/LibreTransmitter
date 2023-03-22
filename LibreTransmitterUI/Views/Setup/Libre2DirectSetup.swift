@@ -47,7 +47,7 @@ struct Libre2DirectSetup: View {
         // calibrationdata must always be extracted from the full nfc scan
         if let calibrationData = info.calibrationData {
             do {
-                try KeychainManager.standard.setLibreNativeCalibrationData(calibrationData)
+                try KeychainManagerWrapper.standard.setLibreNativeCalibrationData(calibrationData)
             } catch {
                 NotificationHelper.sendCalibrationNotification(.invalidCalibrationData)
                 return

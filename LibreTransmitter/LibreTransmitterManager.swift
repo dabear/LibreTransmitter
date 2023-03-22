@@ -514,7 +514,7 @@ extension LibreTransmitterManager {
     }
 
     public var calibrationData: SensorData.CalibrationInfo? {
-        KeychainManager.standard.getLibreNativeCalibrationData()
+        KeychainManagerWrapper.standard.getLibreNativeCalibrationData()
     }
     
     public func getSmallImage() -> UIImage {

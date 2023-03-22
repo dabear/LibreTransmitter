@@ -46,7 +46,7 @@ struct CalibrationEditView: View {
                 }
 
                 do {
-                    try KeychainManager.standard.setLibreNativeCalibrationData(newParams)
+                    try KeychainManagerWrapper.standard.setLibreNativeCalibrationData(newParams)
                     print("calibrationsaving completed")
 
                     presentableStatus = StatusMessage(title: "OK", message: "Calibrations saved!")
@@ -106,7 +106,7 @@ struct CalibrationEditView: View {
     public init(debugMode: Bool=false) {
         self.debugMode = debugMode
 
-        if let params = KeychainManager.standard.getLibreNativeCalibrationData() {
+        if let params = KeychainManagerWrapper.standard.getLibreNativeCalibrationData() {
             hasExistingParams = true
             self.newParams = params
         } else {
