@@ -18,7 +18,7 @@ struct ModeSelectionView: View {
     var modeSelectSection : some View {
         Section(header: Text(LocalizedString("Connection options", comment: "Text describing options for connecting to sensor or transmitter"))) {
             #if canImport(CoreNFC)
-            ZStack {
+            
                 NavigationLink(destination: Libre2DirectSetup(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
                     
                     SettingsItem(title: LocalizedString("Libre 2 Direct", comment: "Libre 2 connection option"))
@@ -26,16 +26,16 @@ struct ModeSelectionView: View {
                         .padding([.top, .bottom], 8)
                         
                 }
-            }
+            
             #endif
 
-            ZStack {
+            
                 NavigationLink(destination: BluetoothSelection(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
                     SettingsItem(title: LocalizedString("Bluetooth Transmitters", comment: "Bluetooth Transmitter connection option"))
                         .actionButtonStyle(.primary)
                         .padding([.top, .bottom], 8)
                 }
-            }
+            
 
         }
     }
@@ -70,9 +70,8 @@ struct ModeSelectionView: View {
                 modeSelectSection
             }.padding()
         }
-        .animation(.default)
-        //TODO: make this non-inline. Be warned that non-inline here for some reason creates overlapping UI elements and unresponsive ui :/
-        .navigationBarTitle("New Device Setup", displayMode: .inline)
+        
+        .navigationBarTitle("New Device Setup")
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)
     }

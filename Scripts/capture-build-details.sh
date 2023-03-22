@@ -4,7 +4,6 @@
 #  Loop
 #
 #  Copyright © 2019 LoopKit Authors. All rights reserved.
-#  Modified by dabear
 
 echo "Libretransmitter Gathering build details in ${SRCROOT}"
 cd "${SRCROOT}"

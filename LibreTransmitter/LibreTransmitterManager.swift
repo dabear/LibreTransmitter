@@ -57,7 +57,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     public var batteryLevel: Double? {
         let batt = self.proxy?.metadata?.battery
-        logger.debug("dabear:: LibreTransmitterManager was asked to return battery: \(batt.debugDescription)")
+        logger.debug("LibreTransmitterManager was asked to return battery: \(batt.debugDescription)")
         // convert from 8% -> 0.8
         if let battery = proxy?.metadata?.battery {
             return Double(battery) / 100
@@ -120,7 +120,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     // public var miaomiaoService: MiaomiaoService
 
     public func fetchNewDataIfNeeded(_ completion: @escaping (CGMReadingResult) -> Void) {
-        logger.debug("dabear:: fetchNewDataIfNeeded called but we don't continue")
+        logger.debug("fetchNewDataIfNeeded called but we don't continue")
 
         completion(.noData)
     }
@@ -141,7 +141,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
             let oldValue = latestBackfill
 
             defer {
-                logger.debug("dabear:: sending glucose notification")
+                logger.debug("sending glucose notification")
                 NotificationHelper.sendGlucoseNotitifcationIfNeeded(glucose: newValue,
                                                                     oldValue: oldValue,
                                                                     trend: trend,
@@ -162,13 +162,13 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
             }
 
-            logger.debug("dabear:: latestBackfill set, newvalue is \(newValue.description)")
+            logger.debug("latestBackfill set, newvalue is \(newValue.description)")
 
             if let oldValue {
                 // the idea here is to use the diff between the old and the new glucose to calculate slope and direction, rather than using trend from the glucose value.
                 // this is because the old and new glucose values represent earlier readouts, while the trend buffer contains somewhat more jumpy (noisy) values.
                 let timediff = LibreGlucose.timeDifference(oldGlucose: oldValue, newGlucose: newValue)
-                logger.debug("dabear:: timediff is \(timediff)")
+                logger.debug("timediff is \(timediff)")
                 let oldIsRecentEnough = timediff <= TimeInterval.minutes(15)
 
                 trend = oldIsRecentEnough ? newValue.GetGlucoseTrend(last: oldValue) : nil
@@ -187,7 +187,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     public required convenience init?(rawState: CGMManager.RawStateValue) {
 
         self.init()
-        logger.debug("dabear:: LibreTransmitterManager  has run init from rawstate")
+        logger.debug("LibreTransmitterManager  has run init from rawstate")
         
     }
 
@@ -207,7 +207,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     public init() {
         lastConnected = nil
 
-        logger.debug("dabear: LibreTransmitterManager will be created now")
+        logger.debug("LibreTransmitterManager will be created now")
         NotificationHelper.requestNotificationPermissionsIfNeeded()
         
         proxy?.delegate = self
@@ -223,7 +223,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
 
     public func disconnect() {
-        logger.debug("dabear:: LibreTransmitterManager disconnect called")
+        logger.debug("LibreTransmitterManager disconnect called")
 
         proxy?.disconnectManually()
         proxy?.delegate = nil
@@ -233,7 +233,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     }
     
     public func reEstablishProxy() {
-        logger.debug("dabear:: LibreTransmitterManager re-establish called")
+        logger.debug("LibreTransmitterManager re-establish called")
 
         proxy = LibreTransmitterProxyManager()
         proxy?.delegate = self
@@ -241,7 +241,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
     
 
     deinit {
-        logger.debug("dabear:: LibreTransmitterManager deinit called")
+        logger.debug("LibreTransmitterManager deinit called")
         // cleanup any references to events to this class
         disconnect()
     }
@@ -290,7 +290,7 @@ extension LibreTransmitterManager {
         let glucosePredictionMinutes: Double = 10
 
         guard allGlucoses.count > 15 else {
-            logger.info("dabear: not creating blood sugar prediction: less data elements than needed (\(allGlucoses.count))")
+            logger.info("not creating blood sugar prediction: less data elements than needed (\(allGlucoses.count))")
             return nil
         }
 
@@ -307,11 +307,11 @@ extension LibreTransmitterManager {
     }
 
     func setObservables(sensorData: SensorData?, bleData: Libre2.LibreBLEResponse?, metaData: LibreTransmitterMetadata?) {
-        logger.debug("dabear:: setObservables called")
+        logger.debug("setObservables called")
         DispatchQueue.main.async {
 
             if let metaData=metaData {
-                self.logger.debug("dabear::will set transmitterInfoObservable")
+                self.logger.debug("will set transmitterInfoObservable")
                 self.transmitterInfoObservable.battery = metaData.batteryString
                 self.transmitterInfoObservable.hardware = metaData.hardware ?? ""
                 self.transmitterInfoObservable.firmware = metaData.firmware ?? ""
@@ -325,7 +325,7 @@ extension LibreTransmitterManager {
             self.transmitterInfoObservable.transmitterType = self.proxy?.shortTransmitterName ?? "Unknown"
 
             if let sensorData {
-                self.logger.debug("dabear::will set sensorInfoObservable")
+                self.logger.debug("will set sensorInfoObservable")
                 self.sensorInfoObservable.sensorAge = sensorData.humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = sensorData.humanReadableTimeLeft
                 self.sensorInfoObservable.sensorMinutesLeft = sensorData.minutesLeft
@@ -425,7 +425,7 @@ extension LibreTransmitterManager {
             let preferredUnit = UserDefaults.standard.mmGlucoseUnit ?? .millimolesPerLiter
 
             if let d = self.latestBackfill {
-                self.logger.debug("dabear::will set glucoseInfoObservable")
+                self.logger.debug("will set glucoseInfoObservable")
 
                 formatter.setPreferredNumberFormatter(for: .millimolesPerLiter)
                 self.glucoseInfoObservable.glucoseMMOL = formatter.string(from: d.quantity, for: .millimolesPerLiter) ?? "-"
@@ -488,12 +488,12 @@ extension LibreTransmitterManager {
         
         if calculateTrends, let newest, let oldest, oldest != newest {
             trend = newest.GetGlucoseTrend(last: oldest)
-            logger.debug("dabear: creating trendarrow from glucoses: newest: \(String(describing:newest)) oldest: \(String(describing: oldest)) ")
+            logger.debug("creating trendarrow from glucoses: newest: \(String(describing:newest)) oldest: \(String(describing: oldest)) ")
         } else {
-            logger.debug("dabear: Not creating trendarrow for remote uploada")
+            logger.debug("Not creating trendarrow for remote uploada")
             trend = .none
         }
-        logger.debug("dabear: tried creating trendarrow using \(glucoses.count) elements for trend calc")
+        logger.debug("tried creating trendarrow using \(glucoses.count) elements for trend calc")
         
         return
         glucoses

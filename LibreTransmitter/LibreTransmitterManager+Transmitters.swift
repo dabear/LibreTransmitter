@@ -18,7 +18,7 @@ extension LibreTransmitterManager {
 
     public func libreTransmitterDidUpdate(with sensorData: SensorData, and Device: LibreTransmitterMetadata) {
 
-        self.logger.debug("dabear:: got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
+        self.logger.debug("got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
         var sensorData = sensorData
         
 
@@ -60,23 +60,23 @@ extension LibreTransmitterManager {
         NotificationHelper.sendSensorExpireAlertIfNeeded(sensorData: sensorData)
 
         guard sensorData.state == .ready || sensorData.state == .starting else {
-            logger.debug("dabear:: got sensordata with valid crcs, but sensor is either expired or failed")
+            logger.debug("got sensordata with valid crcs, but sensor is either expired or failed")
             self.delegateQueue.async {
                 self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(LibreError.expiredSensor))
             }
             return
         }
 
-        logger.debug("dabear:: got sensordata with valid crcs, sensor was ready")
+        logger.debug("got sensordata with valid crcs, sensor was ready")
         // self.lastValidSensorData = sensorData
 
         self.handleGoodReading(data: sensorData) { [weak self] error, glucoseArrayWithPrediction in
             guard let self else {
-                print("dabear:: handleGoodReading could not lock on self, aborting")
+                print(" handleGoodReading could not lock on self, aborting")
                 return
             }
             if let error {
-                self.logger.error("dabear:: handleGoodReading returned with error: \(error.errorDescription)")
+                self.logger.error(" handleGoodReading returned with error: \(error.errorDescription)")
                 self.delegateQueue.async {
                     self.cgmManagerDelegate?.cgmManager(self, hasNew: .error(error))
                 }
@@ -84,7 +84,7 @@ extension LibreTransmitterManager {
             }
 
             guard let glucose = glucoseArrayWithPrediction?.trends else {
-                self.logger.debug("dabear:: handleGoodReading returned with no data")
+                self.logger.debug("handleGoodReading returned with no data")
                 self.delegateQueue.async {
                     self.cgmManagerDelegate?.cgmManager(self, hasNew: .noData)
                 }
@@ -121,7 +121,7 @@ extension LibreTransmitterManager {
                 self.countTimesWithoutData &+= 1
             } else {
                 self.latestBackfill = glucose.max { $0.startDate < $1.startDate }
-                self.logger.debug("dabear:: latestbackfill set to \(self.latestBackfill.debugDescription)")
+                self.logger.debug("latestbackfill set to \(self.latestBackfill.debugDescription)")
                 self.countTimesWithoutData = 0
             }
 
@@ -130,7 +130,7 @@ extension LibreTransmitterManager {
             // must be inside this handler as setobservables "depend" on latestbackfill
             self.setObservables(sensorData: sensorData, bleData: nil, metaData: nil)
 
-            self.logger.debug("dabear:: handleGoodReading returned with \(newGlucoses.count) entries")
+            self.logger.debug("handleGoodReading returned with \(newGlucoses.count) entries")
             self.delegateQueue.async {
                 var result: CGMReadingResult
                 // If several readings from a valid and running sensor come out empty,
@@ -178,24 +178,24 @@ extension LibreTransmitterManager {
 
         
         if let calibrationData {
-            logger.debug("dabear:: calibrationdata loaded")
+            logger.debug("calibrationdata loaded")
 
             if calibrationData.isValidForFooterWithReverseCRCs == data.footerCrc.byteSwapped {
-                logger.debug("dabear:: calibrationdata correct for this sensor, returning last values")
+                logger.debug("calibrationdata correct for this sensor, returning last values")
 
                 callback(nil, readingToGlucose(data, calibration: calibrationData))
                 return
             } else {
                 logger.debug(
                 """
-                dabear:: calibrationdata incorrect for this sensor, calibrationdata.isValidForFooterWithReverseCRCs:
+                 calibrationdata incorrect for this sensor, calibrationdata.isValidForFooterWithReverseCRCs:
                 \(calibrationData.isValidForFooterWithReverseCRCs),
                 data.footerCrc.byteSwapped: \(data.footerCrc.byteSwapped)
                 """)
 
             }
         } else {
-            logger.debug("dabear:: calibrationdata was nil")
+            logger.debug("calibrationdata was nil")
         }
 
         calibrateSensor(sensordata: data) { [weak self] calibrationparams  in
@@ -237,21 +237,19 @@ extension LibreTransmitterManager {
             // Incomplete package?
             // this would only happen if delegate is called manually with an unknown txFlags value
             // this was the case for readouts that were not yet complete
-            // but that was commented out in MiaoMiaoManager.swift, see comment there:
-            // "dabear-edit: don't notify on incomplete readouts"
-            logger.debug("dabear:: incomplete package or unknown response state")
+            logger.debug("incomplete package or unknown response state")
             return
         }
 
         switch packet {
         case .newSensor:
-            logger.debug("dabear:: new libresensor detected")
+            logger.debug("new libresensor detected")
             NotificationHelper.sendSensorChangeNotificationIfNeeded()
         case .noSensor:
-            logger.debug("dabear:: no libresensor detected")
+            logger.debug("no libresensor detected")
             NotificationHelper.sendSensorNotDetectedNotificationIfNeeded(noSensor: true)
         case .frequencyChangedResponse:
-            logger.debug("dabear:: transmitter readout interval has changed!")
+            logger.debug("transmitter readout interval has changed!")
 
         default:
             // we don't care about the rest!

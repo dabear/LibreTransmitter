@@ -94,7 +94,7 @@ struct AuthView: View {
         
         let hasNewDevice = SelectionState.shared.selectedStringIdentifier != UserDefaults.standard.preSelectedDevice
         if hasNewDevice, let newDevice = SelectionState.shared.selectedStringIdentifier {
-            print("dabear: authview will set new device to \(newDevice)")
+            print("authview will set new device to \(newDevice)")
             UserDefaults.standard.preSelectedDevice = newDevice
             SelectionState.shared.selectedUID = nil
             UserDefaults.standard.preSelectedUid = nil
@@ -102,7 +102,7 @@ struct AuthView: View {
         } else if let newUID = SelectionState.shared.selectedUID {
             // this one is only temporary,
             // as we don't know the bluetooth identifier during nfc setup
-            print("dabear: authview will set new libre2 device  to \(newUID)")
+            print("authview will set new libre2 device  to \(newUID)")
 
             UserDefaults.standard.preSelectedUid = newUID
             SelectionState.shared.selectedUID = nil
@@ -121,7 +121,7 @@ struct AuthView: View {
     var body: some View {
         
         GuidePage(content: {
-            VStack {
+            VStack(alignment: .center, spacing: 30)  {
                 getLeadingImage()
                 
                 HStack {
@@ -131,9 +131,11 @@ struct AuthView: View {
                         LocalizedString("Proceed to pair new sensor in the next screens. Note that you will loose connection to any existing sensor or transmitter", comment: "Label text for step 3 of AuthView")
                     ])
                 }
-                    
+                Spacer()
+                
   
             }
+            .padding(.vertical, 16)
 
         }) {
             VStack(spacing: 10) {
@@ -141,9 +143,8 @@ struct AuthView: View {
                 .padding()
             }
         }
-        .animation(.default)
-        //TODO: make this non-inline. Be warned that non-inline here for some reason creates overlapping UI elements and unresponsive ui :/
-        .navigationBarTitle("New Device Setup", displayMode: .inline)
+        
+        .navigationBarTitle("New Device Setup")
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)
         .onAppear {

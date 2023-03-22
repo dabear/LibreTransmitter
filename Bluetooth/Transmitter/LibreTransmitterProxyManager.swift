@@ -100,7 +100,7 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
     var activePlugin: LibreTransmitterProxyProtocol? {
         didSet {
 
-            logger.debug("dabear:: activePlugin changed from \(oldValue.debugDescription) to \(self.activePlugin.debugDescription)")
+            logger.debug("activePlugin changed from \(oldValue.debugDescription) to \(self.activePlugin.debugDescription)")
 
         }
     }
@@ -175,7 +175,7 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
         super.init()
         logger.debug("LibreTransmitterProxyManager called")
         managerQueue.sync {
-            let restoreID = (bundleSeedID() ?? "Unknown") + "BluetoothRestoreIdentifierKey"
+            let restoreID = "LibreTransmitterBluetoothRestoreIdentifierKey"
             centralManager = CBCentralManager(delegate: self, queue: managerQueue, options: [CBCentralManagerOptionShowPowerAlertKey: true, CBCentralManagerOptionRestoreIdentifierKey: restoreID])
         }
     }
@@ -663,7 +663,7 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
         // By resetting here we ensure that the rxbuffer doesn't leak over into the next session
         // Leaking over into the next session, is however not a problem for consitency as we always check the CRC's anyway
         if let lastNotifyUpdate = self.lastNotifyUpdate, now > lastNotifyUpdate.addingTimeInterval(6) {
-            logger.debug("dabear:: there hasn't been any traffic to  the \((self.activePluginType?.shortTransmitterName).debugDescription) plugin for more than 10 seconds, so we reset now")
+            logger.debug("there hasn't been any traffic to  the \((self.activePluginType?.shortTransmitterName).debugDescription) plugin for more than 10 seconds, so we reset now")
             self.reset()
         }
 
@@ -701,7 +701,7 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
     deinit {
         self.activePlugin = nil
         self.delegate = nil
-        logger.debug("dabear:: miaomiaomanager deinit called")
+        logger.debug("miaomiaomanager deinit called")
     }
 }
 

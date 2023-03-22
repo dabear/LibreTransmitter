@@ -21,7 +21,7 @@ public extension KeychainManager {
     func setLibreNativeCalibrationData(_ calibrationData: SensorData.CalibrationInfo) throws {
         let credentials: InternetCredentials?
         credentials = InternetCredentials(username: LibreUsername, password: serializeNativeAlgorithmParameters(calibrationData), url: LibreCalibrationUrl)
-        logger.debug("dabear: Setting calibrationdata to \(String(describing: calibrationData))")
+        logger.debug("Setting calibrationdata to \(String(describing: calibrationData))")
         try replaceInternetCredentials(credentials, forLabel: LibreCalibrationLabel)
     }
 
