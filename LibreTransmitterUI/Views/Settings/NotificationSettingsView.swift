@@ -130,19 +130,6 @@ struct NotificationSettingsView: View {
             glucoseVisibilitySection
             additionalNotificationsSection
 
-            /* miscSection
-            .onAppear {
-                favoriteGlucoseUnit = glucoseSegments.firstIndex(of: glucoseUnit) ?? 0
-            }
-            .onChange(of: favoriteGlucoseUnit) { newValue in
-                let newUnit = glucoseSegments[newValue]
-                if newUnit == HKUnit.milligramsPerDeciliter {
-                    mmGlucoseUnit = "mgdl"
-                } else if newUnit == HKUnit.millimolesPerLiter {
-                    mmGlucoseUnit = "mmol"
-                }
-            }*/
-
         }
         .listStyle(InsetGroupedListStyle())
         .alert(item: $presentableStatus) { status in
