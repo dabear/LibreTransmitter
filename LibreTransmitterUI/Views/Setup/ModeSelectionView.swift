@@ -18,7 +18,7 @@ struct ModeSelectionView: View {
     var modeSelectSection : some View {
         Section(header: Text(LocalizedString("Connection options", comment: "Text describing options for connecting to sensor or transmitter"))) {
             #if canImport(CoreNFC)
-            ZStack {
+            
                 NavigationLink(destination: Libre2DirectSetup(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
                     
                     SettingsItem(title: LocalizedString("Libre 2 Direct", comment: "Libre 2 connection option"))
@@ -26,16 +26,16 @@ struct ModeSelectionView: View {
                         .padding([.top, .bottom], 8)
                         
                 }
-            }
+            
             #endif
 
-            ZStack {
+            
                 NavigationLink(destination: BluetoothSelection(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
                     SettingsItem(title: LocalizedString("Bluetooth Transmitters", comment: "Bluetooth Transmitter connection option"))
                         .actionButtonStyle(.primary)
                         .padding([.top, .bottom], 8)
                 }
-            }
+            
 
         }
     }

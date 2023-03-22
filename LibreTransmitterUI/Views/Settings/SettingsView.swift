@@ -234,12 +234,10 @@ struct SettingsView: View {
        
         
         Section {
-            ZStack {
-                NavigationLink(destination: AuthView(completeNotifier: notifyComplete, notifyReset: notifyReset, notifyReconnect: notifyReconnect)) {
-                    /*Button("Change Sensor") {
-                    }.foregroundColor(.blue)*/
-                    SettingsItem(title: "Change Sensor").foregroundColor(.blue)
-                }
+            NavigationLink(destination: AuthView(completeNotifier: notifyComplete, notifyReset: notifyReset, notifyReconnect: notifyReconnect)) {
+                /*Button("Change Sensor") {
+                }.foregroundColor(.blue)*/
+                SettingsItem(title: "Change Sensor").foregroundColor(.blue)
             }
         }
     }
@@ -276,30 +274,26 @@ struct SettingsView: View {
         Section(header: Text(LocalizedString("Advanced", comment: "Text describing header for advanced settings section"))) {
             // these subviews don't really need to be notified once glucose unit changes
             // so we just pass glucoseunit directly on init
-            ZStack {
-                NavigationLink(destination: AlarmSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Alarms")
-                }
+            NavigationLink(destination: AlarmSettingsView(glucoseUnit: self.glucoseUnit)) {
+                SettingsItem(title: "Alarms")
             }
+            
             if NotificationHelper.criticalAlarmsEnabled {
-                ZStack {
-                    NavigationLink(destination: CriticalAlarmsVolumeView()) {
-                        SettingsItem(title: "Critical Alarms volume")
-                    }
+                NavigationLink(destination: CriticalAlarmsVolumeView()) {
+                    SettingsItem(title: "Critical Alarms volume")
                 }
             }
             
-            ZStack {
-                NavigationLink(destination: GlucoseSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Glucose Settings")
-                }
+            
+            NavigationLink(destination: GlucoseSettingsView(glucoseUnit: self.glucoseUnit)) {
+                SettingsItem(title: "Glucose Settings")
             }
 
-            ZStack {
-                NavigationLink(destination: NotificationSettingsView(glucoseUnit: self.glucoseUnit)) {
-                    SettingsItem(title: "Notifications")
-                }
+        
+            NavigationLink(destination: NotificationSettingsView(glucoseUnit: self.glucoseUnit)) {
+                SettingsItem(title: "Notifications")
             }
+            
 
         }
     }
