@@ -135,7 +135,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
                 return
             }
 
-            metadata = LibreTransmitterMetadata(hardware: "-", firmware: "-", battery: 100,
+            metadata = LibreTransmitterMetadata(hardware: nil, firmware: nil, battery: 100,
                                                 name: Self.shortTransmitterName,
                                                 macAddress: nil,
                                                 patchInfo: sensor.patchInfo,

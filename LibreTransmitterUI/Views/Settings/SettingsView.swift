@@ -188,11 +188,33 @@ struct SettingsView: View {
                 if !transmitterInfo.battery.isEmpty {
                     SettingsItem(title: "Battery", detail: $transmitterInfo.battery )
                 }
-                SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
-                SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
+                
+                // The firmware version is not always extractable for all devices
+                // and the libre2 direct version does not support it at all
+                if !transmitterInfo.hardware.isEmpty {
+                    SettingsItem(title: "Hardware", detail: $transmitterInfo.hardware )
+                }
+                // The firmware version is not always extractable for all devices
+                // and the libre2 direct version does not support it at all
+                if !transmitterInfo.firmware.isEmpty {
+                    SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
+                }
+                
+                
                 SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
                 SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
-                SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterIdentifier )
+                
+                
+                // The mac address of a given device is normally not available on ios
+                // Only the bluetooth identifier, which is a normalized derivative of the mac address is available
+                // However, some transmitters, such as the bubble, provide their own mac address as part of its advertisement info
+                // which we extract and put herer
+                if !transmitterInfo.transmitterMacAddress.isEmpty {
+                    SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterMacAddress )
+                }
+                
+                
+                
                 SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
                 
                 SettingsItem(title: "Sensor Start", detail: sensorInfo.activatedAtString )
