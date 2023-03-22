@@ -231,11 +231,14 @@ struct SettingsView: View {
     }
     
     var sensorChangeSection: some View {
+       
+        
         Section {
             ZStack {
                 NavigationLink(destination: AuthView(completeNotifier: notifyComplete, notifyReset: notifyReset, notifyReconnect: notifyReconnect)) {
-                    Button("Change Sensor") {
-                    }.foregroundColor(.blue)
+                    /*Button("Change Sensor") {
+                    }.foregroundColor(.blue)*/
+                    SettingsItem(title: "Change Sensor").foregroundColor(.blue)
                 }
             }
         }
