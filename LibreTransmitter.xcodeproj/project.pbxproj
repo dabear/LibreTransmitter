@@ -102,7 +102,6 @@
 		27DD8F2A269106A100649010 /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DD8F29269106A100649010 /* ViewExtensions.swift */; };
 		27ED67B82698EF38003E5DAB /* AlarmStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B72698EF38003E5DAB /* AlarmStatus.swift */; };
 		27ED67BA26990D6B003E5DAB /* GenericObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */; };
-		27ED67BC269B8277003E5DAB /* KeyChainManagerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */; };
 		27F1593026CAF77200EBA666 /* GenericThrottler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1592E26CAF6BE00EBA666 /* GenericThrottler.swift */; };
 		27F93B2A2816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F93B292816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift */; };
 		27F93B2C2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F93B2B2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift */; };
@@ -237,7 +236,6 @@
 		27DD8F29269106A100649010 /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		27ED67B72698EF38003E5DAB /* AlarmStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmStatus.swift; sourceTree = "<group>"; };
 		27ED67B926990D6B003E5DAB /* GenericObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericObservableObject.swift; sourceTree = "<group>"; };
-		27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainManagerWrapper.swift; sourceTree = "<group>"; };
 		27F1592E26CAF6BE00EBA666 /* GenericThrottler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericThrottler.swift; sourceTree = "<group>"; };
 		27F93B292816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibreTransmitterManager+Libre2EU.swift"; sourceTree = "<group>"; };
 		27F93B2B2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LibreTransmitterManager+Transmitters.swift"; sourceTree = "<group>"; };
@@ -470,7 +468,6 @@
 				27850CE225672C0C0020D109 /* UserDefaults+Bluetooth.swift */,
 				27850CE325672C0C0020D109 /* UIApplication+metadata.swift */,
 				27850CE425672C0C0020D109 /* GlucoseSchedules.swift */,
-				27ED67BB269B8277003E5DAB /* KeyChainManagerWrapper.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -887,7 +884,6 @@
 				27850D9F25672F190020D109 /* LibreTransmitterProxyProtocol.swift in Sources */,
 				27850DCC25672F770020D109 /* Measurement.swift in Sources */,
 				27850DCB25672F770020D109 /* SensorSerialNumber.swift in Sources */,
-				27ED67BC269B8277003E5DAB /* KeyChainManagerWrapper.swift in Sources */,
 				27850DA525672F1C0020D109 /* LibreTransmitterProxyManager.swift in Sources */,
 				27850CF725672C0C0020D109 /* UserDefaults+Bluetooth.swift in Sources */,
 				271A39F52975844B0005FEDA /* NotificationHelperOverride.swift in Sources */,
