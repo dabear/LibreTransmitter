@@ -16,7 +16,7 @@ private let LibreUsername = "LibreUsername"
 
 private var logger = Logger(forType: "KeychainManagerCalibration")
 
-public extension KeychainManagerWrapper {
+public extension KeychainManager {
     func setLibreNativeCalibrationData(_ calibrationData: SensorData.CalibrationInfo) throws {
         let credentials: InternetCredentials?
         credentials = InternetCredentials(username: LibreUsername, password: serializeNativeAlgorithmParameters(calibrationData), url: LibreCalibrationUrl)
