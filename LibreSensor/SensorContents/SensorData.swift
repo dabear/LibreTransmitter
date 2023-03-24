@@ -123,7 +123,6 @@ public struct SensorData: Codable {
     mutating func decrypt(patchInfo: Data, uid: [UInt8]) {
         
         let sensorType = SensorType(patchInfo: patchInfo)
-    
 
         do {
             self.bytes = try Libre2.decryptFRAM(type: sensorType, id: uid, info: patchInfo, data: self.bytes)
@@ -204,8 +203,8 @@ public struct SensorData: Codable {
         return CalibrationInfo(i1: i1, i2: i2, i3: negativei3 ? -i3 : i3, i4: i4, i5: i5, i6: i6, isValidForFooterWithReverseCRCs: Int(self.footerCrc.byteSwapped))
     }
 
-    //strictly only needed for decryption and calculating serial numbers properly
-    public var patchInfo : Data? = nil
+    // strictly only needed for decryption and calculating serial numbers properly
+    public var patchInfo : Data?
     
     fileprivate let aday = 86_400.0 // in seconds
 
@@ -239,7 +238,6 @@ public struct SensorData: Codable {
         self.date = date.rounded(on: 1, .minute)
 
         self.uuid = uuid
-
         
         print("sensor uuid: \(uuid)")
 
@@ -396,7 +394,7 @@ extension SensorData {
     }
 
     static func writeBits(_ buffer: [UInt8], _ byteOffset: Int, _ bitOffset: Int, _ bitCount: Int, _ value: Int) -> [UInt8] {
-        var res = buffer; // Make a copy
+        var res = buffer
         for i in stride(from: 0, to: bitCount, by: 1) {
             let totalBitOffset = byteOffset * 8 + bitOffset + i
             let byte = Int(floor(Double(totalBitOffset) / 8))
@@ -416,7 +414,7 @@ public extension Array where Element ==  Measurement {
     private func multiply(_ a: [Double], _ b: [Double]) -> [Double] {
         return zip(a, b).map(*)
     }
-    //https://github.com/raywenderlich/swift-algorithm-club/blob/master/Linear%20Regression/LinearRegression.playground/Contents.swift
+    // https://github.com/raywenderlich/swift-algorithm-club/blob/master/Linear%20Regression/LinearRegression.playground/Contents.swift
     private func linearRegression(_ xs: [Double], _ ys: [Double]) -> (Double) -> Double {
         let sum1 = average(multiply(xs, ys)) - average(xs) * average(ys)
         let sum2 = average(multiply(xs, xs)) - pow(average(xs), 2)

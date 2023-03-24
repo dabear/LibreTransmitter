@@ -57,8 +57,8 @@ struct GlucoseSettingsView: View {
             }
             
         }
-        .onAppear{
-            if (requiresAuthentication && !authSuccess) {
+        .onAppear {
+            if requiresAuthentication && !authSuccess {
                 self.authenticate { success in
                     print("got authentication response: \(success)")
                     authSuccess = success

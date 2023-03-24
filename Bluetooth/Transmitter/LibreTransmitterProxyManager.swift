@@ -715,7 +715,7 @@ extension LibreTransmitterProxyManager {
             name: "MiaomiaoClient",
             manufacturer: manufacturer,
             model: nil, // latestSpikeCollector,
-            hardwareVersion: self.metadata?.hardware ,
+            hardwareVersion: self.metadata?.hardware,
             firmwareVersion: self.metadata?.firmware,
             softwareVersion: nil,
             localIdentifier: identifier?.uuidString,

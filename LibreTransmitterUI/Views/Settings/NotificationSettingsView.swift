@@ -51,8 +51,6 @@ struct NotificationSettingsView: View {
         case mmGlucoseUnit = "no.bjorninge.mmGlucoseUnit"
         
     }
-    
-   
 
     @AppStorage(Key.mmAlwaysDisplayGlucose.rawValue) var mmAlwaysDisplayGlucose: Bool = true
     @AppStorage(Key.mmNotifyEveryXTimes.rawValue) var mmNotifyEveryXTimes: Int = 0
@@ -92,7 +90,7 @@ struct NotificationSettingsView: View {
 
             }.clipped()
 
-            //Toggle("Adds Phone Battery", isOn: $mmShowPhoneBattery)
+            // Toggle("Adds Phone Battery", isOn: $mmShowPhoneBattery)
             Toggle("Adds Transmitter Battery", isOn: $mmShowTransmitterBattery)
             Toggle("Also vibrate", isOn: $mmGlucoseAlarmsVibrate)
 

@@ -49,7 +49,7 @@ public struct LibreTransmitterMetadata: CustomStringConvertible {
 }
 
 extension String {
-    //https://stackoverflow.com/questions/39677330/how-does-string-substring-work-in-swift
+    // https://stackoverflow.com/questions/39677330/how-does-string-substring-work-in-swift
     // usage
     // let s = "hello"
     // s[0..<3] // "hel"
@@ -75,7 +75,6 @@ extension String {
         return data
     }
 }
-
 
 public enum SensorFamily: Int, CustomStringConvertible {
     case libre      = 0

@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 public struct SensorSerialNumber: CustomStringConvertible {
     let uid: Data
     let family: SensorFamily

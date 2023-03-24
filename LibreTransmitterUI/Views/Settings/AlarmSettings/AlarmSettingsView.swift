@@ -9,7 +9,7 @@
 import SwiftUI
 import HealthKit
 
-fileprivate func systemImage(_ name:String) -> some View{
+private func systemImage(_ name:String) -> some View {
     Image(systemName: name)
          .resizable()
          .interpolation(.high)
@@ -225,7 +225,6 @@ struct AlarmLowRow: View {
                 }
             Spacer()
 
-
             NumericTextField(description: "glucose", showDescription: false,
                              numericValue: Binding<Double>(
                                 get: {
@@ -311,8 +310,8 @@ struct AlarmSettingsView: View {
             Alert(title: Text(status.title), message: Text(status.message), dismissButton: .default(Text("Got it!")))
         }
         .navigationBarTitle("Alarm Settings")
-        .onAppear{
-            if (requiresAuthentication && !authSuccess) {
+        .onAppear {
+            if requiresAuthentication && !authSuccess {
                 self.authenticate { success in
                     print("got authentication response: \(success)")
                     authSuccess = success

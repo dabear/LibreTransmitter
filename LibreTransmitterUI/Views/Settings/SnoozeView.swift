@@ -92,7 +92,7 @@ struct SnoozeView: View {
                 UserDefaults.standard.snoozedUntil = untilDate < Date() ? nil : untilDate
                 print("will snooze for \(snoozeFor) until \(untilDate.description(with: .current))")
                 snoozeDescription = getSnoozeDescription()
-            }, label:  {
+            }, label: {
                 Text(LocalizedString("Click to Snooze Alerts", comment: "Text describing click to snooze label in snoozeview"))
                     .padding()
             })

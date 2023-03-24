@@ -8,7 +8,7 @@
 
 import Foundation
 
-//https://github.com/NightscoutFoundation/xDrip/pull/828/files
+// https://github.com/NightscoutFoundation/xDrip/pull/828/files
 
 // private func trendToLibreGlucose(_ measurements: [Measurement]) -> [LibreGlucose]?{
 

@@ -158,7 +158,7 @@ class Libre2DirectTransmitter: LibreTransmitterProxyProtocol {
             // due to requirement of deleting cgmmanager when changing sensors
             if let latestGlucose = sensorUpdate.trend.last,
                let oldestGlucose = sensorUpdate.trend.first {
-                //ensures captured trends are recent enough
+                // ensures captured trends are recent enough
                 // but also older than the trends sent by sensor this time around
                 let latestGlucoseDate = latestGlucose.date - TimeInterval(minutes: 20)
                 let oldestGlucoseDate = oldestGlucose.date

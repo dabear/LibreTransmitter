@@ -141,6 +141,3 @@ public struct Sensor: Codable {
 private enum Key: String, CaseIterable {
     case sensorUnlockCount = "libre-direct.settings.sensor.unlockCount"
 }
-
-
-

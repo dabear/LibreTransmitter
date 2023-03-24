@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public enum AppMetaData {
     public static var allProperties: String = "unknown"
 
