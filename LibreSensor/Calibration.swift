@@ -29,6 +29,7 @@ public extension KeychainManager {
         do { // Silence all errors and return nil
             let credentials = try getInternetCredentials(label: LibreCalibrationLabel)
             return deserializeNativeAlgorithmParameters(text: credentials.password)
+
         } catch {
 
             return nil

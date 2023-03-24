@@ -18,6 +18,14 @@ protocol MeasurementProtocol {
     var error: [MeasurementError] { get}
 }
 
+extension MeasurementProtocol {
+    func calibratedGlucose(calibrationInfo: SensorData.CalibrationInfo) -> Double {
+        // add extraslope and extraoffset as indicated by user in the ui
+        round(glucoseValueFromRaw(calibrationInfo: calibrationInfo)) * calibrationInfo.extraSlope + calibrationInfo.extraOffset
+    }
+    
+}
+
 public enum MeasurementError: Int, CaseIterable, Codable {
     case OK = 0
     case SD14_FIFO_OVERFLOW      = 1

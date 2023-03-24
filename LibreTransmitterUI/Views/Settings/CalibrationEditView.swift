@@ -84,21 +84,30 @@ struct CalibrationEditView: View {
         }
     }
 
-    var calibrationInputsSection : some View {
-        Section {
-            NumericTextField(description: "i1", showDescription: true, numericValue: $newParams.i1, isReadOnly: isReadOnly)
-            NumericTextField(description: "i2", showDescription: true, numericValue: $newParams.i2, isReadOnly: isReadOnly)
-            NumericTextField(description: "i3", showDescription: true, numericValue: $newParams.i3, isReadOnly: isReadOnly)
-            NumericTextField(description: "i4", showDescription: true, numericValue: $newParams.i4, isReadOnly: isReadOnly)
-            NumericTextField(description: "i5", showDescription: true, numericValue: $newParams.i5, isReadOnly: isReadOnly)
-            NumericTextField(description: "i6", showDescription: true, numericValue: $newParams.i6, isReadOnly: isReadOnly)
-        }
-        .disabled(!Features.allowsEditingFactoryCalibrationData)
+    var calibrationInputsSections : some View {
+        Group {
+            Section {
+                NumericTextField(description: "i1", showDescription: true, numericValue: $newParams.i1, isReadOnly: isReadOnly)
+                NumericTextField(description: "i2", showDescription: true, numericValue: $newParams.i2, isReadOnly: isReadOnly)
+                NumericTextField(description: "i3", showDescription: true, numericValue: $newParams.i3, isReadOnly: isReadOnly)
+                NumericTextField(description: "i4", showDescription: true, numericValue: $newParams.i4, isReadOnly: isReadOnly)
+                NumericTextField(description: "i5", showDescription: true, numericValue: $newParams.i5, isReadOnly: isReadOnly)
+                NumericTextField(description: "i6", showDescription: true, numericValue: $newParams.i6, isReadOnly: isReadOnly)
+                
+            }
+            
+            Section{
+                NumericTextField(description: "extraSlope", showDescription: true, numericValue: $newParams.extraSlope, isReadOnly: isReadOnly)
+                NumericTextField(description: "extraOffset", showDescription: true, numericValue: $newParams.extraOffset, isReadOnly: isReadOnly)
+            }
+            
+        }.disabled(!Features.allowsEditingFactoryCalibrationData)
+        
     }
 
     var validForSection : some View {
         Section {
-            Text(LocalizedString("Valid for footer:", comment: "Text describing technical details about the validity of calibrations ") +  "\(newParams.isValidForFooterWithReverseCRCs)")
+            Text(LocalizedString("Valid for footer: " , comment: "Text describing technical details about the validity of calibrations ") +  "\(newParams.isValidForFooterWithReverseCRCs)")
 
         }
     }
@@ -110,8 +119,7 @@ struct CalibrationEditView: View {
             NotificationView(text: "To modify these settings you need to modify the code to allow it")
         }
         List {
-            
-            calibrationInputsSection
+            calibrationInputsSections
             validForSection
             if Features.allowsEditingFactoryCalibrationData {
                 saveButtonSection
@@ -130,6 +138,7 @@ struct CalibrationEditView: View {
     public init(debugMode: Bool=false) {
         self.debugMode = debugMode
 
+        
         if let params = KeychainManager.standard.getLibreNativeCalibrationData() {
             hasExistingParams = true
             self.newParams = params

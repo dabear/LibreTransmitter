@@ -294,7 +294,7 @@ extension LibreTransmitterManager {
         }
 
         if let predicted = allGlucoses.predictBloodSugar(glucosePredictionMinutes) {
-            let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+            let currentBg = predicted.calibratedGlucose(calibrationInfo: calibration)
             let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
             return LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate)
             logger.debug("Predicted glucose (not used) was: \(currentBg)")

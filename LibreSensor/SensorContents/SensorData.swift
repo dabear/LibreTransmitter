@@ -138,6 +138,8 @@ public struct SensorData: Codable {
         case i4
         case i5
         case i6
+        case extraSlope
+        case extraOffset
         case isValidForFooterWithReverseCRCs
 
     }
@@ -151,6 +153,19 @@ public struct SensorData: Codable {
             i4 = try container.decode(Double.self, forKey: .i4)
             i5 = try container.decode(Double.self, forKey: .i5)
             i6 = try container.decode(Double.self, forKey: .i6)
+            
+            
+            // These are for all intents and purposes optional
+            do {
+                extraSlope = try container.decode(Double.self, forKey: .extraSlope)
+                extraOffset = try container.decode(Double.self, forKey: .extraOffset)
+                
+            } catch {
+                extraOffset = 0
+                extraSlope = 1
+                
+            }
+            
             isValidForFooterWithReverseCRCs = try container.decode(Int.self, forKey: .isValidForFooterWithReverseCRCs)
         }
 
@@ -163,6 +178,10 @@ public struct SensorData: Codable {
             try container.encode(i5, forKey: .i5)
             try container.encode(i6, forKey: .i6)
             try container.encode(isValidForFooterWithReverseCRCs, forKey: .isValidForFooterWithReverseCRCs)
+            
+            
+            try container.encode(extraSlope, forKey: .extraSlope)
+            try container.encode(extraOffset, forKey: .extraOffset)
         }
         public init(i1: Int, i2: Int, i3: Double, i4: Double, i5: Double, i6: Double, isValidForFooterWithReverseCRCs: Int) {
             self.i1 = i1
@@ -171,6 +190,8 @@ public struct SensorData: Codable {
             self.i4 = i4
             self.i5 = i5
             self.i6 = i6
+            self.extraSlope = 1
+            self.extraOffset = 0
             self.isValidForFooterWithReverseCRCs = isValidForFooterWithReverseCRCs
         }
 
@@ -180,11 +201,14 @@ public struct SensorData: Codable {
         @Published public var i4: Double
         @Published public var i5: Double
         @Published public var i6: Double
+        @Published public var extraOffset: Double
+        @Published public var extraSlope: Double
 
         @Published public var isValidForFooterWithReverseCRCs: Int
 
       public var description: String {
-            "CalibrationInfo(i1: \(i1), i2: \(i2), i3: \(i3), i4: \(i4), isValidForFooterWithReverseCRCs: \(isValidForFooterWithReverseCRCs), i5: \(i5)), i6: \(i6))"
+            "CalibrationInfo(i1: \(i1), i2: \(i2), i3: \(i3), i4: \(i4)," +
+            "isValidForFooterWithReverseCRCs: \(isValidForFooterWithReverseCRCs), i5: \(i5), i6: \(i6), extraOffset: \(extraOffset), extraSlope: \(extraSlope))"
       }
     }
 
