@@ -74,6 +74,7 @@ struct Libre2DirectSetup: View {
         SelectionState.shared.selectedStringIdentifier = nil
         print(" paried and set selected UID to: \(SelectionState.shared.selectedUID?.hex)")
         saveNotifier.notify()
+        NotificationHelper.sendLibre2FirectFinishedSetupNotifcation()
 
     }
 

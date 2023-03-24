@@ -30,6 +30,7 @@ public enum NotificationHelper {
         case invalidChecksum = "no.bjorninge.miaomiao.invalidChecksum-notification"
         case calibrationOngoing = "no.bjorninge.miaomiao.calibration-notification"
         case restoredState = "no.bjorninge.miaomiao.state-notification"
+        case libre2directFinishedSetup = "no.bjorninge.miaomiao.libre2direct-notification"
     }
     
     public static var shouldRequestCriticalPermissions = false
@@ -152,6 +153,16 @@ public enum NotificationHelper {
 
 // MARK: Sensor related notification sendouts
 public extension NotificationHelper {
+    static func sendLibre2FirectFinishedSetupNotifcation() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "Libre 2 Direct Setup Complete"
+            content.body = "Establishing initial connection can take up to 4 minutes. Keep your phone unlocked and Loop in the foreground while connecting"
+
+            addRequest(identifier: .libre2directFinishedSetup, content: content)
+        }
+    }
+    
     static func sendSensorNotDetectedNotificationIfNeeded(noSensor: Bool) {
         guard UserDefaults.standard.mmAlertNoSensorDetected && noSensor else {
             logger.debug("\(#function) Not sending noSensorDetected notification")
