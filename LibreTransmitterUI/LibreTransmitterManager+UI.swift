@@ -90,12 +90,18 @@ extension LibreTransmitterManager: CGMManagerUI {
     }
 
     public var cgmLifecycleProgress: DeviceLifecycleProgress? {
+        if self.sensorInfoObservable.activatedAt == nil {
+            // This is the initial state before the plugin
+            // has connected to the sensor and retrieved its cgmLifecycleProgress
+            // We could show 0 here, but UX-wise it's probably wiser to not do so
+            return nil
+        }
         
         let minutesLeft = Double(self.sensorInfoObservable.sensorMinutesLeft)
         
-        let progress = self.sensorInfoObservable.calculateProgress()
         // This matches the manufacturere's app where it displays a notification when sensor has less than 3 days left
         if TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24*3) {
+            let progress = self.sensorInfoObservable.calculateProgress()
             if TimeInterval(minutes: minutesLeft) < TimeInterval(hours: 24) {
                 return LibreLifecycleProgress(percentComplete: progress, progressState: .warning)
             }

@@ -26,6 +26,10 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
         let minutesSinceStart = Double(self.sensorMinutesSinceStart)
         let maxWearTime = Double(self.sensorMaxMinutesWearTime)
         
+        guard let activatedAt, let expiresAt else {
+            return 0
+        }
+        
         if minutesLeft <= 0 {
             return 1
         }
@@ -33,9 +37,7 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
             // shouldn't really happen, but if it does we don't want to crash because of a minor UI issue
             return 0
         }
-        guard let activatedAt, let expiresAt else {
-            return 0
-        }
+        
         let progress = Date.now.getProgress(range: activatedAt...expiresAt)
         
         return progress == 0 ? progress : progress / 100
