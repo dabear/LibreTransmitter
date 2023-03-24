@@ -69,11 +69,12 @@ struct Libre2DirectSetup: View {
 
         SelectionState.shared.selectedUID = pairingInfo.uuid
         
-        //only relevant for launch through settings, as selectionstate can be persisted
+        // only relevant for launch through settings, as selectionstate can be persisted
         // we need to enforce libre2 by removing any selected third party transmitter
         SelectionState.shared.selectedStringIdentifier = nil
         print(" paried and set selected UID to: \(SelectionState.shared.selectedUID?.hex)")
         saveNotifier.notify()
+        NotificationHelper.sendLibre2FirectFinishedSetupNotifcation()
 
     }
 
@@ -120,7 +121,6 @@ struct Libre2DirectSetup: View {
     
     var body : some View {
         GuidePage(content: {
-            
             
             VStack {
                 getLeadingImage()

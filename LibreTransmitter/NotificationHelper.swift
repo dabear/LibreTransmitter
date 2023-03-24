@@ -30,13 +30,12 @@ public enum NotificationHelper {
         case invalidChecksum = "no.bjorninge.miaomiao.invalidChecksum-notification"
         case calibrationOngoing = "no.bjorninge.miaomiao.calibration-notification"
         case restoredState = "no.bjorninge.miaomiao.state-notification"
+        case libre2directFinishedSetup = "no.bjorninge.miaomiao.libre2direct-notification"
     }
-    
     
     public static var shouldRequestCriticalPermissions = false
     
-    
-    //don't touch this please
+    // don't touch this please
     public static var criticalAlarmsEnabled = false
 
     public static func vibrateIfNeeded(count: Int = 3) {
@@ -58,7 +57,6 @@ public enum NotificationHelper {
     public static func GlucoseUnitIsSupported(unit: HKUnit) -> Bool {
         [HKUnit.milligramsPerDeciliter, HKUnit.millimolesPerLiter].contains(unit)
     }
-    
 
     private static func requestCriticalNotificationPermissions() {
         logger.debug("\(#function) called")
@@ -84,17 +82,15 @@ public enum NotificationHelper {
         
     }
 
-
     public static func requestNotificationPermissionsIfNeeded() {
         // We assume loop will request necessary "non-critical" permissions for us
         // So we are only interested in the "critical" permissions here
-        
         
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             criticalAlarmsEnabled = settings.criticalAlertSetting == .enabled
             logPermissions(settings)
             
-            if shouldRequestCriticalPermissions || NotificationHelperOverride.shouldOverrideRequestCriticalPermissions{
+            if shouldRequestCriticalPermissions || NotificationHelperOverride.shouldOverrideRequestCriticalPermissions {
                 requestCriticalNotificationPermissions()
             }
             
@@ -128,7 +124,6 @@ public enum NotificationHelper {
             content.interruptionLevel = .timeSensitive
         }
         
-        
         let request = UNNotificationRequest(identifier: identifier.rawValue, content: content, trigger: nil)
 
         if deleteOld {
@@ -146,7 +141,6 @@ public enum NotificationHelper {
             logger.debug("\(#function) sending \(identifier.rawValue) notification")
         }
     }
-
     
     static func ensureCanSendGlucoseNotification(_ completion: @escaping (_ unit: HKUnit) -> Void ) {
         ensureCanSendNotification {
@@ -159,6 +153,16 @@ public enum NotificationHelper {
 
 // MARK: Sensor related notification sendouts
 public extension NotificationHelper {
+    static func sendLibre2FirectFinishedSetupNotifcation() {
+        ensureCanSendNotification {
+            let content = UNMutableNotificationContent()
+            content.title = "Libre 2 Direct Setup Complete"
+            content.body = "Establishing initial connection can take up to 4 minutes. Keep your phone unlocked and Loop in the foreground while connecting"
+
+            addRequest(identifier: .libre2directFinishedSetup, content: content)
+        }
+    }
+    
     static func sendSensorNotDetectedNotificationIfNeeded(noSensor: Bool) {
         guard UserDefaults.standard.mmAlertNoSensorDetected && noSensor else {
             logger.debug("\(#function) Not sending noSensorDetected notification")
@@ -241,8 +245,6 @@ public extension NotificationHelper {
         }
     }
 
-
-
     static func sendInvalidSensorNotification(sensorData: SensorData) {
         ensureCanSendNotification {
             let content = UNMutableNotificationContent()
@@ -309,7 +311,6 @@ public extension NotificationHelper {
         }
     }
 }
-
 
 // MARK: - Notification sendout
 public extension NotificationHelper {
@@ -470,8 +471,6 @@ public extension NotificationHelper {
         }
     }
 
-
-
     private static var lastBatteryWarning: Date?
 
     static func sendLowBatteryNotificationIfNeeded(device: LibreTransmitterMetadata) {
@@ -514,6 +513,5 @@ public extension NotificationHelper {
             addRequest(identifier: .lowBattery, content: content)
         }
     }
-
 
 }

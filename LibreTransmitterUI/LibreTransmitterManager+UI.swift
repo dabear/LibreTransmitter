@@ -37,7 +37,6 @@ extension LibreTransmitterManager: CGMManagerUI {
         let wantToResetCGMManagerNotifier = GenericObservableObject()
         
         let wantToRestablishConnectionNotifier = GenericObservableObject()
-        
 
         let settings = SettingsView.asHostedViewController(
             displayGlucoseUnitObservable: displayGlucoseUnitObservable,
@@ -58,12 +57,11 @@ extension LibreTransmitterManager: CGMManagerUI {
 
         }
         
-        wantToRestablishConnectionNotifier.listenOnce { [weak self,weak nav] in
+        wantToRestablishConnectionNotifier.listenOnce { [weak self, weak nav] in
             self?.logger.debug("CGM wants to RestablishConnection")
             self?.reEstablishProxy()
             nav?.notifyComplete()
         }
-
         
         doneNotifier.listenOnce { [weak nav] in
             nav?.notifyComplete()

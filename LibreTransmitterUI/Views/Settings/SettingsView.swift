@@ -58,13 +58,12 @@ struct SettingsView: View {
     @ObservedObject private var notifyDelete: GenericObservableObject
     @ObservedObject private var notifyReset: GenericObservableObject
     @ObservedObject private var notifyReconnect: GenericObservableObject
-
    
     @State private var presentableStatus: StatusMessage?
     @ObservedObject var alarmStatus: LibreTransmitter.AlarmStatus
 
     @State private var showingDestructQuestion = false
-    //@State private var showingExporter = false
+    // @State private var showingExporter = false
     // @Environment(\.presentationMode) var presentationMode
 
     static func asHostedViewController(
@@ -121,7 +120,6 @@ struct SettingsView: View {
                 advancedSection
                 sensorChangeSection
                 destructSection
-                    
                 
             }.listStyle(InsetGroupedListStyle())
             .onAppear {
@@ -136,10 +134,8 @@ struct SettingsView: View {
                     doneButton
                 }
             }
-            //.navigationBarTitle("Libre bluetooth", displayMode: .large)
             .navigationTitle("Libre bluetooth")
     }
-        
 
     var snoozeSection: some View {
         Section {
@@ -179,8 +175,6 @@ struct SettingsView: View {
 
         }
     }
-    
-    
 
     var deviceInfoSection: some View {
         List {
@@ -200,10 +194,8 @@ struct SettingsView: View {
                     SettingsItem(title: "Firmware", detail: $transmitterInfo.firmware )
                 }
                 
-                
                 SettingsItem(title: "Connection State", detail: $transmitterInfo.connectionState )
                 SettingsItem(title: "Transmitter Type", detail: $transmitterInfo.transmitterType )
-                
                 
                 // The mac address of a given device is normally not available on ios
                 // Only the bluetooth identifier, which is a normalized derivative of the mac address is available
@@ -212,8 +204,6 @@ struct SettingsView: View {
                 if !transmitterInfo.transmitterMacAddress.isEmpty {
                     SettingsItem(title: "Mac", detail: $transmitterInfo.transmitterMacAddress )
                 }
-                
-                
                 
                 SettingsItem(title: "Sensor Type", detail: $transmitterInfo.sensorType )
                 
@@ -231,7 +221,6 @@ struct SettingsView: View {
     }
     
     var sensorChangeSection: some View {
-       
         
         Section {
             NavigationLink(destination: AuthView(completeNotifier: notifyComplete, notifyReset: notifyReset, notifyReconnect: notifyReconnect)) {
@@ -241,7 +230,6 @@ struct SettingsView: View {
             }
         }
     }
-
 
     var destructSection: some View {
         Section {
@@ -269,7 +257,6 @@ struct SettingsView: View {
         }
     }
 
-
     var advancedSection: some View {
         Section(header: Text(LocalizedString("Advanced", comment: "Text describing header for advanced settings section"))) {
             // these subviews don't really need to be notified once glucose unit changes
@@ -284,23 +271,20 @@ struct SettingsView: View {
                 }
             }
             
-            
             NavigationLink(destination: GlucoseSettingsView(glucoseUnit: self.glucoseUnit)) {
                 SettingsItem(title: "Glucose Settings")
             }
-
         
             NavigationLink(destination: NotificationSettingsView(glucoseUnit: self.glucoseUnit)) {
                 SettingsItem(title: "Notifications")
             }
-            
 
         }
     }
     
     private var daysRemaining: Int? {
         let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
-        if remaining > .days(1)  {
+        if remaining > .days(1) {
             return Int(remaining.days)
         }
         return nil
@@ -326,7 +310,7 @@ struct SettingsView: View {
         Group {
             Text(String(value)).font(.system(size: 28)).fontWeight(.heavy)
                 .foregroundColor(.primary)
-                //.foregroundColor(viewModel.podOk ? .primary : .secondary)
+                // .foregroundColor(viewModel.podOk ? .primary : .secondary)
             Text(units).foregroundColor(.secondary)
         }
     }
@@ -335,7 +319,6 @@ struct SettingsView: View {
         return sensorInfo.expiresAt != nil && sensorInfo.activatedAt != nil
     }
     
-    
     var lifecycleProgress: some View {
         VStack(spacing: 2) {
             HStack(alignment: .lastTextBaseline, spacing: 3) {
@@ -343,7 +326,7 @@ struct SettingsView: View {
                     Text(LocalizedString("Sensor expires in ", comment: "Text describing sensor expires in label in settingsview"))
                         .foregroundColor(.secondary)
                 } else {
-                    Text(LocalizedString("No Connection: ",comment: "Text describing no connection label in settingsview"))
+                    Text(LocalizedString("No Connection: ", comment: "Text describing no connection label in settingsview"))
                         .foregroundColor(.secondary)
                     + Text("\(transmitterInfo.connectionState)")
                         .foregroundColor(.secondary)
@@ -373,10 +356,10 @@ struct SettingsView: View {
                 SwiftUI.ProgressView(value: sensorInfo.calculateProgress())
                     .scaleEffect(x: 1, y: 4, anchor: .center)
                     .padding(.top, 2)
-                //ProgressView(progress: ))
+                // ProgressView(progress: ))
                 Spacer()
             }
-            //.accentColor(self.viewModel.lifeState.progressColor(guidanceColors: guidanceColors))
+            // .accentColor(self.viewModel.lifeState.progressColor(guidanceColors: guidanceColors))
         }
     }
     
@@ -407,14 +390,14 @@ struct SettingsView: View {
     
     var sensorSerialText : String {
         let ret = sensorInfo.sensorSerial
-        print ("got serial: \(ret)")
+        print("got serial: \(ret)")
         return ret.isEmpty ? " - " : ret
     }
     
     var sensorSerial : some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(LocalizedString("Sensor Serial", comment: "Text describing Sensor serial label in settingsview"))
-                //.font(.system(size: 1))
+                // .font(.system(size: 1))
                 .fontWeight(.heavy)
                 .fixedSize()
             Text("\(sensorSerialText)")
@@ -424,7 +407,7 @@ struct SettingsView: View {
     }
     
     var headerSection: some View {
-        Section() {
+        Section {
             VStack(alignment: .trailing) {
                 
                 Spacer()
@@ -456,8 +439,6 @@ struct SettingsView: View {
             }*/
         }
     }
-
-    
 
 }
 

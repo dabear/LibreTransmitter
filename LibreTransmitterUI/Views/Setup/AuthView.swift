@@ -8,7 +8,7 @@
 
 import SwiftUI
 import LoopKitUI
-//this view should only be called when setting up a new device in an existing cgmmanager
+// this view should only be called when setting up a new device in an existing cgmmanager
 struct AuthView: View {
     
     // The idea is that the cancel and save notifiers will call this complete notifier from the parent
@@ -29,7 +29,7 @@ struct AuthView: View {
     
     @State var isNavigationActive = false
  
-    var buttonSection : some View{
+    var buttonSection : some View {
         Section {
             
             if isAuthenticated {
@@ -45,8 +45,6 @@ struct AuthView: View {
                         Text(LocalizedString("Disconnect & Continue Setup", comment: "Text of Sensor Setup Button in AuthView"))
                             .actionButtonStyle(.destructive)
                     }
-    
-                    
                     
                 }
                 .disabled(!isAuthenticated)
@@ -66,31 +64,28 @@ struct AuthView: View {
         
     }
     
-    
     var cancelButton: some View {
         Button("Cancel") {
             // no need to reconnect here as we haven't been asked to disconnect yet
             completeNotifier.notify()
             
             // If commented out, this will force bluetooth state restoration. Great for testing
-            //notifyReconnect.notify()
+            // notifyReconnect.notify()
         }
     }
-    
     
     func handleCancel() {
         // Cancel request is coming in from a subview
         // In all cases this means that the connection to existing sensor has been terminated
         // So we always need to reconnect
         print("\(#function) called on authview")
-        //completeNotifier.notify()
+        // completeNotifier.notify()
         notifyReconnect.notify()
     }
     
     func handleSave() {
         print("\(#function) called on authview")
-        //completeNotifier.notify()
-        
+        // completeNotifier.notify()
         
         let hasNewDevice = SelectionState.shared.selectedStringIdentifier != UserDefaults.standard.preSelectedDevice
         if hasNewDevice, let newDevice = SelectionState.shared.selectedStringIdentifier {
@@ -114,14 +109,13 @@ struct AuthView: View {
             // stored both preSelectedDevice and selectedUID !
         }
         
-        
         notifyReconnect.notify()
     }
     
     var body: some View {
         
         GuidePage(content: {
-            VStack(alignment: .center, spacing: 30)  {
+            VStack(alignment: .center, spacing: 30) {
                 getLeadingImage()
                 
                 HStack {
@@ -132,7 +126,6 @@ struct AuthView: View {
                     ])
                 }
                 Spacer()
-                
   
             }
             .padding(.vertical, 16)
@@ -159,9 +152,6 @@ struct AuthView: View {
 
     }
 }
-
-
-
 
 struct AuthView_Previews: PreviewProvider {
     static var previews: some View {

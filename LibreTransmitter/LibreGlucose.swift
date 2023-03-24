@@ -20,7 +20,6 @@ public struct LibreGlucose: Codable, Hashable {
 
     public var timestamp: Date
 
-
     public static func timeDifference(oldGlucose: LibreGlucose, newGlucose: LibreGlucose) -> TimeInterval {
         newGlucose.startDate.timeIntervalSince(oldGlucose.startDate)
     }
@@ -161,11 +160,12 @@ extension LibreGlucose {
         var arr = [LibreGlucose]()
 
         for historical in measurements {
+            let calibrated = historical.calibratedGlucose(calibrationInfo: nativeCalibrationData)
             let glucose = LibreGlucose(
                 // unsmoothedGlucose: historical.temperatureAlgorithmGlucose,
                 // glucoseDouble: historical.temperatureAlgorithmGlucose,
-                unsmoothedGlucose: historical.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
-                glucoseDouble: historical.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
+                unsmoothedGlucose: calibrated,
+                glucoseDouble: calibrated,
                 error: historical.error,
                 timestamp: historical.date)
 
@@ -187,7 +187,7 @@ extension LibreGlucose {
             // the sensordisplayable property
             let glucose = LibreGlucose(
                 // unsmoothedGlucose: trend.temperatureAlgorithmGlucose,
-                unsmoothedGlucose: trend.roundedGlucoseValueFromRaw2(calibrationInfo: nativeCalibrationData),
+                unsmoothedGlucose: trend.calibratedGlucose(calibrationInfo: nativeCalibrationData),
                 glucoseDouble: 0.0,
                 error: trend.error,
                 timestamp: trend.date)

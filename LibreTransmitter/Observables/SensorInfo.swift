@@ -18,10 +18,10 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
     @Published public var sensorMinutesSinceStart : Int = 0
     @Published public var sensorMaxMinutesWearTime : Int = 0
     
-    @Published public var activatedAt : Date? = nil
-    @Published public var expiresAt : Date? = nil
+    @Published public var activatedAt : Date?
+    @Published public var expiresAt : Date?
     
-    public func calculateProgress() -> Double{
+    public func calculateProgress() -> Double {
         let minutesLeft = Double(self.sensorMinutesLeft)
         let minutesSinceStart = Double(self.sensorMinutesSinceStart)
         let maxWearTime = Double(self.sensorMaxMinutesWearTime)
@@ -30,7 +30,7 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
             return 1
         }
         if maxWearTime == 0 {
-            //shouldn't really happen, but if it does we don't want to crash because of a minor UI issue
+            // shouldn't really happen, but if it does we don't want to crash because of a minor UI issue
             return 0
         }
         guard let activatedAt, let expiresAt else {
@@ -40,7 +40,6 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
         
         return progress == 0 ? progress : progress / 100
     }
-    
     
     public var activatedAtString: String {
         if let activatedAt = activatedAt {
@@ -63,12 +62,6 @@ public class SensorInfo: ObservableObject, Equatable, Hashable {
             return "—"
         }
     }
-    
-    
-    
-    
-    
-    
     
     public static func == (lhs: SensorInfo, rhs: SensorInfo) -> Bool {
          lhs.sensorAge == rhs.sensorAge && lhs.sensorAgeLeft == rhs.sensorAgeLeft &&

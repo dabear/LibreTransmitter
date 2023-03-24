@@ -123,7 +123,6 @@ public struct SensorData: Codable {
     mutating func decrypt(patchInfo: Data, uid: [UInt8]) {
         
         let sensorType = SensorType(patchInfo: patchInfo)
-    
 
         do {
             self.bytes = try Libre2.decryptFRAM(type: sensorType, id: uid, info: patchInfo, data: self.bytes)
@@ -139,6 +138,8 @@ public struct SensorData: Codable {
         case i4
         case i5
         case i6
+        case extraSlope
+        case extraOffset
         case isValidForFooterWithReverseCRCs
 
     }
@@ -152,6 +153,19 @@ public struct SensorData: Codable {
             i4 = try container.decode(Double.self, forKey: .i4)
             i5 = try container.decode(Double.self, forKey: .i5)
             i6 = try container.decode(Double.self, forKey: .i6)
+            
+            
+            // These are for all intents and purposes optional
+            do {
+                extraSlope = try container.decode(Double.self, forKey: .extraSlope)
+                extraOffset = try container.decode(Double.self, forKey: .extraOffset)
+                
+            } catch {
+                extraOffset = 0
+                extraSlope = 1
+                
+            }
+            
             isValidForFooterWithReverseCRCs = try container.decode(Int.self, forKey: .isValidForFooterWithReverseCRCs)
         }
 
@@ -164,6 +178,10 @@ public struct SensorData: Codable {
             try container.encode(i5, forKey: .i5)
             try container.encode(i6, forKey: .i6)
             try container.encode(isValidForFooterWithReverseCRCs, forKey: .isValidForFooterWithReverseCRCs)
+            
+            
+            try container.encode(extraSlope, forKey: .extraSlope)
+            try container.encode(extraOffset, forKey: .extraOffset)
         }
         public init(i1: Int, i2: Int, i3: Double, i4: Double, i5: Double, i6: Double, isValidForFooterWithReverseCRCs: Int) {
             self.i1 = i1
@@ -172,6 +190,8 @@ public struct SensorData: Codable {
             self.i4 = i4
             self.i5 = i5
             self.i6 = i6
+            self.extraSlope = 1
+            self.extraOffset = 0
             self.isValidForFooterWithReverseCRCs = isValidForFooterWithReverseCRCs
         }
 
@@ -181,11 +201,14 @@ public struct SensorData: Codable {
         @Published public var i4: Double
         @Published public var i5: Double
         @Published public var i6: Double
+        @Published public var extraOffset: Double
+        @Published public var extraSlope: Double
 
         @Published public var isValidForFooterWithReverseCRCs: Int
 
       public var description: String {
-            "CalibrationInfo(i1: \(i1), i2: \(i2), i3: \(i3), i4: \(i4), isValidForFooterWithReverseCRCs: \(isValidForFooterWithReverseCRCs), i5: \(i5)), i6: \(i6))"
+            "CalibrationInfo(i1: \(i1), i2: \(i2), i3: \(i3), i4: \(i4)," +
+            "isValidForFooterWithReverseCRCs: \(isValidForFooterWithReverseCRCs), i5: \(i5), i6: \(i6), extraOffset: \(extraOffset), extraSlope: \(extraSlope))"
       }
     }
 
@@ -204,8 +227,8 @@ public struct SensorData: Codable {
         return CalibrationInfo(i1: i1, i2: i2, i3: negativei3 ? -i3 : i3, i4: i4, i5: i5, i6: i6, isValidForFooterWithReverseCRCs: Int(self.footerCrc.byteSwapped))
     }
 
-    //strictly only needed for decryption and calculating serial numbers properly
-    public var patchInfo : Data? = nil
+    // strictly only needed for decryption and calculating serial numbers properly
+    public var patchInfo : Data?
     
     fileprivate let aday = 86_400.0 // in seconds
 
@@ -239,7 +262,6 @@ public struct SensorData: Codable {
         self.date = date.rounded(on: 1, .minute)
 
         self.uuid = uuid
-
         
         print("sensor uuid: \(uuid)")
 
@@ -396,7 +418,7 @@ extension SensorData {
     }
 
     static func writeBits(_ buffer: [UInt8], _ byteOffset: Int, _ bitOffset: Int, _ bitCount: Int, _ value: Int) -> [UInt8] {
-        var res = buffer; // Make a copy
+        var res = buffer
         for i in stride(from: 0, to: bitCount, by: 1) {
             let totalBitOffset = byteOffset * 8 + bitOffset + i
             let byte = Int(floor(Double(totalBitOffset) / 8))
@@ -416,7 +438,7 @@ public extension Array where Element ==  Measurement {
     private func multiply(_ a: [Double], _ b: [Double]) -> [Double] {
         return zip(a, b).map(*)
     }
-    //https://github.com/raywenderlich/swift-algorithm-club/blob/master/Linear%20Regression/LinearRegression.playground/Contents.swift
+    // https://github.com/raywenderlich/swift-algorithm-club/blob/master/Linear%20Regression/LinearRegression.playground/Contents.swift
     private func linearRegression(_ xs: [Double], _ ys: [Double]) -> (Double) -> Double {
         let sum1 = average(multiply(xs, ys)) - average(xs) * average(ys)
         let sum2 = average(multiply(xs, xs)) - pow(average(xs), 2)

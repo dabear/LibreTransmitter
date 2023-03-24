@@ -238,7 +238,6 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
         proxy = LibreTransmitterProxyManager()
         proxy?.delegate = self
     }
-    
 
     deinit {
         logger.debug("LibreTransmitterManager deinit called")
@@ -295,7 +294,7 @@ extension LibreTransmitterManager {
         }
 
         if let predicted = allGlucoses.predictBloodSugar(glucosePredictionMinutes) {
-            let currentBg = predicted.roundedGlucoseValueFromRaw2(calibrationInfo: calibration)
+            let currentBg = predicted.calibratedGlucose(calibrationInfo: calibration)
             let bgDate = predicted.date.addingTimeInterval(60 * -glucosePredictionMinutes)
             return LibreGlucose(unsmoothedGlucose: currentBg, glucoseDouble: currentBg, timestamp: bgDate)
             logger.debug("Predicted glucose (not used) was: \(currentBg)")
@@ -331,7 +330,6 @@ extension LibreTransmitterManager {
                 self.sensorInfoObservable.sensorMinutesLeft = sensorData.minutesLeft
                 self.sensorInfoObservable.activatedAt = now - TimeInterval(minutes: Double(sensorData.minutesSinceStart))
                 self.sensorInfoObservable.expiresAt = now + TimeInterval(minutes: Double(sensorData.minutesLeft))
-                
                 
                 self.sensorInfoObservable.sensorMinutesSinceStart = sensorData.minutesSinceStart
                 self.sensorInfoObservable.sensorMaxMinutesWearTime = sensorData.maxMinutesWearTime
@@ -393,10 +391,7 @@ extension LibreTransmitterManager {
                     self.sensorInfoObservable.expiresAt = now + TimeInterval(minutes: Double(minutesLeft))
                 }
                 
-                
-                
                 self.sensorInfoObservable.sensorMaxMinutesWearTime = maxMinutesWearTime
-                
 
                 self.sensorInfoObservable.sensorAge = humanReadableSensorAge
                 self.sensorInfoObservable.sensorAgeLeft = humanReadableTimeLeft
@@ -406,7 +401,7 @@ extension LibreTransmitterManager {
                 self.sensorInfoObservable.sensorSerial = SensorSerialNumber(withUID: sensor.uuid, sensorFamily: family)?.serialNumber ?? "-"
 
                 if let mapping = UserDefaults.standard.calibrationMapping,
-                   let calibration = self.calibrationData ,
+                   let calibration = self.calibrationData,
                    mapping.uuid == sensor.uuid && calibration.isValidForFooterWithReverseCRCs ==  mapping.reverseFooterCRC {
                     self.glucoseInfoObservable.checksum = "\(mapping.reverseFooterCRC)"
                 }
@@ -471,7 +466,7 @@ extension LibreTransmitterManager {
         // but that might not be available when loop is restarted for example
         //
         if startDate == nil {
-            startDate = self.delegate.call{ $0?.startDateToFilterNewData(for: self) }
+            startDate = self.delegate.call { $0?.startDateToFilterNewData(for: self) }
         }
 
         // add one second to startdate to make this an exclusive (non overlapping) match
@@ -484,7 +479,7 @@ extension LibreTransmitterManager {
         let newest = glucoses.first
         let oldest = glucoses.last
         
-        var trend: GlucoseTrend? = nil
+        var trend: GlucoseTrend?
         
         if calculateTrends, let newest, let oldest, oldest != newest {
             trend = newest.GetGlucoseTrend(last: oldest)

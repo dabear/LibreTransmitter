@@ -20,7 +20,6 @@ extension LibreTransmitterManager {
 
         self.logger.debug("got sensordata: \(String(describing: sensorData)), bytescount: \( sensorData.bytes.count), bytes: \(sensorData.bytes)")
         var sensorData = sensorData
-        
 
         NotificationHelper.sendLowBatteryNotificationIfNeeded(device: Device)
         self.setObservables(sensorData: nil, bleData: nil, metaData: Device)
@@ -95,7 +94,6 @@ extension LibreTransmitterManager {
 
             var newGlucoses : [NewGlucoseSample] = []
             
-            
             // Since trends have a spacing of 1 minute between them, we use that to calculate trend arrows
             var trends = self.glucosesToSamplesFilter(glucose, startDate: self.getStartDateForFilter())
             
@@ -104,7 +102,6 @@ extension LibreTransmitterManager {
             if let newest = trends.first {
                 trends = [newest]
             }
-            
             
             // Historical readings have a spacing of 15 minutes between them,
             // trend arrow calculation doesn't make that much sense
@@ -175,7 +172,6 @@ extension LibreTransmitterManager {
             callback(.noSensorData, nil)
             return
         }
-
         
         if let calibrationData {
             logger.debug("calibrationdata loaded")

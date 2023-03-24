@@ -23,7 +23,7 @@ extension Array where Element: Hashable {
         }
     }
 
-    func removingDuplicates<T: Hashable>(byKey key: (Element) -> T)  -> [Element] {
+    func removingDuplicates<T: Hashable>(byKey key: (Element) -> T) -> [Element] {
          var result = [Element]()
          var seen = Set<T>()
          for value in self {
@@ -34,10 +34,7 @@ extension Array where Element: Hashable {
          return result
      }
 
-
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
 }
-
-

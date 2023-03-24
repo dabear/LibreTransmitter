@@ -53,9 +53,9 @@ public extension Date {
     // Calculates the progress made from the start of the given range to the current date
     // Returns a percentage value between 0 and 100
     func getProgress(range: ClosedRange<Date>) -> Double {
-        if (self >= range.upperBound ) {
+        if self >= range.upperBound {
            return 100
-        } else if (self <= range.lowerBound) {
+        } else if self <= range.lowerBound {
            return 0
         }
         

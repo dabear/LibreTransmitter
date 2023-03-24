@@ -19,4 +19,3 @@ extension Equatable where Self: AnyObject {
         return lhs === rhs
     }
 }
-

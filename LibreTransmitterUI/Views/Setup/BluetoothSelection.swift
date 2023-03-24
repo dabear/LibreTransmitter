@@ -17,7 +17,7 @@ private struct Defaults {
     static let background = Color(UIColor.systemGroupedBackground)
 }
 
-//https://www.objc.io/blog/2020/02/18/a-signal-strength-indicator/
+// https://www.objc.io/blog/2020/02/18/a-signal-strength-indicator/
 struct SignalStrengthIndicator: View {
     @Binding var bars: Int
     var totalBars: Int = 5
@@ -170,7 +170,7 @@ private struct DeviceItem: View {
 
             print(" tapped and set \(device.asStringIdentifier) as new identifier")
             selection.selectedStringIdentifier = device.asStringIdentifier
-            //only relevant for launch through settings, as selectionstate can be persisted
+            // only relevant for launch through settings, as selectionstate can be persisted
             // we need to enforce transmitter mode by removing any selected third party transmitter
             selection.selectedUID = nil
         }

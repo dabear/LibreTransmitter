@@ -13,7 +13,6 @@ struct ModeSelectionView: View {
 
     @ObservedObject public var cancelNotifier: GenericObservableObject
     @ObservedObject public var saveNotifier: GenericObservableObject
-    
 
     var modeSelectSection : some View {
         Section(header: Text(LocalizedString("Connection options", comment: "Text describing options for connecting to sensor or transmitter"))) {
@@ -28,14 +27,12 @@ struct ModeSelectionView: View {
                 }
             
             #endif
-
             
                 NavigationLink(destination: BluetoothSelection(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
                     SettingsItem(title: LocalizedString("Bluetooth Transmitters", comment: "Bluetooth Transmitter connection option"))
                         .actionButtonStyle(.primary)
                         .padding([.top, .bottom], 8)
                 }
-            
 
         }
     }
@@ -46,7 +43,6 @@ struct ModeSelectionView: View {
 
         }// .accentColor(.red)
     }
-    
 
     var body : some View {
         GuidePage(content: {
@@ -61,7 +57,6 @@ struct ModeSelectionView: View {
                         LocalizedString("Fair warning: The sensor will be not be using the manufacturer's algorithm, and some safety mitigations present in the manufacturers algorithm might be missing when you use this.", comment: "Label text for step 4 of connection setup")
                     ])
                 }
-                    
   
             }
 

@@ -11,7 +11,6 @@ import LoopKit
 
 extension LibreTransmitterManager {
 
-
     public func libreSensorDidUpdate(with error: LibreError) {
 
         self.delegateQueue.async {
@@ -69,7 +68,6 @@ extension LibreTransmitterManager {
         if let newest = newGlucose.first {
             newGlucose = [newest]
         }
-        
 
         if newGlucose.isEmpty {
             self.countTimesWithoutData &+= 1
