@@ -11,6 +11,24 @@ import Combine
 import LibreTransmitter
 import LoopKit
 
+struct NotificationView: View {
+    var text: String
+    var body: some View {
+        HStack(alignment: .center) {
+            Text(Image(systemName: "exclamationmark.triangle").resizable())
+
+            +
+            Text(text)
+                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                
+        }
+        .foregroundColor(.black)
+        .padding()
+        .background(Color.yellow.opacity(0.65))
+        .cornerRadius(12)
+    }
+}
+
 struct CalibrationEditView: View {
     typealias Params = SensorData.CalibrationInfo
 
@@ -40,7 +58,7 @@ struct CalibrationEditView: View {
                     return
                 }
 
-                if false && isReadOnly {
+                if isReadOnly {
                     presentableStatus = StatusMessage(title: "Could not save", message: "Calibration parameters are readonly and cannot be saved")
                     return
                 }
@@ -84,9 +102,15 @@ struct CalibrationEditView: View {
 
         }
     }
+    
+    
 
     var body: some View {
+        if !Features.allowsEditingFactoryCalibrationData {
+            NotificationView(text: "To modify these settings you need to modify the code to allow it")
+        }
         List {
+            
             calibrationInputsSection
             validForSection
             if Features.allowsEditingFactoryCalibrationData {
@@ -95,7 +119,7 @@ struct CalibrationEditView: View {
             
         }
         .listStyle(InsetGroupedListStyle())
-        .navigationBarTitle(Features.allowsEditingFactoryCalibrationData ? "Calibration Edit" : "Factory calibration details")
+        .navigationBarTitle(Features.allowsEditingFactoryCalibrationData ? "Calibration Edit" : "Calibration Details")
     }
 
     @ObservedObject private var newParams: Params
