@@ -283,24 +283,23 @@ struct SettingsView: View {
     }
     
     private var daysRemaining: Int? {
-        let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
-        if remaining > .days(1) {
+        if let remaining = sensorInfo.expiresAt?.timeIntervalSinceNow, remaining > .days(1) {
             return Int(remaining.days)
         }
         return nil
     }
     
     private var hoursRemaining: Int? {
-        let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
-        if remaining > .hours(1) {
+    
+        if let remaining = sensorInfo.expiresAt?.timeIntervalSinceNow, remaining > .hours(1) {
             return Int(remaining.hours.truncatingRemainder(dividingBy: 24))
         }
         return nil
     }
     
     private var minutesRemaining: Int? {
-        let remaining = TimeInterval(minutes: Double(sensorInfo.sensorMinutesLeft))
-        if remaining < .hours(2) {
+        
+        if let remaining = sensorInfo.expiresAt?.timeIntervalSinceNow, remaining < .hours(2) {
             return Int(remaining.minutes.truncatingRemainder(dividingBy: 60))
         }
         return nil
@@ -315,8 +314,21 @@ struct SettingsView: View {
         }
     }
     
+    var sensorIsExpired : Bool {
+        if let expiresAt = sensorInfo.expiresAt {
+            return expiresAt.timeIntervalSinceNow < 0
+        }
+        
+        return false
+    }
+    
     var showProgress : Bool {
-        return sensorInfo.expiresAt != nil && sensorInfo.activatedAt != nil
+        
+        if let expiresAt = sensorInfo.expiresAt,let activatedAt = sensorInfo.activatedAt {
+            return expiresAt.timeIntervalSinceNow > 0
+        }
+        
+        return false
     }
     
     var lifecycleProgress: some View {
@@ -429,14 +441,14 @@ struct SettingsView: View {
                  */
                 
             }
-            /*if true {
+            if sensorIsExpired {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("some notice title")
+                    Text("Sensor is expired")
                         .font(Font.subheadline.weight(.bold))
-                    Text("some notice details")
+                    Text("Replace sensor immediately to continue receving glucose values")
                         .font(Font.footnote.weight(.semibold))
                 }.padding(.vertical, 8)
-            }*/
+            }
         }
     }
 
