@@ -337,12 +337,12 @@ struct SettingsView: View {
                 if showProgress {
                     Text(LocalizedString("Sensor expires in ", comment: "Text describing sensor expires in label in settingsview"))
                         .foregroundColor(.secondary)
-                } else {
+                }/* else {
                     Text(LocalizedString("No Connection: ", comment: "Text describing no connection label in settingsview"))
                         .foregroundColor(.secondary)
                     + Text("\(transmitterInfo.connectionState)")
                         .foregroundColor(.secondary)
-                }
+                }*/
                 
                 Spacer()
                 if showProgress {
@@ -446,6 +446,13 @@ struct SettingsView: View {
                     Text("Sensor is expired")
                         .font(Font.subheadline.weight(.bold))
                     Text("Replace sensor immediately to continue receving glucose values")
+                        .font(Font.footnote.weight(.semibold))
+                }.padding(.vertical, 8)
+            } else if !showProgress {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(LocalizedString("No Connection: ", comment: "Text describing no connection label in settingsview"))
+                        .font(Font.subheadline.weight(.bold))
+                     Text("\(transmitterInfo.connectionState)")
                         .font(Font.footnote.weight(.semibold))
                 }.padding(.vertical, 8)
             }
