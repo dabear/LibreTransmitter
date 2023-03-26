@@ -66,7 +66,7 @@ struct ModeSelectionView: View {
             }.padding()
         }
         
-        .navigationBarTitle("New Device Setup")
+        .navigationBarTitle("New Device Setup", displayMode: .large)
         .navigationBarItems(trailing: cancelButton)
         .navigationBarBackButtonHidden(true)
     }

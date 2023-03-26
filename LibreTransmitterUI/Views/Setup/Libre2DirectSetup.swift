@@ -142,6 +142,7 @@ struct Libre2DirectSetup: View {
                 .actionButtonStyle(.primary)
             }.padding()
         }
+        .navigationTitle("Libre 2 Setup")
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: cancelButton)  // the pair button does the save process for us! //, trailing: saveButton)
         .onReceive(service.publisher, perform: receivePairingInfo)

@@ -134,7 +134,7 @@ struct SettingsView: View {
                     doneButton
                 }
             }
-            .navigationTitle("Libre bluetooth")
+            .navigationTitle("Libre Bluetooth")
     }
 
     var snoozeSection: some View {

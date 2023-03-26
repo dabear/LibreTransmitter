@@ -35,7 +35,7 @@ struct AuthView: View {
             if isAuthenticated {
                 ProgressIndicatorView(state: .completed)
                 Text(LocalizedString("Authenticated", comment: "Text confirming user is authenticated in AuthView"))
-                    .padding([.top, .horizontal])
+                    
                     .transition(AnyTransition.opacity.combined(with: .move(edge: .bottom)))
                 NavigationLink(destination: ModeSelectionView(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier), isActive: $isNavigationActive) {
                     Button(action: {
@@ -115,7 +115,7 @@ struct AuthView: View {
     var body: some View {
         
         GuidePage(content: {
-            VStack(alignment: .center, spacing: 30) {
+            VStack(alignment: .center, spacing: 24) {
                 getLeadingImage()
                 
                 HStack {
@@ -128,13 +128,13 @@ struct AuthView: View {
                 Spacer()
   
             }
-            .padding(.vertical, 16)
+            .padding(.vertical, 8)
 
         }) {
-            VStack(spacing: 10) {
+            VStack {
                 buttonSection
-                .padding()
             }
+            .padding()
         }
         
         .navigationBarTitle("New Device Setup")
