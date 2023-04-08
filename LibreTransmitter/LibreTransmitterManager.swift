@@ -1,7 +1,7 @@
 //
 //  LibreTransmitterManager.swift
-//  Created by Bjørn Inge Berg on 25/02/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 25/02/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation

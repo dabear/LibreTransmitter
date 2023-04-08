@@ -2,8 +2,8 @@
 //  AuthView.swift
 //  LibreTransmitterUI
 //
-//  Created by Bjørn Inge Berg on 23/01/2023.
-//  Copyright © 2023 Mark Wilson. All rights reserved.
+//  Created by LoopKit Authors on 23/01/2023.
+//  Copyright © 2023 LoopKit Authors. All rights reserved.
 //
 
 import SwiftUI

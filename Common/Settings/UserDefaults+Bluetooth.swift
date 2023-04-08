@@ -2,8 +2,8 @@
 //  UserDefaults+Bluetooth.swift
 //  MiaomiaoClientUI
 //
-//  Created by Bjørn Inge Berg on 27/07/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 27/07/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation

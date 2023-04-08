@@ -2,7 +2,7 @@
 //  LibreTransmitterManager+Transmitters.swift
 //  LibreTransmitter
 //
-//  Created by Bjørn Inge Berg on 25/04/2022.
+//  Created by LoopKit Authors on 25/04/2022.
 //  Copyright © 2022 Mark Wilson. All rights reserved.
 //
 

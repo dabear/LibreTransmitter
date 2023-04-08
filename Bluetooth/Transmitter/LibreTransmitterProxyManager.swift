@@ -2,7 +2,7 @@
 //  MiaoMiaoManager.swift
 //  LibreMonitor
 //
-//  Created by Uwe Petersen on 10.03.18, heravily modified by Bjørn Berg.
+//  Created by Uwe Petersen on 10.03.18.
 //  Copyright © 2018 Uwe Petersen. All rights reserved.
 //
 

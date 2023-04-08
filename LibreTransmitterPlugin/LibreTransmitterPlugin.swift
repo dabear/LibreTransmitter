@@ -3,7 +3,7 @@
 //  LibreTransmitterPlugin
 //
 //  Created by Nathaniel Hamming on 2019-12-19.
-//  Copyright © 2019 Mark Wilson. All rights reserved.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation

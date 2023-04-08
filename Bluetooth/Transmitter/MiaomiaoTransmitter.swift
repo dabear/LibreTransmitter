@@ -2,8 +2,8 @@
 //  MiaomiaoTransmitter.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 01/08/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 01/08/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 //  How does the MiaoMiao work?
 //
