@@ -11,8 +11,8 @@ import Foundation
 
 extension UserDefaults {
     private enum Key: String {
-        case bluetoothDeviceUUIDString = "no.bjorninge.bluetoothDeviceUUIDString"
-        case libre2UiD = "no.bjorninge.libre2uid"
+        case bluetoothDeviceUUIDString = "com.loopkit.librebluetoothDeviceUUIDString"
+        case libre2UiD = "com.loopkit.libre2uid"
     }
 
     public var preSelectedUid: Data? {

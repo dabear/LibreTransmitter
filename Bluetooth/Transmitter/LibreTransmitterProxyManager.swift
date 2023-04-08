@@ -127,8 +127,8 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
         peripheral?.identifier
     }
 
-    private let managerQueue = DispatchQueue(label: "no.bjorninge.bluetoothManagerQueue", qos: .utility)
-    private let delegateQueue = DispatchQueue(label: "no.bjorninge.delegateQueue", qos: .utility)
+    private let managerQueue = DispatchQueue(label: "com.loopkit.librebluetoothManagerQueue", qos: .utility)
+    private let delegateQueue = DispatchQueue(label: "com.loopkit.libredelegateQueue", qos: .utility)
 
     fileprivate var serviceUUIDs: [CBUUID]? {
         activePluginType?.serviceUUID.map { $0.value }

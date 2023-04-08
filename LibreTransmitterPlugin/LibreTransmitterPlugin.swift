@@ -32,7 +32,7 @@ class LibreTransmitterPlugin: NSObject, CGMManagerUIPlugin {
 
     }
 
-    let prefix = "no-bjorninge-mm"
+    let prefix = "com-loopkit-libre"
     let bundle = Bundle(for: LibreTransmitterPlugin.self)
 
     var allProperties: String {

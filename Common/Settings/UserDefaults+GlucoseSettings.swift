@@ -11,8 +11,8 @@ import HealthKit
 
 extension UserDefaults {
     private enum Key: String {
-        case mmSyncToNS = "no.bjorninge.mmSyncToNs"
-        case mmBackfillFromHistory = "no.bjorninge.mmBackfillFromHistory"
+        case mmSyncToNS = "com.loopkit.libreSyncToNs"
+        case mmBackfillFromHistory = "com.loopkit.libreBackfillFromHistory"
        
     }
 

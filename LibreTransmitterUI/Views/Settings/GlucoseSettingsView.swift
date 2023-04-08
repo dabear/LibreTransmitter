@@ -27,9 +27,9 @@ struct GlucoseSettingsView: View {
 
     }
 
-    @AppStorage("no.bjorninge.mmSyncToNs") var mmSyncToNS: Bool = true
-    @AppStorage("no.bjorninge.mmBackfillFromHistory") var mmBackfillFromHistory: Bool = true
-    @AppStorage("no.bjorninge.shouldPersistSensorData") var shouldPersistSensorData: Bool = false
+    @AppStorage("com.loopkit.libreSyncToNs") var mmSyncToNS: Bool = true
+    @AppStorage("com.loopkit.libreBackfillFromHistory") var mmBackfillFromHistory: Bool = true
+    @AppStorage("com.loopkit.libreshouldPersistSensorData") var shouldPersistSensorData: Bool = false
 
     @State private var authSuccess = false
     

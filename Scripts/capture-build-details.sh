@@ -10,7 +10,7 @@ cd "${SRCROOT}"
 
 plist="${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}"
 
-prefix="no-bjorninge-mm"
+prefix="com-loopkit-libre"
 
 if [ -e .git ]; then
   rev=$(git rev-parse HEAD)

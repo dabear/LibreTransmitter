@@ -16,7 +16,7 @@ struct CriticalAlarmsVolumeView: View {
     @State private var isEditing = false
     
     private enum Key: String {
-        case mmCriticalAlarmsVolume = "no.bjorninge.mmCriticalAlarmsVolume"
+        case mmCriticalAlarmsVolume = "com.loopkit.libreCriticalAlarmsVolume"
     }
     
     @AppStorage(Key.mmCriticalAlarmsVolume.rawValue) var mmCriticalAlarmsVolume: Double = 60

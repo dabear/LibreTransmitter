@@ -30,8 +30,8 @@ public struct LimitedQueue<T: Codable>: Codable {
 }
 extension UserDefaults {
     private enum Key: String {
-        case queuedSensorData = "no.bjorninge.queuedSensorData"
-        case shouldPersistSensorData = "no.bjorninge.shouldPersistSensorData"
+        case queuedSensorData = "com.loopkit.librequeuedSensorData"
+        case shouldPersistSensorData = "com.loopkit.libreshouldPersistSensorData"
     }
 
     var shouldPersistSensorData: Bool {
