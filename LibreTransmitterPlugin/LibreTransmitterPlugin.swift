@@ -22,7 +22,7 @@ class LibreTransmitterPlugin: NSObject, CGMManagerUIPlugin {
     }
     
     public var cgmManagerType: CGMManagerUI.Type? {
-        LibreTransmitterManager.self
+        LibreTransmitterManagerV2.self
     }
     
     override init() {

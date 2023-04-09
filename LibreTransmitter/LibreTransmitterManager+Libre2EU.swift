@@ -9,7 +9,7 @@
 import Foundation
 import LoopKit
 
-extension LibreTransmitterManager {
+extension LibreTransmitterManagerV2 {
 
     public func libreSensorDidUpdate(with error: LibreError) {
 

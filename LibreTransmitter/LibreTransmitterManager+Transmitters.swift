@@ -10,7 +10,7 @@ import Foundation
 import LoopKit
 
 // MARK: - Bluetooth transmitter data
-extension LibreTransmitterManager {
+extension LibreTransmitterManagerV2 {
 
     public func noLibreTransmitterSelected() {
         NotificationHelper.sendNoTransmitterSelectedNotification()

@@ -113,7 +113,7 @@
 		43A8EC8C210E665700A81379 /* LoopKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC8B210E665600A81379 /* LoopKitUI.framework */; };
 		43A8EC91210E676500A81379 /* LibreTransmitterManager+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC8E210E676500A81379 /* LibreTransmitterManager+UI.swift */; };
 		43A8EC95210E67B000A81379 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43A8EC94210E67B000A81379 /* HealthKit.framework */; };
-		43A8EC9D210E68CE00A81379 /* LibreTransmitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */; };
+		43A8EC9D210E68CE00A81379 /* LibreTransmitterManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43A8EC9C210E68CE00A81379 /* LibreTransmitterManagerV2.swift */; };
 		43AB511B21330D1400B3D58D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB511921330D1400B3D58D /* Localizable.strings */; };
 		43AB5127213315D300B3D58D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 43AB5125213315D300B3D58D /* Localizable.strings */; };
 		B40BF26623ABD4E700A43CEE /* LibreTransmitterPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40BF26523ABD4E700A43CEE /* LibreTransmitterPlugin.swift */; };
@@ -250,7 +250,7 @@
 		43A8EC8B210E665600A81379 /* LoopKitUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LoopKitUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43A8EC8E210E676500A81379 /* LibreTransmitterManager+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LibreTransmitterManager+UI.swift"; sourceTree = "<group>"; };
 		43A8EC94210E67B000A81379 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
-		43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterManager.swift; sourceTree = "<group>"; };
+		43A8EC9C210E68CE00A81379 /* LibreTransmitterManagerV2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibreTransmitterManagerV2.swift; sourceTree = "<group>"; };
 		43AB511A21330D1400B3D58D /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		43AB511C21330D6800B3D58D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		43AB511D21330D6B00B3D58D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -563,7 +563,7 @@
 				271A39F42975844B0005FEDA /* NotificationHelperOverride.swift */,
 				27850D0C25672CA60020D109 /* LibreGlucose.swift */,
 				43AB5125213315D300B3D58D /* Localizable.strings */,
-				43A8EC9C210E68CE00A81379 /* LibreTransmitterManager.swift */,
+				43A8EC9C210E68CE00A81379 /* LibreTransmitterManagerV2.swift */,
 				27F93B2B2816B93900EE39A7 /* LibreTransmitterManager+Transmitters.swift */,
 				27F93B292816B7FF00EE39A7 /* LibreTransmitterManager+Libre2EU.swift */,
 				432B0E8B1CDFC3C50045347B /* LibreTransmitter.h */,
@@ -864,7 +864,7 @@
 				27850D9125672F020020D109 /* CBPeripheralExtensions.swift in Sources */,
 				27850DA625672F1E0020D109 /* MiaomiaoTransmitter.swift in Sources */,
 				B40BF26823ABD55200A43CEE /* OSLog.swift in Sources */,
-				43A8EC9D210E68CE00A81379 /* LibreTransmitterManager.swift in Sources */,
+				43A8EC9D210E68CE00A81379 /* LibreTransmitterManagerV2.swift in Sources */,
 				27850DB225672F3F0020D109 /* LimitedQueue.swift in Sources */,
 				274557C82979EA38003B027B /* LoggerExtension.swift in Sources */,
 				27850D9825672F130020D109 /* BubbleTransmitter.swift in Sources */,
