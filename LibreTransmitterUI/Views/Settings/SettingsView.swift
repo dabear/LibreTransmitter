@@ -448,7 +448,7 @@ struct SettingsView: View {
                     Text("Replace sensor immediately to continue receving glucose values")
                         .font(Font.footnote.weight(.semibold))
                 }.padding(.vertical, 8)
-            } else if !showProgress {
+            } else if !["Notifying", "Connected"].contains(transmitterInfo.connectionState) || !showProgress {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(LocalizedString("No Connection: ", comment: "Text describing no connection label in settingsview"))
                         .font(Font.subheadline.weight(.bold))
