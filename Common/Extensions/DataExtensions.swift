@@ -2,8 +2,8 @@
 //  DataExtensions.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 22/09/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 22/09/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation

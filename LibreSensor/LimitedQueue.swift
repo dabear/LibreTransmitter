@@ -2,8 +2,8 @@
 //  LimitedQueue.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 03/03/2020.
-//  Copyright © 2020 Bjørn Inge Vikhammermo Berg. All rights reserved.
+//  Created by LoopKit Authors on 03/03/2020.
+//  Copyright © 2020 LoopKit Authors. All rights reserved.
 //
 
 import Foundation
@@ -30,8 +30,8 @@ public struct LimitedQueue<T: Codable>: Codable {
 }
 extension UserDefaults {
     private enum Key: String {
-        case queuedSensorData = "no.bjorninge.queuedSensorData"
-        case shouldPersistSensorData = "no.bjorninge.shouldPersistSensorData"
+        case queuedSensorData = "com.loopkit.librequeuedSensorData"
+        case shouldPersistSensorData = "com.loopkit.libreshouldPersistSensorData"
     }
 
     var shouldPersistSensorData: Bool {

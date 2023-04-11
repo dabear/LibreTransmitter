@@ -2,8 +2,8 @@
 //  Calibration.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 05/03/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 05/03/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation

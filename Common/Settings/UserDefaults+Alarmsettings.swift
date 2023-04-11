@@ -2,8 +2,8 @@
 //  Userdefaults+Alarmsettings.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 20/04/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 20/04/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation
@@ -11,23 +11,23 @@ import HealthKit
 
 extension UserDefaults {
     private enum Key: String {
-        case glucoseSchedules = "no.bjorninge.glucoseschedules"
+        case glucoseSchedules = "com.loopkit.libreglucoseschedules"
 
-        case mmAlwaysDisplayGlucose = "no.bjorninge.mmAlwaysDisplayGlucose"
-        case mmNotifyEveryXTimes = "no.bjorninge.mmNotifyEveryXTimes"
-        case mmGlucoseAlarmsVibrate = "no.bjorninge.mmGlucoseAlarmsVibrate"
-        case mmAlertLowBatteryWarning = "no.bjorninge.mmLowBatteryWarning"
-        case mmAlertInvalidSensorDetected = "no.bjorninge.mmInvalidSensorDetected"
+        case mmAlwaysDisplayGlucose = "com.loopkit.libreAlwaysDisplayGlucose"
+        case mmNotifyEveryXTimes = "com.loopkit.libreNotifyEveryXTimes"
+        case mmGlucoseAlarmsVibrate = "com.loopkit.libreGlucoseAlarmsVibrate"
+        case mmAlertLowBatteryWarning = "com.loopkit.libreLowBatteryWarning"
+        case mmAlertInvalidSensorDetected = "com.loopkit.libreInvalidSensorDetected"
         // case mmAlertalarmNotifications
-        case mmAlertNewSensorDetected = "no.bjorninge.mmNewSensorDetected"
-        case mmAlertNoSensorDetected = "no.bjorninge.mmNoSensorDetected"
-        case mmGlucoseUnit = "no.bjorninge.mmGlucoseUnit"
-        case mmAlertSensorSoonExpire = "no.bjorninge.mmAlertSensorSoonExpire"
-        case mmSnoozedUntil = "no.bjorninge.mmSnoozedUntil"
-        case mmDangerMode = "no.bjorninge.mmDangerModeActivated"
-        case mmShowPhoneBattery = "no.bjorninge.mmShowPhoneBattery"
-        case mmShowTransmitterBattery = "no.bjorninge.mmShowTransmitterBattery"
-        case mmCriticalAlarmsVolume = "no.bjorninge.mmCriticalAlarmsVolume"
+        case mmAlertNewSensorDetected = "com.loopkit.libreNewSensorDetected"
+        case mmAlertNoSensorDetected = "com.loopkit.libreNoSensorDetected"
+        case mmGlucoseUnit = "com.loopkit.libreGlucoseUnit"
+        case mmAlertSensorSoonExpire = "com.loopkit.libreAlertSensorSoonExpire"
+        case mmSnoozedUntil = "com.loopkit.libreSnoozedUntil"
+        case mmDangerMode = "com.loopkit.libreDangerModeActivated"
+        case mmShowPhoneBattery = "com.loopkit.libreShowPhoneBattery"
+        case mmShowTransmitterBattery = "com.loopkit.libreShowTransmitterBattery"
+        case mmCriticalAlarmsVolume = "com.loopkit.libreCriticalAlarmsVolume"
     }
    
     public func optionalBool(forKey defaultName: String) -> Bool? {

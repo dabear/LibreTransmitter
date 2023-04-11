@@ -1,7 +1,7 @@
 public extension UserDefaults {
     private enum Key: String {
-        case sensor = "no.bjorninge.libre2sensor"
-        case calibrationMapping = "no.bjorninge.libre2sensor-calibrationmapping"
+        case sensor = "com.loopkit.libre2sensor"
+        case calibrationMapping = "com.loopkit.libre2sensor-calibrationmapping"
 
     }
 

@@ -2,8 +2,8 @@
 //  TestView.swift
 //  MiaomiaoClientUI
 //
-//  Created by Bjørn Inge Berg on 15/10/2020.
-//  Copyright © 2020 Bjørn Inge Vikhammermo Berg. All rights reserved.
+//  Created by LoopKit Authors on 15/10/2020.
+//  Copyright © 2020 LoopKit Authors. All rights reserved.
 //
 
 import LibreTransmitter

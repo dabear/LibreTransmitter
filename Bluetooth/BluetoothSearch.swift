@@ -2,8 +2,8 @@
 //  BluetoothSearch.swift
 //  MiaomiaoClientUI
 //
-//  Created by Bjørn Inge Berg on 26/07/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 26/07/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import CoreBluetooth

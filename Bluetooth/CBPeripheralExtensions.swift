@@ -2,8 +2,8 @@
 //  CBPeripheralExtensions.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 19/10/2020.
-//  Copyright © 2020 Bjørn Inge Vikhammermo Berg. All rights reserved.
+//  Created by LoopKit Authors on 19/10/2020.
+//  Copyright © 2020 LoopKit Authors. All rights reserved.
 //
 
 import CoreBluetooth

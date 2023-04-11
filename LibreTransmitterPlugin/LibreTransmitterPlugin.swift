@@ -3,7 +3,7 @@
 //  LibreTransmitterPlugin
 //
 //  Created by Nathaniel Hamming on 2019-12-19.
-//  Copyright © 2019 Mark Wilson. All rights reserved.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation
@@ -22,7 +22,7 @@ class LibreTransmitterPlugin: NSObject, CGMManagerUIPlugin {
     }
     
     public var cgmManagerType: CGMManagerUI.Type? {
-        LibreTransmitterManager.self
+        LibreTransmitterManagerV2.self
     }
     
     override init() {
@@ -32,7 +32,7 @@ class LibreTransmitterPlugin: NSObject, CGMManagerUIPlugin {
 
     }
 
-    let prefix = "no-bjorninge-mm"
+    let prefix = "com-loopkit-libre"
     let bundle = Bundle(for: LibreTransmitterPlugin.self)
 
     var allProperties: String {

@@ -2,8 +2,8 @@
 //  GenericThrottler.swift
 //  LibreTransmitter
 //
-//  Created by Bjørn Inge Berg on 16/08/2021.
-//  Copyright © 2021 Mark Wilson. All rights reserved.
+//  Created by LoopKit Authors on 16/08/2021.
+//  Copyright © 2021 LoopKit Authors. All rights reserved.
 //
 
 import Foundation

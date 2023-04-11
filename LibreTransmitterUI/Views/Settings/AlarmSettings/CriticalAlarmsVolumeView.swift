@@ -2,8 +2,8 @@
 //  CriticalAlarmsVolumeView.swift
 //  LibreTransmitterUI
 //
-//  Created by Bjørn Inge Berg on 29/01/2023.
-//  Copyright © 2023 Mark Wilson. All rights reserved.
+//  Created by LoopKit Authors on 29/01/2023.
+//  Copyright © 2023 LoopKit Authors. All rights reserved.
 //
 
 import SwiftUI
@@ -16,7 +16,7 @@ struct CriticalAlarmsVolumeView: View {
     @State private var isEditing = false
     
     private enum Key: String {
-        case mmCriticalAlarmsVolume = "no.bjorninge.mmCriticalAlarmsVolume"
+        case mmCriticalAlarmsVolume = "com.loopkit.libreCriticalAlarmsVolume"
     }
     
     @AppStorage(Key.mmCriticalAlarmsVolume.rawValue) var mmCriticalAlarmsVolume: Double = 60

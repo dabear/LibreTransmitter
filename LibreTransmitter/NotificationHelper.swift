@@ -2,8 +2,8 @@
 //  NotificationHelper.swift
 //  MiaomiaoClient
 //
-//  Created by Bjørn Inge Berg on 30/05/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 30/05/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import AudioToolbox
@@ -18,19 +18,19 @@ private var logger = Logger(forType: "NotificationHelper")
 public enum NotificationHelper {
 
     private enum Identifiers: String {
-        case glucocoseNotifications = "no.bjorninge.miaomiao.glucose-notification"
-        case noSensorDetected = "no.bjorninge.miaomiao.nosensordetected-notification"
-        case tryAgainLater = "no.bjorninge.miaomiao.glucoseNotAvailableTryAgainLater-notification"
-        case sensorChange = "no.bjorninge.miaomiao.sensorchange-notification"
-        case invalidSensor = "no.bjorninge.miaomiao.invalidsensor-notification"
-        case lowBattery = "no.bjorninge.miaomiao.lowbattery-notification"
-        case sensorExpire = "no.bjorninge.miaomiao.SensorExpire-notification"
-        case noBridgeSelected = "no.bjorninge.miaomiao.noBridgeSelected-notification"
-        case bluetoothPoweredOff = "no.bjorninge.miaomiao.bluetoothPoweredOff-notification"
-        case invalidChecksum = "no.bjorninge.miaomiao.invalidChecksum-notification"
-        case calibrationOngoing = "no.bjorninge.miaomiao.calibration-notification"
-        case restoredState = "no.bjorninge.miaomiao.state-notification"
-        case libre2directFinishedSetup = "no.bjorninge.miaomiao.libre2direct-notification"
+        case glucocoseNotifications = "com.loopkit.libremiaomiao.glucose-notification"
+        case noSensorDetected = "com.loopkit.libremiaomiao.nosensordetected-notification"
+        case tryAgainLater = "com.loopkit.libremiaomiao.glucoseNotAvailableTryAgainLater-notification"
+        case sensorChange = "com.loopkit.libremiaomiao.sensorchange-notification"
+        case invalidSensor = "com.loopkit.libremiaomiao.invalidsensor-notification"
+        case lowBattery = "com.loopkit.libremiaomiao.lowbattery-notification"
+        case sensorExpire = "com.loopkit.libremiaomiao.SensorExpire-notification"
+        case noBridgeSelected = "com.loopkit.libremiaomiao.noBridgeSelected-notification"
+        case bluetoothPoweredOff = "com.loopkit.libremiaomiao.bluetoothPoweredOff-notification"
+        case invalidChecksum = "com.loopkit.libremiaomiao.invalidChecksum-notification"
+        case calibrationOngoing = "com.loopkit.libremiaomiao.calibration-notification"
+        case restoredState = "com.loopkit.libremiaomiao.state-notification"
+        case libre2directFinishedSetup = "com.loopkit.libremiaomiao.libre2direct-notification"
     }
     
     public static var shouldRequestCriticalPermissions = false

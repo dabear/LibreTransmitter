@@ -2,8 +2,8 @@
 //  NotificationSettingsView.swift
 //  LibreTransmitterUI
 //
-//  Created by Bjørn Inge Berg on 27/05/2021.
-//  Copyright © 2021 Mark Wilson. All rights reserved.
+//  Created by LoopKit Authors on 27/05/2021.
+//  Copyright © 2021 LoopKit Authors. All rights reserved.
 //
 
 import SwiftUI
@@ -31,24 +31,24 @@ struct NotificationSettingsView: View {
     }
 
     private enum Key: String {
-        // case glucoseSchedules = "no.bjorninge.glucoseschedules"
+        // case glucoseSchedules = "com.loopkit.libreglucoseschedules"
 
-        case mmAlwaysDisplayGlucose = "no.bjorninge.mmAlwaysDisplayGlucose"
-        case mmNotifyEveryXTimes = "no.bjorninge.mmNotifyEveryXTimes"
-        case mmGlucoseAlarmsVibrate = "no.bjorninge.mmGlucoseAlarmsVibrate"
-        case mmAlertLowBatteryWarning = "no.bjorninge.mmLowBatteryWarning"
-        case mmAlertInvalidSensorDetected = "no.bjorninge.mmInvalidSensorDetected"
+        case mmAlwaysDisplayGlucose = "com.loopkit.libreAlwaysDisplayGlucose"
+        case mmNotifyEveryXTimes = "com.loopkit.libreNotifyEveryXTimes"
+        case mmGlucoseAlarmsVibrate = "com.loopkit.libreGlucoseAlarmsVibrate"
+        case mmAlertLowBatteryWarning = "com.loopkit.libreLowBatteryWarning"
+        case mmAlertInvalidSensorDetected = "com.loopkit.libreInvalidSensorDetected"
         // case mmAlertalarmNotifications
-        case mmAlertNewSensorDetected = "no.bjorninge.mmNewSensorDetected"
-        case mmAlertNoSensorDetected = "no.bjorninge.mmNoSensorDetected"
+        case mmAlertNewSensorDetected = "com.loopkit.libreNewSensorDetected"
+        case mmAlertNoSensorDetected = "com.loopkit.libreNoSensorDetected"
 
-        case mmAlertSensorSoonExpire = "no.bjorninge.mmAlertSensorSoonExpire"
+        case mmAlertSensorSoonExpire = "com.loopkit.libreAlertSensorSoonExpire"
 
-        case mmShowPhoneBattery = "no.bjorninge.mmShowPhoneBattery"
-        case mmShowTransmitterBattery = "no.bjorninge.mmShowTransmitterBattery"
+        case mmShowPhoneBattery = "com.loopkit.libreShowPhoneBattery"
+        case mmShowTransmitterBattery = "com.loopkit.libreShowTransmitterBattery"
 
         // handle specially:
-        case mmGlucoseUnit = "no.bjorninge.mmGlucoseUnit"
+        case mmGlucoseUnit = "com.loopkit.libreGlucoseUnit"
         
     }
 

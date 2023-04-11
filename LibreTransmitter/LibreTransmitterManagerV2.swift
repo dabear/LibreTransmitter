@@ -1,7 +1,7 @@
 //
 //  LibreTransmitterManager.swift
-//  Created by Bjørn Inge Berg on 25/02/2019.
-//  Copyright © 2019 Bjørn Inge Berg. All rights reserved.
+//  Created by LoopKit Authors on 25/02/2019.
+//  Copyright © 2019 LoopKit Authors. All rights reserved.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ import CoreBluetooth
 import HealthKit
 import os.log
 
-public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate {
+public final class LibreTransmitterManagerV2: CGMManager, LibreTransmitterDelegate {
 
     public typealias GlucoseArrayWithPrediction = (trends: [LibreGlucose], historical: [LibreGlucose], prediction: [LibreGlucose])
     public lazy var logger = Logger(forType: Self.self)
@@ -182,7 +182,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 
     }
 
-    public var managerIdentifier = "LibreTransmitterManager"
+    public var managerIdentifier = "LibreTransmitterManagerV2"
 
     public required convenience init?(rawState: CGMManager.RawStateValue) {
 
@@ -279,7 +279,7 @@ public final class LibreTransmitterManager: CGMManager, LibreTransmitterDelegate
 }
 
 // MARK: - Convenience functions
-extension LibreTransmitterManager {
+extension LibreTransmitterManagerV2 {
 
     internal func createBloodSugarPrediction(_ measurements: [Measurement], calibration: SensorData.CalibrationInfo) -> LibreGlucose? {
         let allGlucoses = measurements.sorted { $0.date > $1.date }

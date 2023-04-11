@@ -19,7 +19,7 @@ class LibreTransmitterSetupViewController: UINavigationController, CGMManagerOnb
 
     fileprivate lazy var logger = Logger(forType: Self.self)
 
-    lazy var cgmManager: LibreTransmitterManager? =  LibreTransmitterManager()
+    lazy var cgmManager: LibreTransmitterManagerV2? =  LibreTransmitterManagerV2()
 
     var modeSelection: UIHostingController<ModeSelectionView>!
 
