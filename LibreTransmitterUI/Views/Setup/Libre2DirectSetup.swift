@@ -10,8 +10,11 @@ import SwiftUI
 import LibreTransmitter
 import LoopKitUI
 import LoopKit
+import os.log
 
 #if canImport(CoreNFC)
+
+fileprivate var logger = Logger(forType: "Libre2DirectSetup")
 
 struct Libre2DirectSetup: View {
 
@@ -24,8 +27,28 @@ struct Libre2DirectSetup: View {
 
     @ObservedObject public var cancelNotifier: GenericObservableObject
     @ObservedObject public var saveNotifier: GenericObservableObject
+    
+    public var isMockedSensor = false
+    
+    
+    func pairMockedSensor() {
+        let info = FakeSensorPairingData().fakeSensorPairingInfo()
+        logger.debug("Sending fake sensor pairinginfo: \(info.description)")
+        //delay a bit to simulate a real tag readout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            receivePairingInfo(info)
+        }
+        
+        
+    }
 
     func pairSensor() {
+        
+        guard !isMockedSensor else {
+            pairMockedSensor()
+            return
+        }
+        
         if !Features.phoneNFCAvailable {
             presentableStatus = StatusMessage(title: "Phone NFC required!", message: "Your phone or app is not enabled for NFC communications, which is needed to pair to libre2 sensors")
             return
@@ -64,7 +87,7 @@ struct Libre2DirectSetup: View {
 
         let max = info.sensorData?.maxMinutesWearTime ?? 0
 
-        let sensor = Sensor(uuid: info.uuid, patchInfo: info.patchInfo, maxAge: max)
+        let sensor = Sensor(uuid: info.uuid, patchInfo: info.patchInfo, maxAge: max, initialIdentificationStrategy: info.initialIdentificationStrategy, sensorName: info.sensorName)
         UserDefaults.standard.preSelectedSensor = sensor
 
         SelectionState.shared.selectedUID = pairingInfo.uuid

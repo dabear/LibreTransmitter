@@ -18,7 +18,7 @@ struct LibreLifecycleProgress: DeviceLifecycleProgress {
     var progressState: LoopKit.DeviceLifecycleProgressState
 }
 
-extension LibreTransmitterManagerV2: CGMManagerUI {
+extension LibreTransmitterManagerV3: CGMManagerUI {
 
     public var cgmStatusBadge: DeviceStatusBadge? {
         nil
@@ -113,7 +113,7 @@ extension LibreTransmitterManagerV2: CGMManagerUI {
     }
 }
 
-extension LibreTransmitterManagerV2: DeviceManagerUI {
+extension LibreTransmitterManagerV3: DeviceManagerUI {
     public static var onboardingImage: UIImage? {
         nil
     }

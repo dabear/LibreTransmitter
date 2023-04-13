@@ -13,10 +13,24 @@ struct ModeSelectionView: View {
 
     @ObservedObject public var cancelNotifier: GenericObservableObject
     @ObservedObject public var saveNotifier: GenericObservableObject
+    
+    var supportsFakeSensor = Features.supportsFakeSensor
 
     var modeSelectSection : some View {
         Section(header: Text(LocalizedString("Connection options", comment: "Text describing options for connecting to sensor or transmitter"))) {
+            if supportsFakeSensor {
+                NavigationLink(destination: Libre2DirectSetup(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier, isMockedSensor: true)) {
+                    
+                    SettingsItem(title: LocalizedString("Fake Libre 2 Direct", comment: "Fake Libre 2 connection option"))
+                        .actionButtonStyle(.primary)
+                        .padding([.top, .bottom], 8)
+                        
+                }
+            }
+            
             #if canImport(CoreNFC)
+            
+
             
                 NavigationLink(destination: Libre2DirectSetup(cancelNotifier: cancelNotifier, saveNotifier: saveNotifier)) {
                     
