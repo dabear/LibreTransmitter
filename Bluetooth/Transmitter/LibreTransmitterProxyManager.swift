@@ -448,12 +448,14 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
 
         var foundUUID = manufacturerData.subdata(in: 2..<8)
         foundUUID.append(contentsOf: [0x07, 0xe0])
+        
+        logger.debug("ManufacturerData: \(manufacturerData), found uid: \(foundUUID)")
 
         guard foundUUID == selectedUid && Libre2DirectTransmitter.canSupportPeripheral(peripheral) else {
             return false
         }
         
-        logger.debug("ManufacturerData: \(manufacturerData), found uid: \(foundUUID)")
+        
         
         return true
     }
