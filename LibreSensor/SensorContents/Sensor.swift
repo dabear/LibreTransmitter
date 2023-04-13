@@ -60,6 +60,10 @@ public struct CalibrationToSensorMapping: Codable {
         self.reverseFooterCRC = reverseFooterCRC
     }
 }
+public enum Libre2IdentificationStrategy: Int, Codable {
+    case byUid = 0 //default
+    case byFakeSensorName = 1 //only when used with tzachi-dar-simulator
+}
 
 public struct Sensor: Codable {
     public let uuid: Data
@@ -76,6 +80,10 @@ public struct Sensor: Codable {
    // public var lifetime: Int
 
     public var unlockCount: Int
+    
+    var initialIdentificationStrategy: Libre2IdentificationStrategy
+    
+    var sensorName : String?
 
     /*
     public var unlockCount: Int {
@@ -108,7 +116,7 @@ public struct Sensor: Codable {
         }
     } */
 
-    public init(uuid: Data, patchInfo: Data, maxAge: Int, unlockCount: Int = 0) {
+    public init(uuid: Data, patchInfo: Data, maxAge: Int, unlockCount: Int = 0, initialIdentificationStrategy: Libre2IdentificationStrategy = .byUid, sensorName: String? = nil) {
         self.uuid = uuid
         self.patchInfo = patchInfo
 
@@ -121,6 +129,8 @@ public struct Sensor: Codable {
         self.unlockCount = 0
         self.maxAge = maxAge
         // self.calibrationInfo = calibrationInfo
+        self.initialIdentificationStrategy = initialIdentificationStrategy
+        self.sensorName = sensorName
     }
 
     public var description: String {

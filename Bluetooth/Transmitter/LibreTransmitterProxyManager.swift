@@ -433,6 +433,41 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
             fatalError("Failed due to unkown default, Uwe!")
         }
     }
+    
+    private func verifyLibre2ManufacturerData(peripheral: CBPeripheral, selectedUid: Data ,advertisementData: [String: Any]) -> Bool {
+        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
+            logger.debug("manufacturerData was not retrieved")
+            return false
+        }
+
+        guard manufacturerData.count == 8 else {
+            logger.debug("manufacturerData was of incorrect size: \(manufacturerData.count)")
+            return false
+        }
+         logger.debug("manufacturerdata is: \(manufacturerData.hex)")
+
+        var foundUUID = manufacturerData.subdata(in: 2..<8)
+        foundUUID.append(contentsOf: [0x07, 0xe0])
+
+        guard foundUUID == selectedUid && Libre2DirectTransmitter.canSupportPeripheral(peripheral) else {
+            return false
+        }
+        
+        logger.debug("ManufacturerData: \(manufacturerData), found uid: \(foundUUID)")
+        
+        return true
+    }
+    
+    private func verifyLibre2ByName(peripheral: CBPeripheral, name: String) -> Bool {
+        
+        // This method is not as robust, and should only be used in cases where manufacturerdata is not available, such as when using the tzachi-dar simulator
+        guard  peripheral.name?.contains(name) == true else {
+            return false
+        }
+        return Libre2DirectTransmitter.canSupportPeripheral(peripheral)
+        
+        
+    }
 
     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
         dispatchPrecondition(condition: .onQueue(managerQueue))
@@ -447,26 +482,32 @@ public final class LibreTransmitterProxyManager: NSObject, CBCentralManagerDeleg
          if let selectedUid = UserDefaults.standard.preSelectedUid {
             logger.debug("Was asked to connect preselected libre2 by uid: \(selectedUid.hex), discovered devicename is: \(String(describing: peripheral.name))")
 
-            guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
-                return
-            }
-
-            guard manufacturerData.count == 8 else {
-                return
-            }
-
-            var foundUUID = manufacturerData.subdata(in: 2..<8)
-            foundUUID.append(contentsOf: [0x07, 0xe0])
-
-            guard foundUUID == selectedUid && Libre2DirectTransmitter.canSupportPeripheral(peripheral) else {
-                return
-            }
+             let sensor = UserDefaults.standard.preSelectedSensor
+             logger.debug("preselected sensor is: \(String(describing:sensor))")
+             
+             
+             if let sensor = UserDefaults.standard.preSelectedSensor, let name = sensor.sensorName, sensor.initialIdentificationStrategy == .byFakeSensorName {
+                 logger.debug("Verifiying libre2 connection using sensor name")
+                 if !verifyLibre2ByName(peripheral: peripheral, name: name) {
+                     logger.debug("failed Verifiying libre2 connection using sensor name")
+                     return
+                 }
+                 
+             } else {
+                 logger.debug("Verifiying libre2 connection using manufacturerData")
+                 if !verifyLibre2ManufacturerData(peripheral: peripheral, selectedUid: selectedUid, advertisementData: advertisementData) {
+                     logger.debug("failed Verifiying libre2 connection using manufacturerData")
+                     return
+                 }
+             }
+             
+            
 
             // next time we search via bluetooth, let's identify the sensor with its bluetooth identifier
             UserDefaults.standard.preSelectedUid = nil
             UserDefaults.standard.preSelectedDevice = peripheral.identifier.uuidString
 
-            logger.debug("ManufacturerData: \(manufacturerData), found uid: \(foundUUID)")
+
 
             logger.debug("Did connect to preselected \(String(describing: peripheral.name)) with identifier \(String(describing: peripheral.identifier.uuidString)) and uid \(selectedUid.hex)")
             self.peripheral = peripheral
